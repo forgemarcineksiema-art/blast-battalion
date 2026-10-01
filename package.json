@@ -1,0 +1,12 @@
+{
+  "name": "blast-battalion",
+  "version": "1.0.0",
+  "description": "Destructible-terrain run-and-gun for web portals (CrazyGames, Poki).",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "python tools/devserver.py 8321",
+    "build": "node tools/build.mjs",
+    "build:debug": "node tools/build.mjs --no-minify"
+  }
+}
