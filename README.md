@@ -2,6 +2,12 @@
 
 ![Blast Battalion](marketing/cover_1920x1080.png)
 
+<p align="center">
+  <img src="marketing/screenshots/jungle.png" width="32%" alt="Dżungla">
+  <img src="marketing/screenshots/desert.png" width="32%" alt="Pustynia">
+  <img src="marketing/screenshots/snow.png" width="32%" alt="Śnieg">
+</p>
+
 Przeglądarkowa gra akcji typu run-and-gun na **CrazyGames** i **Poki**. W grze jest:
 - zniszczalny teren;
 - świat jako broń: beczki wybuchowe, beczki i rury z paliwem (cieknące kałuże, ogień biegnący po śladzie), mosty linowe do zestrzelenia;
