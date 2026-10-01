@@ -1,5 +1,7 @@
 # Blast Battalion
 
+![Blast Battalion](marketing/cover_1920x1080.png)
+
 Przeglądarkowa gra akcji typu run-and-gun na **CrazyGames** i **Poki**. W grze jest:
 - zniszczalny teren;
 - świat jako broń: beczki wybuchowe, beczki i rury z paliwem (cieknące kałuże, ogień biegnący po śladzie), mosty linowe do zestrzelenia;
