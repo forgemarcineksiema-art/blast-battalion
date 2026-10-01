@@ -3,245 +3,245 @@
 ![Blast Battalion](marketing/cover_1920x1080.png)
 
 <p align="center">
-  <img src="marketing/screenshots/jungle.png" width="32%" alt="Dżungla">
-  <img src="marketing/screenshots/desert.png" width="32%" alt="Pustynia">
-  <img src="marketing/screenshots/snow.png" width="32%" alt="Śnieg">
+  <img src="marketing/screenshots/jungle.png" width="32%" alt="Jungle">
+  <img src="marketing/screenshots/desert.png" width="32%" alt="Desert">
+  <img src="marketing/screenshots/snow.png" width="32%" alt="Snow">
 </p>
 
-Przeglądarkowa gra akcji typu run-and-gun na **CrazyGames** i **Poki**. W grze jest:
-- zniszczalny teren;
-- świat jako broń: beczki wybuchowe, beczki i rury z paliwem (cieknące kałuże, ogień biegnący po śladzie), mosty linowe do zestrzelenia;
-- uwalnianie jeńców z losową zamianą bohatera;
-- 12 bohaterów;
-- 14 typów wrogów (m.in. snajper z laserem, miotacz ognia, oficer wzywający nalot) i ciężarówki z desantem; każdy atak jest zapowiedziany, a przy pierwszym spotkaniu wroga karta INTEL pokazuje jego twarz i sposób na niego;
-- 3 bossów ze słabymi punktami;
-- efekty z oświetleniem (poświata wybuchów, ognia i broni, fale uderzeniowe, grzyby, żar), pogoda w każdej strefie i ustawienie FX AUTO / FULL / LITE (AUTO samo przechodzi na LITE na słabym sprzęcie);
-- 15 misji w 3 strefach, z różnymi celami: ewakuacja, zamach, sabotaż i ucieczka przed detonacją;
-- tryb Arcade bez końca, jako rajd: po każdym etapie wybierasz 1 z 3 kart ulepszeń na resztę biegu (m.in. wybuchowe kule, łańcuch piorunów, rykoszety, deszcz beczek, latanie dla wszystkich);
-- misja dnia (ten sam poziom dla wszystkich danego dnia) z szaloną regułą dnia (np. niska grawitacja, każdy poległy wybucha, dzień jednego bohatera);
-- charakter: bohaterowie rzucają kwestiami, żołnierze krzyczą i panikują, Generał Grimm drwi przez radio;
-- postacie reagują całym ciałem: lądowanie, poślizg przy zawracaniu, celowanie, odrzut, przeładowanie, drgnięcie po trafieniu, panika z rękami w górze, przewracanie falą uderzeniową, spadające hełmy, radość wrogów po śmierci bohatera, jeńcy machający zza krat; ataki bossów zapowiada sama maszyna (żarzący się wylot lufy, świecąca wyrzutnia, przysiad przed skokiem);
-- pieniądze ($) za każdą misję (gwiazdki i nowe medale płacą więcej, porażka daje drobną nagrodę) i sklep UPGRADES ze stałymi ulepszeniami: FIREPOWER (+15% obrażeń), SUPPLY PACK (+1 specjal), RESERVES (+1 życie), BODY ARMOR (+1 HP);
-- codzienna dostawa (panel po pierwszej ukończonej misji danego dnia i skrzynia na ekranie tytułowym): im więcej dni z rzędu, tym więcej pieniędzy, a panel pokazuje jutrzejszą kwotę;
-- uczciwe śmierci: każda ma napis z przyczyną i (pierwsze dwa razy) podpowiedź, co zrobić następnym razem; gruz i zderzenie z bossem zabierają punkt życia zamiast zabijać od razu; pociski bossów mają czerwony znacznik miejsca upadku;
-- po przegranej misji następna próba ma dodatkowe życie (najwyżej +2);
-- pasek „NEXT HERO” po misji: ilu jeńców brakuje do następnego bohatera;
-- garderoba: czapki (od bandany po koronę) i malowania dla każdego bohatera, kupowane za pieniądze z misji, z przymierzaniem przed zakupem;
-- mini-bossowie: THE DOZER (buldożer mielący teren, szarża po zapowiedzi) i JUGGERNAUT (minigun z laserem, słaby punkt na plecach) w czterech misjach i w Arcade;
-- sekrety: w każdej misji ukryty skarbiec pod popękaną ziemią (skocz na pęknięcia) ze złotą skrzynią i nagrodą;
-- pojazdy: kroczący mech i czołg (działo z automatycznym celowaniem, taran, mielenie ścian, rozjeżdżanie żołnierzy);
-- sceny filmowe: na starcie nowej strefy przelot z działkiem śmigłowca nad bazą wroga; pasy kinowe przy wejściu i śmierci bossa oraz przy wybuchu bazy;
-- ekran tytułowy, pod którym gra prawdziwa misja (demo), a nowy gracz od razu zaczyna misję 1;
-- HUD i menu w wojskowym stylu: bohater na nieśmiertelniku, trasa misji z jego twarzą, Grimm jak napisy w filmie, podpowiedzi sterowania jako klawisze nad bohaterem; menu z metalowych płyt z ikonami, wybór misji jako trasy stref, medale przypinane na ekranie wyników; samouczek z tabliczek-piktogramów z klawiszami gracza;
-- lokalny co-op na 2 graczy;
-- 3 poziomy trudności;
-- 6 języków: angielski, hiszpański, portugalski (Brazylia), niemiecki, francuski i polski. Gra wybiera język przeglądarki, zmiana w OPTIONS → LANGUAGE.
+A run-and-gun action game for the browser, made for **CrazyGames** and **Poki**. Features:
+- destructible terrain;
+- the world as a weapon: explosive barrels, fuel barrels and pipes (leaking puddles, fire racing along the trail), rope bridges you can shoot down;
+- rescuing prisoners, with each rescue swapping you to a random hero;
+- 12 heroes;
+- 14 enemy types (including a laser-sighted sniper, a flamethrower and an officer who calls in airstrikes) plus troop trucks; every attack is telegraphed, and the first time you meet an enemy an INTEL card shows its face and how to beat it;
+- 3 bosses with weak points;
+- lit effects (glow from explosions, fire and muzzle flashes, shockwaves, mushroom clouds, embers), weather in every zone and an FX AUTO / FULL / LITE setting (AUTO drops to LITE on its own on weak hardware);
+- 15 missions across 3 zones, with varied objectives: extraction, assassination, sabotage and escaping a detonation;
+- an endless Arcade mode played as a run: after each stage you pick 1 of 3 upgrade cards for the rest of the run (including explosive bullets, chain lightning, ricochets, barrel rain and flight for everyone);
+- a daily mission (the same level for everyone on a given day) with a crazy rule of the day (e.g. low gravity, every fallen soldier explodes, one-hero day);
+- personality: heroes throw out one-liners, soldiers shout and panic, General Grimm taunts you over the radio;
+- characters react with their whole body: landing, skidding when turning around, aiming, recoil, reloading, flinching when hit, panicking with hands in the air, getting knocked down by shockwaves, helmets flying off, enemies cheering when a hero dies, prisoners waving from behind bars; boss attacks are telegraphed by the machine itself (a glowing muzzle, a lit-up launcher, a crouch before a jump);
+- money ($) for every mission (stars and new medals pay more, a failed mission still pays a little) and an UPGRADES shop with permanent upgrades: FIREPOWER (+15% damage), SUPPLY PACK (+1 special), RESERVES (+1 life), BODY ARMOR (+1 HP);
+- a daily supply drop (a panel after the first completed mission of the day and a crate on the title screen): the longer your daily streak, the more money, and the panel shows tomorrow's amount;
+- fair deaths: each one shows its cause and (the first two times) a hint on what to do next time; debris and touching a boss cost one hit point instead of killing outright; boss projectiles get a red marker where they will land;
+- after a failed mission, the next attempt gets an extra life (up to +2);
+- a "NEXT HERO" bar after each mission: how many prisoners are left until the next hero;
+- a wardrobe: hats (from a bandana to a crown) and paint jobs for every hero, bought with mission money, with a try-on before buying;
+- mini-bosses: THE DOZER (a bulldozer that grinds through terrain and charges after a warning) and JUGGERNAUT (a laser-sighted minigun, weak point on its back) in four missions and in Arcade;
+- secrets: every mission hides a vault under cracked ground (jump on the cracks) with a golden crate and a reward;
+- vehicles: a walking mech and a tank (auto-aiming cannon, ramming, grinding through walls, running over soldiers);
+- cinematics: at the start of each new zone, a helicopter gunship flyover above the enemy base; letterbox bars when a boss enters and dies, and when the base blows up;
+- a title screen with a real mission playing underneath (a demo), while a new player jumps straight into mission 1;
+- military-style HUD and menus: the hero on a dog tag, a mission route with the hero's face, Grimm shown like film subtitles, control hints as keys above the hero; menus built from metal plates with icons, mission select as zone routes, medals pinned on the results screen; a tutorial made of pictogram signs showing the player's own keys;
+- local 2-player co-op;
+- 3 difficulty levels;
+- 6 languages: English, Spanish, Portuguese (Brazil), German, French and Polish. The game picks the browser's language; change it in OPTIONS → LANGUAGE.
 
-Gra jest napisana w czystym JavaScripcie z Canvasem, bez zależności i bez plików graficznych czy dźwiękowych (wszystko generuje kod).
+The game is written in plain JavaScript with Canvas, with no dependencies and no image or sound files (everything is generated by code).
 
-Dokumentacja:
-- [docs/GDD.md](docs/GDD.md) — pełny projekt gry;
-- [docs/PLAYTEST.md](docs/PLAYTEST.md) — jak przeprowadzić test z osobami, które grają pierwszy raz;
-- [docs/RELEASE.md](docs/RELEASE.md) — lista kontrolna wydania na CrazyGames i Poki oraz to, jak gra spełnia wymagania portali;
-- [docs/METRICS.md](docs/METRICS.md) — prognoza konwersji, czasu sesji i D1 bez danych z portalu (symulowani gracze + model lejka) i decyzje, które z niej wynikają.
+Documentation:
+- [docs/GDD.md](docs/GDD.md) — the full game design;
+- [docs/PLAYTEST.md](docs/PLAYTEST.md) — how to run a playtest with first-time players;
+- [docs/RELEASE.md](docs/RELEASE.md) — the release checklist for CrazyGames and Poki, and how the game meets the portals' requirements;
+- [docs/METRICS.md](docs/METRICS.md) — a forecast of conversion, session length and D1 retention without portal data (simulated players + a funnel model), and the decisions that follow from it.
 
-## Uruchomienie
+## Running the game
 
-Najprościej: otwórz `index.html` w przeglądarce (działa z dysku).
+The simplest way: open `index.html` in a browser (it works straight from disk).
 
-Serwer deweloperski (bez cache'owania, potrzebny Python):
+Development server (no caching, requires Python):
 
 ```bash
 python tools/devserver.py 8321
 ```
 
-Potem wejdź na http://localhost:8321.
+Then go to http://localhost:8321.
 
-Przydatne parametry adresu:
+Useful URL parameters:
 
-| Parametr | Działanie |
+| Parameter | Effect |
 |---|---|
-| `?level=5` | start od razu w misji 5 |
-| `?unlockall=1` | odblokowuje wszystkie misje i bohaterów |
-| `?platform=poki` / `?platform=crazygames` | ładuje SDK danego portalu |
-| `?debug=1` | tryb debug (SDK Poki w trybie debug, `window.__bb` z dostępem do stanu gry) |
+| `?level=5` | start straight in mission 5 |
+| `?unlockall=1` | unlocks all missions and heroes |
+| `?platform=poki` / `?platform=crazygames` | loads that portal's SDK |
+| `?debug=1` | debug mode (Poki SDK in debug mode, `window.__bb` exposes the game state) |
 
-## Sterowanie
+## Controls
 
-| Akcja | 1 gracz | Co-op P1 | Co-op P2 | Pad |
+| Action | 1 player | Co-op P1 | Co-op P2 | Gamepad |
 |---|---|---|---|---|
-| Ruch | WASD / strzałki | WASD | strzałki | gałka / krzyżak |
-| Skok (przytrzymanie = lot Skyhawka) | W / ↑ / Spacja / Z | W / Spacja | ↑ / Numpad 0 | A |
-| Strzał | J / X | F | K / Numpad 1 | X / RT |
-| Specjal (najpierw złota skrzynia) | K / C | G | L / Numpad 2 | B / LT |
-| Nóż / kopnięcie (beczki, ciała, odbijanie granatów) | L / V | H | ; / Numpad 3 | Y |
-| Ślizg pod kulami (w biegu) | S / ↓ | S | ↓ | gałka w dół |
-| Złap żołnierza (przytrzymaj nóż), rzuć (nóż / strzał) | L / V | H | ; | Y |
-| Mech: wsiądź (przy mechu) / wysiądź (przytrzymaj) | ↑ / ↓ | W / S | ↑ / ↓ | gałka |
-| Pauza | Esc / P | | | Start |
+| Move | WASD / arrows | WASD | arrows | stick / D-pad |
+| Jump (hold = Skyhawk's flight) | W / ↑ / Space / Z | W / Space | ↑ / Numpad 0 | A |
+| Shoot | J / X | F | K / Numpad 1 | X / RT |
+| Special (golden crate first) | K / C | G | L / Numpad 2 | B / LT |
+| Knife / kick (barrels, bodies, deflecting grenades) | L / V | H | ; / Numpad 3 | Y |
+| Slide under bullets (while running) | S / ↓ | S | ↓ | stick down |
+| Grab a soldier (hold knife), throw (knife / shoot) | L / V | H | ; | Y |
+| Mech: get in (next to the mech) / get out (hold) | ↑ / ↓ | W / S | ↑ / ↓ | stick |
+| Pause | Esc / P | | | Start |
 
-Na ekranach dotykowych pojawia się wirtualny joystick oraz przyciski FIRE, JUMP, SPEC i KNIFE (dotknięcie = nóż / kopnięcie, przytrzymanie = złapanie żołnierza, kolejne dotknięcie = rzut). Strzał z bliska też działa jak nóż. Ślizg to joystick w dół w biegu. W co-op pierwszy podłączony pad steruje graczem 2.
+On touch screens a virtual joystick appears along with FIRE, JUMP, SPEC and KNIFE buttons (tap = knife / kick, hold = grab a soldier, tap again = throw). Shooting at point-blank range also works as a knife. To slide, push the joystick down while running. In co-op, the first connected gamepad controls player 2.
 
-Klawisze (układ 1 gracza) można zmienić w **OPTIONS → KEYBOARD CONTROLS**; tablice samouczka i klawisze nad bohaterem pokazują aktualne przypisania.
+Keys (single-player layout) can be rebound in **OPTIONS → KEYBOARD CONTROLS**; the tutorial signs and the keys above the hero show the current bindings.
 
-### Opcje i dostępność (OPTIONS w menu i w pauzie)
+### Options and accessibility (OPTIONS in the menu and in pause)
 
-| Opcja | Wartości | Co robi |
+| Option | Values | What it does |
 |---|---|---|
-| SOUND EFFECTS / MUSIC | ON / OFF | dźwięk i muzyka |
-| SCREEN SHAKE | OFF / LOW / FULL | wstrząsy kamery |
-| EFFECTS | AUTO / FULL / LITE | jakość efektów; AUTO samo przechodzi na LITE, gdy urządzenie nie wyrabia |
-| BLOOD | ON / OFF | krew i rozrywanie ciał; w paczce CrazyGames domyślnie OFF (PEGI 12): trafienie daje obłoczek pyłu, a wybuch wyrzuca ciało w powietrze zamiast je rozrywać; w wersji web domyślnie ON. W paczce Poki tej opcji nie ma, a krwi nie ma nigdy (zasady treści Poki) |
-| FLASHING | NORMAL / REDUCED | REDUCED: bez błysków całego ekranu i promieni, mniejsze i żółte zamiast białych błyski wybuchów, przy trafieniu tylko miękka czerwona ramka |
-| AIM ASSIST | OFF / NORMAL / HIGH | siła wspomagania celowania do wrogów wyżej/niżej (na dotyku domyślnie HIGH) |
-| AUTO FIRE | ON / OFF | bohater sam strzela, gdy wróg jest na linii strzału w zasięgu broni (na dotyku domyślnie ON) |
-| VIBRATION | ON / OFF | tylko na telefonach: trafienie, śmierć, bliski wybuch, zniszczony boss |
-| KEYBOARD CONTROLS | — | zmiana klawiszy: nowy klawisz staje się główny, poprzedni zapasowym; RESET TO DEFAULT (na telefonie tej pozycji nie ma) |
+| SOUND EFFECTS / MUSIC | ON / OFF | sound and music |
+| SCREEN SHAKE | OFF / LOW / FULL | camera shake |
+| EFFECTS | AUTO / FULL / LITE | effects quality; AUTO drops to LITE on its own when the device can't keep up |
+| BLOOD | ON / OFF | blood and gibs; OFF by default in the CrazyGames build (PEGI 12): a hit gives a puff of dust, and an explosion throws the body into the air instead of blowing it apart; ON by default in the web build. The Poki build has no such option and never shows blood (Poki content rules) |
+| FLASHING | NORMAL / REDUCED | REDUCED: no full-screen flashes or light rays, smaller yellow explosion flashes instead of white ones, and only a soft red frame when hit |
+| AIM ASSIST | OFF / NORMAL / HIGH | how strongly aim is assisted toward enemies above/below (HIGH by default on touch) |
+| AUTO FIRE | ON / OFF | the hero fires on their own when an enemy is in the line of fire and within weapon range (ON by default on touch) |
+| VIBRATION | ON / OFF | phones only: getting hit, death, a nearby explosion, a destroyed boss |
+| KEYBOARD CONTROLS | — | key rebinding: the new key becomes the primary one, the previous one the backup; RESET TO DEFAULT (not shown on phones) |
 
-Menu: nowy gracz nie widzi ekranu tytułowego — gra startuje od razu w misji 1, z logo nad zrzutem ze śmigłowca. Powracający gracz widzi ekran tytułowy, pod którym gra prawdziwa misja (demo bez dźwięku i bez zapisu). Główny przycisk (▶ CONTINUE) uruchamia następną nieukończoną misję, jeden rząd niżej prowadzi do misji, Arcade, misji dnia, bohaterów, ulepszeń i co-op. W prawym górnym rogu są głośnik (cały dźwięk; efekty i muzyka osobno w opcjach), opcje i skrzynia dostawy. Każda z trzech gwiazdek misji ma własny warunek (ukończenie, wszyscy jeńcy, bez straty bohatera) i zostaje zdobyta na stałe, także jeśli warunki spełnia się w różnych podejściach; karta misji na ekranie wyboru i pauza pokazują, których jeszcze brakuje.
+Menu: a new player never sees the title screen — the game starts straight in mission 1, with the logo over the helicopter drop. A returning player sees the title screen with a real mission playing underneath (a demo with no sound and no saving). The main button (▶ CONTINUE) starts the next unfinished mission; one row below leads to missions, Arcade, the daily mission, heroes, upgrades and co-op. The top-right corner holds the speaker (all sound; effects and music separately in the options), options and the supply drop crate. Each of a mission's three stars has its own condition (completion, all prisoners, no hero lost) and is earned for good, even if the conditions are met across different attempts; the mission card on the select screen and the pause menu show which ones are still missing.
 
-Zdarzenia trwają na tyle długo, żeby dało się je zrozumieć (zasady i liczby: [docs/GDD.md, 5.7](docs/GDD.md)):
-- pociski bohatera lecą wolniej niż „prawdziwe”, ale dalej, i zostawiają świecącą smugę;
-- trafiony wróg na moment błyska na biało i odlatuje łukiem; ciała, gruz i spadające klocki mają wspólną, łagodniejszą „filmową” grawitację (bohater i żołnierze — zwykłą, więc sterowanie się nie zmienia);
-- konstrukcja bez podparcia przez chwilę trzeszczy, pęka i sypie pyłem, zanim runie (można z niej zeskoczyć), a most przed zerwaniem ugina się i trzeszczy;
-- beczki w reakcji łańcuchowej wylatują w powietrze i wybuchają po kolei;
-- po śmierci bohatera czas zwalnia, kamera zostaje na miejscu, a nad ciałem widać, co go zabiło (np. SHOT BY A SNIPER);
-- postacie pokazują ciałem, co zaraz zrobią i co się stało (zasady i czasy: [docs/GDD.md, 5.14](docs/GDD.md)): żołnierz podskakuje na „!”, celuje z postawy i przeładowuje po serii, granatnik wyciąga zawleczkę i bierze zamach, moździerzysta wkłada pocisk do lufy i zatyka uszy, pies przysiada przed skokiem. Pozy bohatera nigdy nie opóźniają sterowania.
+Events last long enough to be readable (rules and numbers: [docs/GDD.md, 5.7](docs/GDD.md)):
+- the hero's bullets fly slower than "real" ones, but farther, and leave a glowing trail;
+- a hit enemy flashes white for a moment and flies off in an arc; bodies, debris and falling blocks share a gentler, "cinematic" gravity (the hero and soldiers use normal gravity, so the controls don't change);
+- an unsupported structure creaks, cracks and sheds dust for a moment before it collapses (you can jump off it), and a bridge sags and creaks before it snaps;
+- barrels in a chain reaction get launched into the air and explode one after another;
+- when the hero dies, time slows down, the camera stays put, and the cause of death appears above the body (e.g. SHOT BY A SNIPER);
+- characters show with their body what they are about to do and what just happened (rules and timings: [docs/GDD.md, 5.14](docs/GDD.md)): a soldier hops at the "!", aims from a stance and reloads after a burst, the grenadier pulls the pin and winds up, the mortar man drops a shell down the tube and covers his ears, the dog crouches before leaping. Hero poses never delay the controls.
 
-Wrogowie giną od wskoczenia im na głowę. Skok ze ślizgu leci dalej, a własny wybuch pod nogami podrzuca bohatera. Bohater ma 3 / 2 / 1 punkty życia na poziomach Recruit / Soldier / Veteran. Przed każdą serią wróg celuje, co widać jako czerwoną linię.
+Enemies die when you jump on their heads. A jump out of a slide goes farther, and your own explosion underfoot launches the hero upward. The hero has 3 / 2 / 1 hit points on Recruit / Soldier / Veteran. Before every burst an enemy takes aim, shown as a red line.
 
-## Panel strojenia (F2)
+## Tuning panel (F2)
 
-W wersji lokalnej, webowej i w artefakcie klawisz **F2** (albo `~`) otwiera panel strojenia. W paczkach na Poki i CrazyGames panelu nie ma. Panel zawiera 57 suwaków w sześciu grupach:
-- ruch: bieg, skok, grawitacja, coyote time, ślizg…;
-- strzelanie: zasięg, prędkość pocisków, obszar trafienia, wspomaganie celowania, wybuchy, stop-klatka przy zabójstwie…;
-- kamera: nowa / stara kamera, wyprzedzenie, opóźnienia, patrzenie w dół przy spadaniu, wstrząsy, odrzut…;
-- wrogowie i trafienia: HP bohatera, nietykalność, czas reakcji i celowania wroga…;
-- postacie: nowe / stare animacje, długość póz, podskok wroga na „!”, zamach granatnika, pocisk do lufy moździerza, przewracanie falą, radość wrogów, wiercenie się w bezruchu, zapowiedzi ataków bossów;
-- gra: długość wybuchów i dymu, trzeszczenie terenu przed zawaleniem, grawitacja rzeczy (ciała, gruz, klocki), zwolnienie przy śmierci bohatera, prędkość gry.
+In the local build, the web build and the artifact, **F2** (or `~`) opens the tuning panel. The Poki and CrazyGames builds don't include it. The panel has 57 sliders in six groups:
+- movement: running, jumping, gravity, coyote time, sliding…;
+- shooting: range, bullet speed, hitbox size, aim assist, explosions, hit-stop on kills…;
+- camera: new / old camera, look-ahead, lag, looking down while falling, shake, recoil…;
+- enemies and hits: hero HP, invulnerability, enemy reaction and aiming time…;
+- characters: new / old animations, pose length, enemy hop at the "!", grenadier wind-up, mortar shell loading, shockwave knockdown, enemy cheering, idle fidgeting, boss attack warnings;
+- game: explosion and smoke duration, terrain creaking before a collapse, object gravity (bodies, debris, blocks), slow motion on hero death, game speed.
 
-Obsługa:
-- zmiany działają od razu w trwającej misji i zapisują się w przeglądarce;
-- dwuklik na suwaku przywraca wartość domyślną;
-- **Kopiuj** kopiuje zmienione wartości jako JSON — wklej je w czacie albo wpisz jako `def` w `TUNE_DEFS` (`src/core.js`), żeby trafiły do gry na stałe;
-- **Reset** przywraca wszystkie wartości domyślne.
+Usage:
+- changes apply immediately in the running mission and are saved in the browser;
+- double-click a slider to restore its default value;
+- **Copy** copies the changed values as JSON — paste them into a chat or enter them as `def` in `TUNE_DEFS` (`src/core.js`) to make them permanent in the game;
+- **Reset** restores all default values.
 
-## Testy z nowymi graczami (F3)
+## Testing with new players (F3)
 
-W tych samych wersjach (lokalnej, webowej i w artefakcie) gra zapisuje przebieg sesji na potrzeby playtestu: zgony z przyczyną i sprawcą, utknięcia, bezczynność, pierwsze użycie każdego klawisza i mechaniki, wyniki misji i kliknięcia w menu.
+In the same builds (local, web and artifact), the game records the session for playtesting: deaths with cause and killer, getting stuck, idle time, the first use of every key and mechanic, mission results and menu clicks.
 
-- **F3** otwiera panel „Raport z testu”. Na telefonie: pięć szybkich stuknięć w numer wersji na ekranie tytułowym.
-- **Nowy tester** archiwizuje bieżący log, czyści postęp gry (jak przy pierwszym uruchomieniu) i odkłada Twój zapis na bok.
-- **Przywróć mój zapis** kończy testy i przywraca Twój postęp.
-- **Kopiuj** / **Kopiuj wszystkie** kopiuje raport (czytelny tekst + dane JSON) do wklejenia w czacie.
-- Dane zostają w przeglądarce, nic nie jest wysyłane.
+- **F3** opens the "Playtest report" panel. On a phone: tap the version number on the title screen five times quickly.
+- **New tester** archives the current log, wipes game progress (as on a first launch) and sets your save aside.
+- **Restore my save** ends testing and brings your progress back.
+- **Copy** / **Copy all** copies the report (readable text + JSON data) for pasting into a chat.
+- The data stays in the browser; nothing is sent anywhere.
 
-Jak przeprowadzić sesję, co obserwować i o co pytać: [docs/PLAYTEST.md](docs/PLAYTEST.md).
+How to run a session, what to watch for and what to ask: [docs/PLAYTEST.md](docs/PLAYTEST.md).
 
-## Budowanie paczek dla portali
+## Building the portal packages
 
-Wymaga Node.js (minifikacja przez `npx terser`, pobierany automatycznie).
+Requires Node.js (minification via `npx terser`, downloaded automatically).
 
 ```bash
 node tools/build.mjs
 ```
 
-Wynik w `dist/`:
+Output in `dist/`:
 
-| Plik | Do czego |
+| File | Purpose |
 |---|---|
-| `blast-battalion-crazygames.zip` | upload w CrazyGames Developer Portal (SDK v3 wpięte) |
-| `blast-battalion-poki.zip` | upload w Poki for Developers (SDK v2 wpięte) |
-| `blast-battalion-web.zip`, `web/index.html` | wersja bez SDK (itch.io, własna strona, testy) |
-| `artifact/blast-battalion.html` | cała gra w jednym pliku HTML |
+| `blast-battalion-crazygames.zip` | upload to the CrazyGames Developer Portal (SDK v3 integrated) |
+| `blast-battalion-poki.zip` | upload to Poki for Developers (SDK v2 integrated) |
+| `blast-battalion-web.zip`, `web/index.html` | build without an SDK (itch.io, your own site, testing) |
+| `artifact/blast-battalion.html` | the whole game in a single HTML file |
 
-Materiały do stron gry na portalach są w `marketing/`:
-- okładki 1920×1080, 800×1200 i 800×800 (tylko tytuł, zgodnie z zasadami CrazyGames);
-- wideo podglądu 18 s w poziomie (1920×1080) i w pionie (1080×1620).
+Assets for the portals' game pages are in `marketing/`:
+- covers at 1920×1080, 800×1200 and 800×800 (title only, per CrazyGames rules);
+- an 18 s preview video in landscape (1920×1080) and portrait (1080×1620).
 
-Jak je wygenerować ponownie, opisuje [docs/RELEASE.md](docs/RELEASE.md).
+How to regenerate them is described in [docs/RELEASE.md](docs/RELEASE.md).
 
-## Publikacja — krok po kroku
+## Publishing — step by step
 
-Pełna lista kontrolna (test regresji, przegląd ekranów, wymagania portali): [docs/RELEASE.md](docs/RELEASE.md). W skrócie:
+The full checklist (regression test, screen review, portal requirements): [docs/RELEASE.md](docs/RELEASE.md). In short:
 
 1. `node tools/build.mjs`
 2. **CrazyGames**:
-   - wejdź na developer.crazygames.com → nowa gra → HTML5;
-   - wgraj `blast-battalion-crazygames.zip`;
-   - dodaj okładki i wideo z `marketing/`;
-   - włącz przełącznik **Progress Save** (bez niego zapis w chmurze przez moduł Data nie działa);
-   - przetestuj w podglądzie, gdzie reklamy są symulowane.
+   - go to developer.crazygames.com → new game → HTML5;
+   - upload `blast-battalion-crazygames.zip`;
+   - add the covers and videos from `marketing/`;
+   - turn on the **Progress Save** toggle (without it, cloud saving through the Data module doesn't work);
+   - test in the preview, where ads are simulated.
 
-   Gra startuje w „Basic Launch”, a do „Full Launch” przechodzi po dobrych metrykach.
+   The game starts in "Basic Launch" and moves to "Full Launch" after good metrics.
 3. **Poki**:
-   - wejdź na developers.poki.com → zgłoszenie gry;
-   - wgraj `blast-battalion-poki.zip` i sprawdź go w Poki Inspector.
+   - go to developers.poki.com → submit a game;
+   - upload `blast-battalion-poki.zip` and check it in Poki Inspector.
 
-   Integrację SDK lokalnie sprawdzisz, dodając `?debug=1`.
-4. Podbij `VERSION` w `src/core.js` przy każdej aktualizacji.
+   You can check the SDK integration locally by adding `?debug=1`.
+4. Bump `VERSION` in `src/core.js` with every update.
 
-## Gdzie co zmieniać
+## Where to change what
 
-| Chcę zmienić… | Plik |
+| I want to change… | File |
 |---|---|
-| nazwę gry | `GAME_TITLE` w `src/core.js`, `<title>` w `index.html`, logo w `Logo` (`src/ui.js`, litery w `LOGO_GLYPHS`) |
-| listę misji, cele (`goal`), trudność, pule wrogów | `LEVELS` w `src/levels.js` |
-| misje Arcade | `arcadeDef()` w `src/levels.js` |
-| poziomy trudności | `DIFFICULTY` w `src/levels.js` |
-| budowle (prefabrykaty ASCII) | `PREFABS` w `src/levels.js` |
-| bohaterów i progi odblokowania | `HEROES` w `src/heroes.js`, wygląd w `LOOKS` (`src/sprites.js`) |
-| pozy postaci i ich czasy | pozy w `POSES` (`src/sprites.js`); która poza kiedy: `animFrame()` w `src/heroes.js` i `src/enemies.js`; czasy w grupie POSTACIE panelu F2 (`TUNE_DEFS` w `src/core.js`) |
-| ceny i działanie ulepszeń, nagrody pieniężne, codzienną dostawę | `UPGRADES`, `DAILY_DROP` i `Meta` w `src/meta.js` |
-| karty ulepszeń Arcade i reguły dnia (i co robią) | `PERKS`, `DAILY_RULES` w `src/mods.js` (efekty czytane przez `World.mods`) |
-| kwestie bohaterów, okrzyki żołnierzy, radio Generała Grimma | `src/chatter.js` |
-| przedmioty ze złotych skrzyń | `POCKET_ITEMS` i `usePocket()` w `src/heroes.js` |
-| statystyki wrogów | `ENEMY_DEFS` w `src/enemies.js` |
-| pułapki, syreny, składy paliwa | `Alarm`, `Mine`, `Spikes`, `Depot` w `src/entities.js` |
-| paliwo (wycieki, kałuże, ogień) i mosty linowe | `src/hazards.js` (stałe w `FUEL`) |
-| ciężarówki z desantem, nalot oficera, karta INTEL przy pierwszym spotkaniu wroga | `src/army.js` (`ENEMY_INTRO`) |
-| HUD: nieśmiertelnik, trasa misji, wynik, Grimm, TIP, INTEL, klawisze nad bohaterem | `src/hud.js` |
-| wygląd menu: płyty, przyciski, plakietki, medale, ikony | `src/uikit.js` |
-| tłumaczenia | zwroty w `src/lang_*.js` (klucz to angielski napis z gry); zdania z liczbami i nazwami: reguły `L10N_RULES` w `src/lang.js` i ich wzory w `rules` każdego języka; po zmianie uruchom `python tools/check_lang.py` |
-| nowy język | nowy plik `src/lang_xx.js` (jak `lang_es.js`), wpis w `LANGS` (`src/lang.js`) i w `index.html`; brakujące litery dopisz do czcionki (`ACCENTED` w `src/gfx.js`) |
-| tabliczki samouczka (piktogramy z klawiszami) | `signParts()` w `src/entities.js` |
-| zasady celów misji, ścianę detonacji, finał | `src/world.js` (`objectiveText`, `updateDoom`, `updateFinale`) |
-| bossów | `src/bosses.js` |
-| reklamy / SDK | `src/platform.js` |
-| muzykę | `SONGS` w `src/audio.js` (nuty zapisane tekstem) |
+| the game's name | `GAME_TITLE` in `src/core.js`, `<title>` in `index.html`, the logo in `Logo` (`src/ui.js`, letters in `LOGO_GLYPHS`) |
+| the mission list, objectives (`goal`), difficulty, enemy pools | `LEVELS` in `src/levels.js` |
+| Arcade missions | `arcadeDef()` in `src/levels.js` |
+| difficulty levels | `DIFFICULTY` in `src/levels.js` |
+| structures (ASCII prefabs) | `PREFABS` in `src/levels.js` |
+| heroes and unlock thresholds | `HEROES` in `src/heroes.js`, looks in `LOOKS` (`src/sprites.js`) |
+| character poses and their timings | poses in `POSES` (`src/sprites.js`); which pose when: `animFrame()` in `src/heroes.js` and `src/enemies.js`; timings in the CHARACTERS group of the F2 panel (`TUNE_DEFS` in `src/core.js`) |
+| upgrade prices and effects, money rewards, the daily supply drop | `UPGRADES`, `DAILY_DROP` and `Meta` in `src/meta.js` |
+| Arcade upgrade cards and daily rules (and what they do) | `PERKS`, `DAILY_RULES` in `src/mods.js` (effects read through `World.mods`) |
+| hero one-liners, soldier shouts, General Grimm's radio | `src/chatter.js` |
+| golden crate items | `POCKET_ITEMS` and `usePocket()` in `src/heroes.js` |
+| enemy stats | `ENEMY_DEFS` in `src/enemies.js` |
+| traps, sirens, fuel depots | `Alarm`, `Mine`, `Spikes`, `Depot` in `src/entities.js` |
+| fuel (leaks, puddles, fire) and rope bridges | `src/hazards.js` (constants in `FUEL`) |
+| troop trucks, the officer's airstrike, the INTEL card on first enemy encounter | `src/army.js` (`ENEMY_INTRO`) |
+| HUD: dog tag, mission route, score, Grimm, TIP, INTEL, keys above the hero | `src/hud.js` |
+| menu look: plates, buttons, badges, medals, icons | `src/uikit.js` |
+| translations | phrases in `src/lang_*.js` (the key is the English in-game string); sentences with numbers and names: `L10N_RULES` in `src/lang.js` and their patterns in each language's `rules`; after changes run `python tools/check_lang.py` |
+| a new language | a new `src/lang_xx.js` file (like `lang_es.js`), an entry in `LANGS` (`src/lang.js`) and in `index.html`; add any missing letters to the font (`ACCENTED` in `src/gfx.js`) |
+| tutorial signs (pictograms with keys) | `signParts()` in `src/entities.js` |
+| mission objective rules, the detonation wall, the finale | `src/world.js` (`objectiveText`, `updateDoom`, `updateFinale`) |
+| bosses | `src/bosses.js` |
+| ads / SDK | `src/platform.js` |
+| music | `SONGS` in `src/audio.js` (notes written as text) |
 
-## Testy
+## Testing
 
-`tools/harness.js` to narzędzie testowe, które nie trafia do paczek. Wstrzykuje się je na stronie uruchomionej z `?debug=1` (wersja deweloperska `index.html` z serwera). Udostępnia:
-- `TT.start(n)` — start misji;
-- `TT.step(n)` — ręczne kroki symulacji;
-- `TT.shot(nazwa)` — zrzut canvasu przez serwer deweloperski;
-- `TT.logical(w, h)` i `await TT.screens(tag)` — zrzuty wszystkich menu i nakładek przy zadanym rozmiarze widoku (przegląd układu na nietypowych ekranach);
-- `AUTO(kroki, { god: true })` — prosty bot, który przechodzi misję i loguje zdarzenia;
-- `await REGRESS()` — test regresji: bot przechodzi wszystkie misje i zgłasza wyjątki, NaN, rozrost liczby obiektów i czas klatki. Przed wydaniem musi dać `PASS`;
-- `await HUMANSIM()` i `await HUMANBOSS({ level })` — symulowani nowi gracze (nowicjusz, przeciętny, wprawny) grają kampanię albo jedną misję; wynik (czasy, porażki, przyczyny śmierci) przyjmuje `python tools/funnel.py`, który przelicza go na przewidywaną konwersję, czas sesji i D1. Opis w [docs/METRICS.md](docs/METRICS.md).
+`tools/harness.js` is a test tool that is not included in the packages. It is injected into a page running with `?debug=1` (the development `index.html` served by the dev server). It provides:
+- `TT.start(n)` — start a mission;
+- `TT.step(n)` — step the simulation manually;
+- `TT.shot(name)` — save a canvas screenshot through the dev server;
+- `TT.logical(w, h)` and `await TT.screens(tag)` — screenshots of every menu and overlay at a given viewport size (layout review on unusual screens);
+- `AUTO(steps, { god: true })` — a simple bot that plays through a mission and logs events;
+- `await REGRESS()` — the regression test: a bot plays through every mission and reports exceptions, NaNs, object count growth and frame time. It must return `PASS` before a release;
+- `await HUMANSIM()` and `await HUMANBOSS({ level })` — simulated new players (novice, average, skilled) play the campaign or a single mission; the output (times, failures, causes of death) feeds `python tools/funnel.py`, which turns it into predicted conversion, session length and D1 retention. Details in [docs/METRICS.md](docs/METRICS.md).
 
-Obok są:
-- `tools/posesheet.js` (`await POSESHEET.all()`) — arkusz wszystkich postaci we wszystkich pozach;
-- `tools/animfilm.js` (`await FILM.scene('grunt')`, po `harness.js`) — taśma filmowa sceny: kolejne klatki wokół jednej postaci obok siebie (żołnierz, granatnik, moździerz, snajper, pies, panika, przewrócenie falą, radość wrogów, śmierci, jeńcy, spadochroniarz, bossowie);
-- `tools/keyart.js` (`KEYART_ALL()`) — generuje okładki;
-- `tools/trailer.js` z `tools/mp4mux.js` (`TRAILER.video(...)`) — nagrywa wideo podglądu. Zapisy są powtarzalne dzięki ustalonemu ziarnu losowości, a MP4 koduje przeglądarka (WebCodecs).
+Alongside it:
+- `tools/posesheet.js` (`await POSESHEET.all()`) — a sheet of every character in every pose;
+- `tools/animfilm.js` (`await FILM.scene('grunt')`, after `harness.js`) — a filmstrip of a scene: consecutive frames around one character side by side (soldier, grenadier, mortar man, sniper, dog, panic, shockwave knockdown, enemy cheering, deaths, prisoners, paratrooper, bosses);
+- `tools/keyart.js` (`KEYART_ALL()`) — generates the covers;
+- `tools/trailer.js` with `tools/mp4mux.js` (`TRAILER.video(...)`) — records the preview video. Recordings are reproducible thanks to a fixed random seed, and the browser encodes the MP4 (WebCodecs).
 
-## Struktura
+## Project structure
 
 ```
-index.html        strona gry (wersja deweloperska, ładuje src/*.js)
-src/              kod gry (kolejność ładowania w index.html)
-tools/build.mjs   budowanie paczek + ZIP
-tools/devserver.py serwer deweloperski
-tools/harness.js  narzędzia testowe: bot, przegląd ekranów, test regresji REGRESS(), symulowani gracze HUMANSIM()
-tools/funnel.py   model lejka: przewidywana konwersja, czas sesji i D1 z wyników HUMANSIM()
-tools/check_lang.py sprawdza tłumaczenia: litery w czcionce, te same zwroty we wszystkich językach
-tools/posesheet.js, tools/animfilm.js   podgląd póz i taśmy filmowe animacji postaci (nie trafiają do paczek)
-tools/keyart.js, tools/trailer.js, tools/mp4mux.js   okładki i wideo podglądu (nie trafiają do paczek)
-docs/GDD.md       dokument projektowy
-docs/PLAYTEST.md  instrukcja sesji testowej z nowymi graczami
-docs/METRICS.md   prognoza metryk portali i decyzje z niej
-docs/RELEASE.md   lista kontrolna wydania i wymagania portali
-marketing/        okładki i wideo podglądu dla portali
+index.html        game page (development build, loads src/*.js)
+src/              game code (load order in index.html)
+tools/build.mjs   package build + ZIP
+tools/devserver.py development server
+tools/harness.js  test tools: bot, screen review, REGRESS() regression test, HUMANSIM() simulated players
+tools/funnel.py   funnel model: predicted conversion, session length and D1 from HUMANSIM() results
+tools/check_lang.py checks translations: letters in the font, the same phrases in every language
+tools/posesheet.js, tools/animfilm.js   pose previews and animation filmstrips (not included in the packages)
+tools/keyart.js, tools/trailer.js, tools/mp4mux.js   covers and preview video (not included in the packages)
+docs/GDD.md       game design document
+docs/PLAYTEST.md  guide to running a playtest session with new players
+docs/METRICS.md   portal metrics forecast and the decisions drawn from it
+docs/RELEASE.md   release checklist and portal requirements
+marketing/        covers and preview videos for the portals
 ```

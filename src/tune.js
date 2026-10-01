@@ -64,17 +64,17 @@ const TunePanel = {
 
   copy() {
     const json = JSON.stringify(this.changed(), null, 1);
-    const ok = () => { this.note.textContent = 'Skopiowano zmienione wartości - wklej je w czacie.'; };
+    const ok = () => { this.note.textContent = 'Changed values copied - paste them in the chat.'; };
     const fallback = () => {
       this.text.style.display = 'block'; this.text.value = json; this.text.focus(); this.text.select();
-      this.note.textContent = 'Zaznaczone - skopiuj Ctrl+C.';
+      this.note.textContent = 'Selected - copy with Ctrl+C.';
     };
     try { navigator.clipboard.writeText(json).then(ok, fallback); } catch (e) { fallback(); }
   },
   reset() {
     for (const d of TUNE_DEFS) this.set(d, d.def, true);
     this.save();
-    this.note.textContent = 'Przywrócono wartości domyślne.';
+    this.note.textContent = 'Defaults restored.';
   },
 
   build() {
@@ -105,17 +105,17 @@ const TunePanel = {
     const hd = document.createElement('div');
     hd.className = 'hd';
     const title = document.createElement('b');
-    title.textContent = 'Strojenie gry';
-    const bCopy = document.createElement('button'); bCopy.textContent = 'Kopiuj'; bCopy.title = 'Kopiuj zmienione wartości jako JSON';
-    const bReset = document.createElement('button'); bReset.textContent = 'Reset'; bReset.title = 'Wszystko na wartości domyślne';
-    const bClose = document.createElement('button'); bClose.textContent = '×'; bClose.title = 'Zamknij (F2)';
+    title.textContent = 'Game tuning';
+    const bCopy = document.createElement('button'); bCopy.textContent = 'Copy'; bCopy.title = 'Copy changed values as JSON';
+    const bReset = document.createElement('button'); bReset.textContent = 'Reset'; bReset.title = 'Reset everything to defaults';
+    const bClose = document.createElement('button'); bClose.textContent = '×'; bClose.title = 'Close (F2)';
     bCopy.addEventListener('click', () => this.copy());
     bReset.addEventListener('click', () => this.reset());
     bClose.addEventListener('click', () => this.toggle());
     hd.append(title, bCopy, bReset, bClose);
     this.note = document.createElement('div');
     this.note.className = 'note';
-    this.note.textContent = 'Działa od razu, zapisuje się w tej przeglądarce. Dwuklik na suwaku = domyślna wartość.';
+    this.note.textContent = 'Applies at once and is saved in this browser. Double-click a slider = default value.';
     this.text = document.createElement('textarea');
     this.text.readOnly = true;
     el.append(hd, this.note, this.text);
@@ -133,7 +133,7 @@ const TunePanel = {
       }
       const row = document.createElement('div');
       row.className = 'row';
-      row.title = (d.hint ? d.hint + ' · ' : '') + 'domyślnie ' + this.fmt(d, d.def);
+      row.title = (d.hint ? d.hint + ' · ' : '') + 'default ' + this.fmt(d, d.def);
       const lab = document.createElement('div');
       lab.className = 'lab';
       const name = document.createElement('span');

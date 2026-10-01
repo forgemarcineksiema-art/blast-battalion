@@ -598,7 +598,7 @@ window.TITLEMOCK = {
       await this.seeded(7, async () => this.drawB()); const B = this.grab(); out.push(await this.post('title_B_poster', B));
       await this.seeded(5, async () => this.drawC({ t: 0.3 })); const C = this.grab(); out.push(await this.post('title_C_camp', C));
       await this.seeded(3, () => this.setupFirst(60)); this.drawFirst(); const F = this.grab(); out.push(await this.post('title_first_launch', F));
-      out.push(await this.post('title_sheet', this.sheet([cur, A, B, C], ['TERAZ', 'A  ŻYWA SCENA Z GRY', 'B  PLAKAT FILMU AKCJI', 'C  OBÓZ WOJSKOWY'])));
+      out.push(await this.post('title_sheet', this.sheet([cur, A, B, C], ['NOW', 'A  LIVE GAME SCENE', 'B  ACTION MOVIE POSTER', 'C  MILITARY CAMP'])));
     } finally { FX.quality = q; FX.calm = calm; Save.data = JSON.parse(saved); Save.save(); }
     return out;
   },

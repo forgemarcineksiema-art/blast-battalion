@@ -1,870 +1,870 @@
-# Blast Battalion — dokument projektowy gry (GDD)
+# Blast Battalion — Game Design Document (GDD)
 
-Wersja 1.3 · wrzesień 2026 · platformy docelowe: **CrazyGames**, **Poki** (HTML5, desktop + mobile)
+Version 1.3 · September 2026 · target platforms: **CrazyGames**, **Poki** (HTML5, desktop + mobile)
 
-> Zmiany w 1.1–1.2 wynikają z researchu gatunku run-and-gun. Wersja 1.3 to dopracowanie czucia gry po testach: ruch, strzelanie, uczciwość trafień i nazwane zabójstwa zamiast combo.
+> Changes in 1.1–1.2 come from research into the run-and-gun genre. Version 1.3 polishes game feel after testing: movement, shooting, hit fairness, and named kills instead of combos.
 
 ---
 
-## 1. Gra w skrócie
+## 1. Game at a glance
 
 | | |
 |---|---|
-| **Gatunek** | run-and-gun / platformówka akcji w pixel-arcie, całkowicie zniszczalny teren |
-| **Inspiracja** | klasyczne filmy akcji lat 80. — własna marka, postacie i grafika |
-| **Sesja** | misja 2–4 min, kampania 15 misji (~45–60 min), tryb Arcade bez końca |
-| **Tryby** | kampania, Arcade, misja dnia, lokalny co-op na 2 graczy, 3 poziomy trudności |
-| **Odbiorca** | 10–35 lat, gracze przeglądarkowi szukający szybkiej, „głośnej” akcji bez instalacji |
-| **Sterowanie** | klawiatura, pad, dotyk (wirtualny joystick + 3 przyciski) |
-| **Rozmiar** | kilkaset KB kodu, zero zewnętrznych assetów (grafika i dźwięk generowane kodem) |
+| **Genre** | run-and-gun / pixel-art action platformer with fully destructible terrain |
+| **Inspiration** | classic 80s action movies — original brand, characters and art |
+| **Session** | 2–4 min per mission, 15-mission campaign (~45–60 min), endless Arcade mode |
+| **Modes** | campaign, Arcade, daily mission, local 2-player co-op, 3 difficulty levels |
+| **Audience** | ages 10–35, browser players looking for fast, "loud" action with no install |
+| **Controls** | keyboard, gamepad, touch (virtual joystick + 3 buttons) |
+| **Size** | a few hundred KB of code, zero external assets (art and sound generated in code) |
 
-**Pitch:** Oddział komandosów wyzwala jeńców z baz Generała Grimma. Każdy uwolniony jeniec to **+1 życie i natychmiastowa zamiana na losowego bohatera** z innym uzbrojeniem. Wszystko wybucha, wszystko da się zniszczyć, konstrukcje walą się na wrogów.
+**Pitch:** A commando squad frees prisoners from General Grimm's bases. Every freed prisoner is **+1 life and an instant swap to a random hero** with different weapons. Everything explodes, everything can be destroyed, and structures collapse onto enemies.
 
-**Wyróżniki na portalach:** zniszczalny teren i reakcje łańcuchowe (rzadkie w grach przeglądarkowych), losowa zamiana bohatera jako mechanika „wow” w każdej misji, 12 bohaterów do odblokowania (retencja), różne cele misji (zamach, sabotaż, ucieczka przed detonacją), bossowie, co-op na jednej klawiaturze.
-
----
-
-## 2. Filary designu
-
-1. **Chaos, który się opłaca** — każdy strzał coś niszczy; beczki, ogień i zawalające się wieże zabijają wrogów za gracza.
-2. **Zawsze nowa broń** — ratowanie jeńców wymusza granie ciągle innym bohaterem; gracz nie zdąży się znudzić.
-3. **Kruche, ale uczciwe** — zwykły wróg pada od jednego trafienia, bohater wytrzymuje 1–3 zależnie od trudności (Veteran = klasyczne jedno trafienie). Każda seria wroga jest zapowiedziana czerwoną linią celownika, a muśnięcie krawędzi sylwetki się nie liczy — śmierć ma wynikać z błędu gracza, nie z zaskoczenia.
-4. **Świat jako broń** — „jak zrobię X, stanie się Y”: kopnięta beczka leci i wybucha, kopnięte ciało przewraca kolegów jak kręgle, zrzucony z wieży żołnierz ginie, własny wybuch podrzuca bohatera. Gra nagradza to nazwanymi zabójstwami.
-5. **Wejście w 5 sekund** — brak ekranów ładowania, samouczek to tabliczki w pierwszej misji, sterowanie na 4 przyciski.
+**Selling points on portals:** destructible terrain and chain reactions (rare in browser games), random hero swap as a "wow" mechanic in every mission, 12 unlockable heroes (retention), varied mission objectives (assassination, sabotage, escaping a detonation), bosses, co-op on a single keyboard.
 
 ---
 
-## 3. Pętla rozgrywki
+## 2. Design pillars
+
+1. **Chaos that pays off** — every shot destroys something; barrels, fire and collapsing towers kill enemies for the player.
+2. **Always a new weapon** — rescuing prisoners forces the player to keep switching heroes; there is no time to get bored.
+3. **Fragile but fair** — a regular enemy dies from one hit, the hero takes 1–3 depending on difficulty (Veteran = classic one hit). Every enemy burst is telegraphed by a red aiming line, and grazing the edge of the silhouette does not count — death should come from the player's mistake, not from surprise.
+4. **The world as a weapon** — "if I do X, Y will happen": a kicked barrel flies and explodes, a kicked body knocks over comrades like bowling pins, a soldier knocked off a tower dies, the hero's own explosion launches him up. The game rewards this with named kills.
+5. **In within 5 seconds** — no loading screens, the tutorial is signs in the first mission, controls use 4 buttons.
+
+---
+
+## 3. Gameplay loop
 
 ```mermaid
 flowchart LR
-  A[Zrzut ze śmigłowca] --> B[Walka i niszczenie terenu]
-  B --> C{Klatka z jeńcem}
-  C -->|uwolnienie| D[+1 życie, nowy losowy bohater]
+  A[Helicopter drop] --> B[Combat and terrain destruction]
+  B --> C{Prisoner cage}
+  C -->|release| D[+1 life, new random hero]
   D --> B
-  B --> E[Flaga checkpointu]
+  B --> E[Checkpoint flag]
   E --> B
-  B --> O{Cel misji}
-  O -->|pułkownik / składy / ucieczka| F[Flaga ewakuacji]
-  F --> G[Obrona do przylotu śmigłowca]
-  G --> X[Baza wylatuje w powietrze]
-  X --> H[Wynik, gwiazdki, odblokowania]
-  H -->|reklama między misjami| A
+  B --> O{Mission objective}
+  O -->|colonel / depots / escape| F[Extraction flag]
+  F --> G[Hold out until the helicopter arrives]
+  G --> X[Base blows up]
+  X --> H[Score, stars, unlocks]
+  H -->|ad between missions| A
 ```
 
-**Pętla meta:** łączna liczba uwolnionych jeńców (zapisywana) odblokowuje kolejnych bohaterów → większa pula losowań → gracz wraca, by „dozbierać” resztę i zdobyć 3 gwiazdki w każdej misji.
+**Meta loop:** the total number of freed prisoners (saved) unlocks more heroes → a bigger pool of random swaps → the player comes back to "collect" the rest and earn 3 stars in every mission.
 
 ---
 
-## 4. Sterowanie
+## 4. Controls
 
-| Akcja | Klawiatura | Pad | Dotyk |
+| Action | Keyboard | Gamepad | Touch |
 |---|---|---|---|
-| Ruch | A/D, ←/→ | lewa gałka / krzyżak | joystick (lewa połowa ekranu) |
-| Skok | W, ↑, Spacja, Z | A / LB | JUMP lub joystick w górę |
-| Strzał | J, X | X / RT / RB | FIRE (przytrzymanie = ogień ciągły) |
-| Specjal / złota skrzynia | K, C | B / LT | SPEC |
-| Nóż | L, V (oraz strzał, gdy wróg stoi tuż obok) | Y | KNIFE (albo FIRE przy wrogu) |
-| Lot (SKYHAWK) | przytrzymanie skoku po szczycie skoku | przytrzymanie A | przytrzymanie JUMP |
-| Ślizg (pod kulami) | ↓ / S w biegu | gałka w dół w biegu | joystick w dół w biegu |
-| Deptanie | spadnij wrogowi na głowę (przytrzymany skok = wyższe odbicie) | — | — |
-| Kopnięcie beczki / ciała, odbicie granatu | nóż przy obiekcie | Y | FIRE przy beczce |
-| Złap żołnierza (żywa tarcza) | przytrzymaj nóż przy wrogu; rzut: nóż lub strzał | przytrzymaj Y | przytrzymaj KNIFE; rzut: KNIFE lub FIRE |
-| Wsiądź do mecha / wysiądź | ↑ (albo nóż) przy mechu / przytrzymaj ↓ | gałka w górę / w dół | joystick w górę / w dół |
-| Drabina | ↑/↓ na drabinie | gałka góra/dół | joystick góra/dół |
-| Zejście z platformy | ↓ | gałka w dół | joystick w dół |
-| Pauza | Esc, P | Start | ikona pauzy w rogu |
+| Move | A/D, ←/→ | left stick / D-pad | joystick (left half of the screen) |
+| Jump | W, ↑, Space, Z | A / LB | JUMP or joystick up |
+| Shoot | J, X | X / RT / RB | FIRE (hold = continuous fire) |
+| Special / gold crate | K, C | B / LT | SPEC |
+| Knife | L, V (and shoot when an enemy is right next to you) | Y | KNIFE (or FIRE next to an enemy) |
+| Fly (SKYHAWK) | hold jump after the top of the jump | hold A | hold JUMP |
+| Slide (under bullets) | ↓ / S while running | stick down while running | joystick down while running |
+| Stomp | land on an enemy's head (held jump = higher bounce) | — | — |
+| Kick a barrel / body, deflect a grenade | knife next to the object | Y | FIRE next to a barrel |
+| Grab a soldier (human shield) | hold knife next to an enemy; throw: knife or shoot | hold Y | hold KNIFE; throw: KNIFE or FIRE |
+| Enter / exit the mech | ↑ (or knife) next to the mech / hold ↓ | stick up / down | joystick up / down |
+| Ladder | ↑/↓ on a ladder | stick up/down | joystick up/down |
+| Drop through a platform | ↓ | stick down | joystick down |
+| Pause | Esc, P | Start | pause icon in the corner |
 
-**Co-op:** P1 — WASD + F (strzał) / G (specjal) / H (nóż) + Spacja; P2 — strzałki + K / L / ; (albo Numpad 0–3). Pierwszy podłączony pad steruje graczem 2.
+**Co-op:** P1 — WASD + F (shoot) / G (special) / H (knife) + Space; P2 — arrows + K / L / ; (or Numpad 0–3). The first connected gamepad controls player 2.
 
-Sterowanie dotykowe pojawia się automatycznie po pierwszym dotknięciu; w pionie telefonu pokazuje się plansza „obróć urządzenie”. Dźwięk i muzyka są na ekranie tytułowym; wszystko inne w **OPTIONS** (menu i pauza): wstrząs ekranu, jakość efektów, **mniej błysków**, **wspomaganie celowania OFF/NORMAL/HIGH**, **auto-ogień**, **wibracje** (telefony) i **zmiana klawiszy** (1.11). Na dotyku domyślnie: celowanie HIGH i auto-ogień ON — kciuki mają trudniej niż klawiatura.
+Touch controls appear automatically after the first touch; in phone portrait orientation a "rotate your device" screen is shown. Sound and music are on the title screen; everything else is in **OPTIONS** (menu and pause): screen shake, effects quality, **fewer flashes**, **aim assist OFF/NORMAL/HIGH**, **auto fire**, **vibration** (phones) and **key rebinding** (1.11). On touch the defaults are aim assist HIGH and auto fire ON — thumbs have a harder time than a keyboard.
 
 ---
 
-## 5. Mechaniki
+## 5. Mechanics
 
-### 5.1 Ruch
-- Bieg 102 px/s, szybkie przyspieszanie; **zawracanie z podwójną siłą** (z pyłem spod butów), więc zmiana kierunku jest natychmiastowa.
-- Skok ~3,6 kafla (58 px, 0,7 s w powietrzu), zmienna wysokość: krótkie stuknięcie daje ~25 px (do 1.25 było 18 px, czyli ledwie jeden kafel), 6 klatek przytrzymania ~39 px, pełny skok 58 px. **Zmienna grawitacja**: normalna w górę, krótkie zawiśnięcie na szczycie przy wciśniętym skoku (×0,55), szybsze opadanie (×1,5) — skok jest „ostry”, nie pływający. **Coyote time 100 ms**, **bufor skoku 150 ms**.
-- **Korekta narożników**: gdy skok zahacza o krawędź sufitu (do 5 px), bohater prześlizguje się obok zamiast odbić.
-- **Ślizg**: ↓ w biegu → 0,42 s ślizgu z prędkością ~190 px/s; sylwetka obniżona, więc **kule na wysokości klatki piersiowej przelatują nad głową**. Ślizg przewraca i zabija zwykłych żołnierzy (TACKLED). **Skok ze ślizgu** zachowuje prędkość — o ~30% dalej niż zwykły skok z rozbiegu.
-- **Deptanie**: spadnięcie wrogowi na głowę zabija go i odbija bohatera w górę (z wciśniętym skokiem wyżej — można skakać po głowach).
-- **Skok na wybuchu**: własne eksplozje nie ranią, ale z bliska podrzucają (granat pod nogi, rakieta w ścianę obok → wyższy skok niż normalny).
-- **Squash & stretch**: sylwetka rozciąga się przy wybiciu i spłaszcza przy lądowaniu (proporcjonalnie do prędkości).
-- **Ściany (1.26)** — zasada: nic nie porusza bohaterem, o co gracz nie prosi, a zwrot działa na ścianie tak samo jak na ziemi.
-  - **Skok przy ścianie to zwykły skok** (58 px, z grawitacją). Do 1.25 skok przy ścianie z przytrzymanym kierunkiem wynosił bohatera po ścianie z prędkością skoku i bez grawitacji, na 240 px (4× wyżej niż skok). Nawet samo stuknięcie dawało 200 px. Według gracza „skakanie jest bardzo nieintuicyjne i mylące”.
-  - **Złapanie ściany:** gdy w powietrzu opadasz na ścianę (albo jesteś w szczycie skoku) z przytrzymanym kierunkiem do niej, bohater ją łapie i trzyma się jej, także po puszczeniu klawiszy.
-  - **Na ścianie bohater patrzy tam, gdzie ostatnio wcisnąłeś:**
-    - kierunek do ściany (albo ↑) to spokojna wspinaczka 92 px/s; OGIEŃ kopie wtedy w ścianę;
-    - puszczenie klawiszy: bohater wisi i dalej patrzy tam, gdzie patrzył, więc „stop i strzał w przeszkodę” przekopuje ścianę;
-    - kierunek od ściany odwraca bohatera na ścianie: stopa oparta o ścianę, broń na zewnątrz (poza `cling`). OGIEŃ, specjal i nóż lecą wtedy od ściany, zgodnie z prośbą gracza („przyklejony do ściany i jednocześnie strzelać”);
-    - ↓ zjeżdża (do 130 px/s);
-    - SKOK odbija od ściany w górę i w bok. Działa też przez 0,12 s po puszczeniu ściany;
-    - odejście od ściany: kierunek od ściany przytrzymany ok. 0,25 s bez strzelania, ↓ albo skok.
-  - **W/↑ na ścianie tylko wspina, nie skacze.** Na ziemi W nadal skacze.
-  - **Krawędź na wysokości piersi:** automatyczny przeskok na górę, zarówno w skoku, jak i przy wspinaczce. Pełny skok przeskakuje uskok do 4 kafli, samo stuknięcie do 2 kafli (zmierzone).
-  - **Uderzenie** (trafienie, wybuch) zrzuca bohatera ze ściany. Kamera trzyma się bohatera na ścianie.
-  - **Podpowiedź:** przy dwóch pierwszych złapaniach ściany na żółtym pasku „TIP: WALL: PUSH IN = CLIMB   PUSH AWAY = TURN & SHOOT”. Tabliczka w misji 1 (od 1.27 piktogram, 5.10): „ściana [D] ↑ / [A] TURN + SHOOT”.
-  - **Symulacja (A/B, symulowani gracze, ten sam harness):** pierwszy projekt (bohater zawsze plecami do ściany, wspinaczka tylko na ↑) obniżył przejścia misji 2 z 8 do 3 na 9. Gracze stawali przy przeszkodzie i strzelali, a bohater strzelał wtedy do tyłu. Obecny model daje tyle samo co stary ruch: misja 2 8 na 9 (stary 8 na 9), misja 7 4 na 6 (stary 5 na 12). Bot regresji ukończył 8 z 15 misji, czyli w zwykłym zakresie 6–10.
-  - Całość jest kluczowa dla poruszania się po zniszczonym terenie.
-- Drabiny, platformy jednokierunkowe (mosty, wieże), zeskok przez platformę.
+### 5.1 Movement
+- Run 102 px/s, fast acceleration; **turning around with double force** (with dust from the boots), so changing direction is instant.
+- Jump ~3.6 tiles (58 px, 0.7 s airborne), variable height: a short tap gives ~25 px (until 1.25 it was 18 px, barely one tile), 6 frames of holding ~39 px, full jump 58 px. **Variable gravity**: normal on the way up, a short hang at the apex while jump is held (×0.55), faster falling (×1.5) — the jump is "sharp", not floaty. **Coyote time 100 ms**, **jump buffer 150 ms**.
+- **Corner correction**: when a jump clips the edge of a ceiling (up to 5 px), the hero slips past instead of bouncing off.
+- **Slide**: ↓ while running → a 0.42 s slide at ~190 px/s; the silhouette is lowered, so **chest-height bullets fly over the head**. The slide knocks over and kills regular soldiers (TACKLED). **Jumping out of a slide** keeps the speed — ~30% farther than a normal running jump.
+- **Stomp**: landing on an enemy's head kills him and bounces the hero up (higher with jump held — you can hop across heads).
+- **Explosion jump**: your own explosions do not hurt you, but at close range they launch you (grenade at your feet, rocket into a nearby wall → a higher jump than normal).
+- **Squash & stretch**: the silhouette stretches on take-off and squashes on landing (proportional to speed).
+- **Walls (1.26)** — principle: nothing moves the hero that the player did not ask for, and facing works on a wall the same as on the ground.
+  - **A jump next to a wall is a normal jump** (58 px, with gravity). Until 1.25 a jump next to a wall with the direction held carried the hero up the wall at jump speed and without gravity, for 240 px (4× higher than a jump). Even a tap gave 200 px. In the player's words, "jumping is very unintuitive and confusing".
+  - **Wall grab:** when you fall onto a wall in the air (or are at the top of a jump) with the direction toward it held, the hero grabs it and holds on, even after the keys are released.
+  - **On a wall the hero faces wherever you last pressed:**
+    - direction toward the wall (or ↑) is a steady 92 px/s climb; FIRE then digs into the wall;
+    - releasing the keys: the hero hangs and keeps facing where he was facing, so "stop and shoot the obstacle" digs through the wall;
+    - direction away from the wall turns the hero around on the wall: foot braced against the wall, weapon facing out (pose `cling`). FIRE, special and knife then go away from the wall, as the player asked ("stuck to the wall and shooting at the same time");
+    - ↓ slides down (up to 130 px/s);
+    - JUMP kicks off the wall up and to the side. It also works for 0.12 s after letting go of the wall;
+    - leaving the wall: direction away from the wall held for about 0.25 s without shooting, ↓ or jump.
+  - **W/↑ on a wall only climbs, it does not jump.** On the ground W still jumps.
+  - **Chest-height ledge:** automatic vault onto the top, both while jumping and while climbing. A full jump clears a step of up to 4 tiles, a tap up to 2 tiles (measured).
+  - **A hit** (bullet, explosion) knocks the hero off the wall. The camera stays on the hero while on the wall.
+  - **Hint:** on the first two wall grabs a yellow bar shows "TIP: WALL: PUSH IN = CLIMB   PUSH AWAY = TURN & SHOOT". Sign in mission 1 (from 1.27 a pictogram, 5.10): "wall [D] ↑ / [A] TURN + SHOOT".
+  - **Simulation (A/B, simulated players, same harness):** the first design (hero always with his back to the wall, climbing only on ↑) dropped mission 2 completions from 8 to 3 out of 9. Players stood at an obstacle and fired, and the hero then shot backwards. The current model performs as well as the old movement: mission 2 8 out of 9 (old 8 out of 9), mission 7 4 out of 6 (old 5 out of 12). The regression bot completed 8 of 15 missions, within the usual 6–10 range.
+  - All of this is key to moving through destroyed terrain.
+- Ladders, one-way platforms (bridges, towers), dropping through a platform.
 
-### 5.2 Walka
-- Strzały poziome (bez celowania) — idealne pod mobile.
-- **Punkty życia bohatera zależą od trudności**: Recruit 3, Soldier 2, Veteran 1 (klasyczne „jedno trafienie”). Obrażenia: kula, ugryzienie, uderzenie tarczą, ogień = 1; wybuch = 2 w centrum, 1 na skraju; zmiażdżenie, kolce, ściana detonacji = śmierć. Po trafieniu: odrzut, 1,2 s nietykalności (miganie), czerwony błysk ekranu, stop-klatka, paski HP na portrecie. Skrzynka z amunicją leczy 1 HP, nowy bohater (jeniec) ma pełne HP.
-- **Uczciwe trafienia**: pociski wroga liczą się tylko w rdzeniu sylwetki (2 px od boków, 3 px od góry) — muśnięcie nie zabija. W ślizgu górna granica spada o kolejne 5 px.
-- **Zapowiedziane strzały**: przed serią żołnierz celuje — widać **czerwoną linię celownika** (0,45 s, karabin maszynowy 0,6 s, RPG 0,55 s; Recruit ×1,35, Veteran ×0,75), potem seria leci dokładnie tą linią. Od „!” do pierwszej kuli mija ok. 1,3–1,6 s (Soldier). Wieżyczki i pułkownik celują tak samo.
-- **Celność rośnie z czasem**: pierwsze serie mają duży rozrzut, im dłużej wróg widzi gracza, tym celniej strzela. Pociski wroga są wolniejsze (175/195 px/s + trudność) i wyraźne (grube, z poświatą).
-- **Reakcje wrogów**: trafiony (a nie zabity) wróg przerywa celowanie; kula świszcząca tuż obok płoszy go i czasem psuje mu celowanie (ogień zaporowy).
-- **Czucie strzału**: odrzut kamery w kierunku przeciwnym do strzału (siła zależna od broni), błysk trafienia, krótka stop-klatka przy każdym zabójstwie, smugi pocisków.
-- **Zasięgi broni** (1.3.1, zmierzone): karabin Max Havoc ~510 px, Chrono ~555, Phantom ~490, Brutus i Skyhawk ~460, snajperka 560 (przebija), strzelba ~200 (śrut z rozrzutem), dyski Ricochet ~250 w jedną stronę, Tesla namierza do 220 px (łańcuch 110), miotacz ognia ~110 px, katana 30 px, nóż 20 px. Kamera wyprzedza bohatera o 14% szerokości ekranu, żeby widać było, do czego się strzela.
-- **Spokojna kamera (1.25.1)**, po zgłoszeniu „kamera zbyt agresywnie przeskakuje”:
-  - **wyprzedzenie idzie za kierunkiem biegu, nie za zwrotem:** obrót, żeby strzelić do tyłu, nie rusza kamery (wcześniej krótkie stuknięcie przesuwało ją o 39 px);
-  - **przy prawdziwej zmianie kierunku** (0,25 s biegu w drugą stronę) wyprzedzenie przesuwa się płynnie w 0,9 s. Wcześniej przeskakiwało ok. 130 px w 0,2 s, nawet 9–10 px na klatkę, teraz najwyżej ok. 4 px, wliczając sam bieg;
-  - **w pionie kamera trzyma wysokość ostatniego gruntu:** zwykły skok nie buja obrazem (wcześniej ok. 42 px przy każdym skoku). Kamera podąża za spadkiem poniżej tego gruntu, za wzlotem wyżej niż 64 px (skok na wybuchu, plecak odrzutowy), za wspinaczką i za drabiną;
-  - oba parametry są w panelu strojenia F2: „Kamera: przejście przy zmianie kierunku” i „Kamera: pionowy luz w skoku”. Kule gracza mają obszar trafienia ±2,5 px.
-- **Płynna kamera (1.30):** sprężyna zamiast wygładzania, bez przerzutów po śmierci i przy arenie bossa, patrzenie w dół przy spadaniu, obraz rysowany między krokami fizyki — zob. 5.12.
-- **Lekkie wspomaganie celowania** (1.3.2): jeśli najbliższy widoczny wróg przed bohaterem stoi o poziom wyżej lub niżej (środek sylwetki do 28 px od linii lufy, czyli ok. 1,75 kafla) i poziomy strzał by go ominął, strzał pochyla się w jego stronę, maks. ~18°. Wymaga czystej linii wzroku — nie strzela przez teren; wrogów wyżej niż ~1,75 kafla nadal trzeba „przeskoczyć”. Działa dla karabinów, strzelby (cały snop), miotacza, rakiet Boomera, dysków i snajperki (ukośny promień).
-- **Promienie wybuchów gracza** (1.3.1): granat 42, dynamit 56, rakieta 36, nalot 34 na pocisk, minirakiety 24, ground pound 52, wabik 30, koktajl zapalający — pas ognia 80 px.
-- Własne eksplozje gracza go nie ranią (tylko odrzut).
-- **Łapanie** (1.6): przytrzymanie noża (0,18 s) przy żołnierzu łapie go — krótkie wciśnięcie dalej oznacza dźgnięcie/kopnięcie. Trzymany żołnierz wisi przed bohaterem i **przyjmuje kule z przodu** (4 trafienia, potem ginie jako HUMAN SHIELD). Bohater biega wolniej (×0,85) i nie strzela; nóż albo strzał **rzuca** żołnierzem (THROWN), a lecące ciało przewraca kolejnych (BOWLED OVER). Rzucony bomber leci jak tykająca bomba. Nie da się złapać ciężkich, wieżyczek, bossów ani tarczownika od strony tarczy; po 3,5 s bohater rzuca automatycznie.
-- **Czołg** (1.22): zaparkowany w misjach 8 i 12 (w Arcade od 4. etapu, szansa 30%). Wsiada się i wysiada tak jak do mecha (↑ lub nóż, przytrzymane ↓). Pancerz 60; kule ranią go słabo, wybuchy mocno.
-  - **Jazda:** 62 px/s; nie skacze, ale wjeżdża na stopnie wysokie na kafel.
-  - **Gąsienice:** mielą miękkie ściany (ziemia, piasek, drewno, worki, skrzynie); skała i stal go zatrzymują.
-  - **Taranowanie:** żołnierzy rozjeżdża (CRUSHED), ciężkich obija, beczki pcha przed sobą.
-  - **Strzał (działo):** pocisk po łuku sam namierza najbliższego żołnierza przed czołgiem (do 340 px), a bez celu leci nisko i płasko. Przeładowanie 0,95 s, wybuch 34 px, odrzut cofa czołg, lufa się unosi i cofa.
-  - **Specjal:** seria 12 pocisków z karabinu sprzężonego (co 2,2 s).
-  - **Nóż:** taran — 0,55 s pędu 150 px/s, który miażdży i przebija miękkie ściany dwa razy szybciej (co 1,6 s).
-  - **Dźwięk:** gąsienice terkoczą przy jeździe.
-- **Mech** (1.6): zaparkowany kroczący robot w misjach 7, 11, 13 i 14 (w Arcade od 5. etapu z szansą 40%). ↑ albo nóż przy mechu — wsiadasz; przytrzymanie ↓ przez 0,5 s — wysiadasz (mech zostaje z resztą pancerza). Pancerz 40; kula = 1, wybuch = 5–10, zmiażdżenie = 12, kolce nie szkodzą; pilot nie traci HP. Strzał: ciężki karabin (2 obrażenia, kopie teren), specjal: salwa 3 rakiet (co 2,5 s), nóż: cios niszczący ściany i posyłający ciała w powietrze, twarde lądowanie miażdży wrogów obok. Wchodzi na stopnie wysokie na kafel. Zniszczony wybucha i wyrzuca pilota z 1,5 s nietykalności. Uwolniony jeniec daje pilotowi +1 życie bez zamiany bohatera; przy ewakuacji pilot wysiada sam.
-- Specjale: 2–3 ładunki na bohatera; skrzynki z amunicją odnawiają komplet.
-- **Złote skrzynie**: jeden przedmiot „w kieszeni” (nalot, spowolnienie czasu, rój rakiet, Roid Rage), odpalany przyciskiem SPECIAL przed specjalem bohatera.
-- **Nóż / kopnięcie**: zabija zwykłego żołnierza jednym ciosem i posyła ciało w powietrze — **lecące ciało przewraca i zabija kolejnych żołnierzy (BOWLED OVER, domino)**; rozbija tarcze; krwawe zabójstwo straszy pobliskich wrogów (panika). Kopnięta beczka leci i wybucha przy pierwszym kontakcie (BARREL KICK), kopnięta butla odpala jak rakieta, a nożem można **odbić granat wroga** z powrotem.
-- Wrogowie strzelają **tylko gdy są na ekranie** i dopiero po czasie reakcji (ikona „?”, potem „!”) — uczciwość.
-- Rakiety i pociski wroga można zestrzelić kulą (+50).
+### 5.2 Combat
+- Horizontal shots (no aiming) — ideal for mobile.
+- **Hero hit points depend on difficulty**: Recruit 3, Soldier 2, Veteran 1 (classic "one hit"). Damage: bullet, bite, shield bash, fire = 1; explosion = 2 at the center, 1 at the edge; crushing, spikes, detonation wall = death. After a hit: knockback, 1.2 s of invulnerability (blinking), red screen flash, hit-stop, HP bars on the portrait. An ammo crate heals 1 HP, a new hero (prisoner) has full HP.
+- **Fair hits**: enemy projectiles only count in the core of the silhouette (2 px in from the sides, 3 px from the top) — a graze does not kill. While sliding the top boundary drops by another 5 px.
+- **Telegraphed shots**: before a burst a soldier aims — a **red aiming line** is visible (0.45 s, machine gun 0.6 s, RPG 0.55 s; Recruit ×1.35, Veteran ×0.75), then the burst flies exactly along that line. From the "!" to the first bullet takes about 1.3–1.6 s (Soldier). Turrets and the colonel aim the same way.
+- **Accuracy grows over time**: the first bursts have a large spread; the longer an enemy sees the player, the more accurately he shoots. Enemy projectiles are slower (175/195 px/s + difficulty) and clearly visible (thick, glowing).
+- **Enemy reactions**: an enemy who is hit (but not killed) stops aiming; a bullet whizzing right past him startles him and sometimes spoils his aim (suppressive fire).
+- **Shooting feel**: camera kick opposite to the shot direction (strength depends on the weapon), hit flash, a short hit-stop on every kill, bullet tracers.
+- **Weapon ranges** (1.3.1, measured): Max Havoc's rifle ~510 px, Chrono ~555, Phantom ~490, Brutus and Skyhawk ~460, sniper rifle 560 (piercing), shotgun ~200 (pellets with spread), Ricochet's discs ~250 one way, Tesla locks on up to 220 px (chain 110), flamethrower ~110 px, katana 30 px, knife 20 px. The camera leads the hero by 14% of the screen width so you can see what you are shooting at.
+- **Calm camera (1.25.1)**, after the report "the camera jumps around too aggressively":
+  - **the lead follows the running direction, not facing:** turning around to shoot backwards does not move the camera (previously a short tap moved it by 39 px);
+  - **on a real change of direction** (0.25 s of running the other way) the lead shifts smoothly over 0.9 s. Previously it jumped about 130 px in 0.2 s, up to 9–10 px per frame; now at most about 4 px, including the running itself;
+  - **vertically the camera holds the height of the last ground:** a normal jump does not bob the view (previously about 42 px on every jump). The camera follows a fall below that ground, a rise of more than 64 px (explosion jump, jetpack), climbing and ladders;
+  - both parameters are in the F2 tuning panel: "Turn-around transition" and "Vertical slack in jumps" (CAMERA group). Player bullets have a hit area of ±2.5 px.
+- **Smooth camera (1.30):** a spring instead of smoothing, no jump cuts after death or at the boss arena, looking down while falling, the picture drawn between physics steps — see 5.12.
+- **Light aim assist** (1.3.2): if the nearest visible enemy in front of the hero stands one level higher or lower (silhouette center up to 28 px from the barrel line, about 1.75 tiles) and a horizontal shot would miss him, the shot tilts toward him, max ~18°. Requires a clear line of sight — it does not shoot through terrain; enemies higher than ~1.75 tiles still have to be "jumped up to". Works for rifles, the shotgun (the whole spread), the flamethrower, Boomer's rockets, discs and the sniper rifle (angled beam).
+- **Player explosion radii** (1.3.1): grenade 42, dynamite 56, rocket 36, airstrike 34 per missile, mini-rockets 24, ground pound 52, decoy 30, incendiary cocktail — an 80 px strip of fire.
+- The player's own explosions do not hurt him (knockback only).
+- **Grabbing** (1.6): holding knife (0.18 s) next to a soldier grabs him — a short press still means stab/kick. The held soldier hangs in front of the hero and **takes bullets from the front** (4 hits, then dies as HUMAN SHIELD). The hero runs slower (×0.85) and does not shoot; knife or shoot **throws** the soldier (THROWN), and the flying body knocks over others (BOWLED OVER). A thrown bomber flies like a ticking bomb. You cannot grab heavies, turrets, bosses, or a shield soldier from the shield side; after 3.5 s the hero throws automatically.
+- **Tank** (1.22): parked in missions 8 and 12 (in Arcade from stage 4, 30% chance). Enter and exit like the mech (↑ or knife, hold ↓). Armor 60; bullets barely hurt it, explosions hurt a lot.
+  - **Driving:** 62 px/s; it does not jump but climbs one-tile steps.
+  - **Tracks:** grind through soft walls (dirt, sand, wood, sandbags, crates); rock and steel stop it.
+  - **Ramming:** runs over soldiers (CRUSHED), bumps heavies, pushes barrels ahead of it.
+  - **Shoot (cannon):** an arcing shell auto-targets the nearest soldier in front of the tank (up to 340 px); with no target it flies low and flat. Reload 0.95 s, explosion 34 px, recoil pushes the tank back, the barrel lifts and recoils.
+  - **Special:** a burst of 12 rounds from the coaxial machine gun (every 2.2 s).
+  - **Knife:** ram — 0.55 s of charging at 150 px/s that crushes and breaks through soft walls twice as fast (every 1.6 s).
+  - **Sound:** the tracks rattle while driving.
+- **Mech** (1.6): a parked walking robot in missions 7, 11, 13 and 14 (in Arcade from stage 5 with a 40% chance). ↑ or knife next to the mech — you get in; hold ↓ for 0.5 s — you get out (the mech stays with its remaining armor). Armor 40; bullet = 1, explosion = 5–10, crushing = 12, spikes do no harm; the pilot does not lose HP. Shoot: heavy machine gun (2 damage, digs terrain), special: a volley of 3 rockets (every 2.5 s), knife: a punch that destroys walls and sends bodies flying, a hard landing crushes nearby enemies. Climbs one-tile steps. When destroyed it explodes and ejects the pilot with 1.5 s of invulnerability. A freed prisoner gives the pilot +1 life without swapping heroes; at extraction the pilot gets out automatically.
+- Specials: 2–3 charges per hero; ammo crates refill them all.
+- **Gold crates**: one item "in the pocket" (airstrike, time slowdown, missile swarm, Roid Rage), triggered with the SPECIAL button before the hero's own special.
+- **Knife / kick**: kills a regular soldier in one blow and sends the body flying — **the flying body knocks over and kills other soldiers (BOWLED OVER, domino)**; breaks shields; a bloody kill scares nearby enemies (panic). A kicked barrel flies and explodes on first contact (BARREL KICK), a kicked gas tank launches like a rocket, and the knife can **deflect an enemy grenade** back.
+- Enemies shoot **only when they are on screen** and only after a reaction time (a "?" icon, then "!") — fairness.
+- Enemy rockets and projectiles can be shot down with a bullet (+50).
 
-### 5.3 Zniszczalny teren
-Świat to siatka kafli 16×16 px, każdy ma HP i odporności.
+### 5.3 Destructible terrain
+The world is a grid of 16×16 px tiles, each with HP and resistances.
 
-| Kafel | HP | Uwagi |
+| Tile | HP | Notes |
 |---|---|---|
-| Ziemia | 10 | „kotwica” — nie spada; pociski kopią tunele |
-| Skała | 30 | odporna na kule (×0,45); podłoga aren bossów |
-| Skała macierzysta | ∞ | dno poziomu |
-| Drewno | 9 | palne, konstrukcyjne (może się zawalić) |
-| Cegła/beton | 24 | bunkry, odporna na kule (×0,55) |
-| Stal | 60 | kule ×0,12, eksplozje ×0,55 |
-| Worki z piaskiem | 14 | osłony |
-| Drabina / platforma | 4–6 | palne, przepuszczają pociski |
-| Skrzynia z amunicją | 5 | po zniszczeniu wypada amunicja |
-| Blacha dachowa | 10 | krucha przy upadku |
-| Kamień (ruiny) | 26 | konstrukcyjny |
+| Dirt | 10 | "anchor" — does not fall; projectiles dig tunnels |
+| Rock | 30 | resistant to bullets (×0.45); floor of boss arenas |
+| Bedrock | ∞ | bottom of the level |
+| Wood | 9 | flammable, structural (can collapse) |
+| Brick/concrete | 24 | bunkers, resistant to bullets (×0.55) |
+| Steel | 60 | bullets ×0.12, explosions ×0.55 |
+| Sandbags | 14 | cover |
+| Ladder / platform | 4–6 | flammable, let projectiles through |
+| Ammo crate | 5 | drops ammo when destroyed |
+| Roof sheet metal | 10 | brittle when falling |
+| Stone (ruins) | 26 | structural |
 
-- **Zawalanie**: po zniszczeniu kafla sprawdzane jest, czy konstrukcja (drewno, cegła, stal, kamień…) jest połączona z gruntem. Jeśli nie — cała bryła spada jako bloki, które **miażdżą** wrogów i odpalają beczki. Bloki spadające z wysoka rozpadają się, z niska — osiadają. **Bohatera** blok nie zabija od razu (1.19): kosztuje 1 punkt życia, odrzuca spod zawału i rozpada się mu na hełmie (nie osiada na nim). W symulacji nowych graczy gruz był drugą przyczyną zgonów, także w misji 1, a śmierć od klocka, którego nikt nie widział, wygląda na niesprawiedliwą.
-- **Ogień**: palne kafle płoną kilka sekund, rozprzestrzeniają ogień, podpalają jednostki. Płonący wrogowie biegają w panice i zapalają innych.
-- **Beczki** (eksplodują łańcuchowo, lecą od podmuchu), **butle z gazem** (po trafieniu lecą poziomo jak rakieta, przebijając ziemię i wrogów).
-- **Pułapki**: miny (0,25 s na ucieczkę, ranią wszystkich), kolce na dnie wąwozów pod mostami, **syreny alarmowe** — obserwator z radiem biegnie do syreny, która co kilka sekund zrzuca spadochroniarzy, dopóki jej nie zniszczysz.
-- **Ślady**: krew zostaje na terenie (warstwa decali znikająca razem z kaflem).
-- **Upadek z wysokości** (ponad ~5,5 kafla) zabija wroga (SPLAT) — wystarczy wysadzić podłogę pod wieżą albo zepchnąć go z krawędzi.
+- **Collapse**: when a tile is destroyed the game checks whether the structure (wood, brick, steel, stone…) is still connected to the ground. If not, the whole chunk falls as blocks that **crush** enemies and set off barrels. Blocks falling from high up shatter, from low down they settle. A block does not kill the **hero** outright (1.19): it costs 1 hit point, knocks him out from under the rubble and breaks apart on his helmet (it does not settle on him). In the new-player simulation, debris was the second most common cause of death, even in mission 1, and dying to a block nobody saw looks unfair.
+- **Fire**: flammable tiles burn for a few seconds, spread fire and set units alight. Burning enemies run around in panic and ignite others.
+- **Barrels** (explode in chains, get blown around by blasts), **gas tanks** (when hit they fly horizontally like a rocket, punching through dirt and enemies).
+- **Traps**: mines (0.25 s to get away, hurt everyone), spikes at the bottom of ravines under bridges, **alarm sirens** — a lookout with a radio runs to the siren, which drops paratroopers every few seconds until you destroy it.
+- **Traces**: blood stays on the terrain (a decal layer that disappears together with the tile).
+- **A fall from a height** (over ~5.5 tiles) kills an enemy (SPLAT) — just blow up the floor under a tower or push him off a ledge.
 
-### 5.3.1 Paliwo i mosty linowe (1.8) — „świat jako broń”, część 2
-- **Zielone beczki z paliwem** i **rury z paliwem** (pionowe odcinki z zaworem przy bazach i składach paliwa) **cieką od kul** — kula robi dziurę, nigdy nie zapala paliwa (do 4 dziur, więcej dziur = szybszy wyciek; kula przechodzi na wylot, więc paliwo tryska w obie strony). Kule wroga też je dziurawią. Czerwone beczki dalej wybuchają od kul — to inne role.
-- **Kałuże**: paliwo leży na ziemi (na kaflu), płynie na boki, spływa w dół i przelewa się przez krawędzie (kapie). Grubsza kałuża rozlewa się dalej, cienki ślad zostaje w miejscu. Widać ją jako ciemną, oleistą warstwę z tęczowym połyskiem.
-- **Zapłon**: każdy wybuch, płomień (miotacz Scorcha i wroga, koktajl, pas ognia), palące się drewno, **płonący żołnierz, który przebiegnie przez kałużę**, pochodnia z innej beczki. Ogień biegnie po paliwie (~300 px/s, przeskakuje przerwę jednego kafla), pali się 1–6 s zależnie od ilości, podpala drewno i zostawia osmalony grunt.
-- **Płonące paliwo** to ogień dla wszystkiego, co sprawdza ogień: wrogowie się zapalają (**FLASH FIRE**), beczki wybuchają, składy paliwa płoną, słupki mostów się przepalają. Ogień podpalony przez gracza nie rani gracza (tak jak jego koktajl); ogień od wroga albo „niczyj” rani (1 HP).
-- **Beczka w ogniu**: przebita zamienia się na 1,3 s w pochodnię (płomienie z dziur na boki, ok. 2 kafle), potem wybucha i rozchlapuje resztę paliwa już płonącą. Cała, nieprzebita beczka po 0,6 s grzania wybucha. **Rura** w ogniu pali się jak pochodnia, dopóki ma paliwo (nie wybucha).
-- **Kopnięcie** (nóż) toczy beczkę ~1,5 s; przebita zostawia za sobą ślad paliwa — gotowy lont do podpalenia.
-- **Mosty linowe** nad głębokimi przepaściami (7–8 kafli, bez kolców): deski wiszą między dwoma słupkami. **Zestrzelenie słupka** (4 kule, wybuch od razu, ogień przepala) albo zniszczenie dowolnej deski (wybuch, ogień, twarde lądowanie mecha) — **cały most spada** razem z żołnierzami na nim (**BRIDGE OUT**; spadające deski miażdżą też tych na dole, ale nigdy bohatera). Bohater nie ma obrażeń od upadku; po drugiej stronie przepaści jest drabina. Kule wroga nie niszczą słupków (ich wybuchy tak). Część dolin zostaje ze starym mostem na podporze (czasem nad kolcami).
-- **Nauka**: misja 2 (Mudslide) ma zawsze most linowy z żołnierzami i skład paliwa (2 beczki, rura, strażnicy). Do pierwszego użycia pojawiają się podpowiedzi: „SHOOT THE POST” nad bliższym słupkiem, „SHOOT: LEAK” nad najbliższą beczką/rurą, „FIRE IT UP!” nad cieknącą.
-- **Rozmieszczenie**: skład paliwa jako segment (dżungla rzadziej, pustynia najczęściej), pojedyncze beczki na płaskim terenie i przy beczkach wybuchowych, beczka w parterze kwatery (HQ), rura przy każdym składzie paliwa w misjach sabotażowych (przecieknięta i podpalona pali skład).
+### 5.3.1 Fuel and rope bridges (1.8) — "the world as a weapon", part 2
+- **Green fuel drums** and **fuel pipes** (vertical sections with a valve near bases and fuel depots) **leak when shot** — a bullet makes a hole and never ignites the fuel (up to 4 holes, more holes = faster leak; the bullet goes right through, so fuel spurts out both sides). Enemy bullets puncture them too. Red barrels still explode from bullets — they have a different role.
+- **Puddles**: fuel lies on the ground (on a tile), spreads sideways, flows downhill and spills over edges (drips). A thicker puddle spreads farther, a thin trail stays in place. It shows as a dark, oily layer with a rainbow sheen.
+- **Ignition**: any explosion, flame (Scorch's and enemy flamethrowers, cocktail, fire strip), burning wood, **a burning soldier running through the puddle**, a torch from another drum. Fire runs along the fuel (~300 px/s, jumps a one-tile gap), burns for 1–6 s depending on the amount, ignites wood and leaves scorched ground.
+- **Burning fuel** is fire for everything that checks for fire: enemies catch fire (**FLASH FIRE**), barrels explode, fuel depots burn, bridge posts burn through. Fire lit by the player does not hurt the player (just like his cocktail); fire from an enemy or "nobody's" fire hurts (1 HP).
+- **Drum in fire**: a punctured drum turns into a torch for 1.3 s (flames out of the holes to the sides, about 2 tiles), then explodes and splashes the remaining fuel, already burning. An intact, unpunctured drum explodes after 0.6 s of heating. A **pipe** in fire burns like a torch as long as it has fuel (it does not explode).
+- **Kicking** (knife) rolls a drum for ~1.5 s; a punctured one leaves a fuel trail behind it — a ready-made fuse to light.
+- **Rope bridges** over deep chasms (7–8 tiles, no spikes): planks hang between two posts. **Shooting out a post** (4 bullets, an explosion instantly, fire burns through) or destroying any plank (explosion, fire, a mech's hard landing) — **the whole bridge falls** together with the soldiers on it (**BRIDGE OUT**; falling planks also crush those below, but never the hero). The hero takes no fall damage; there is a ladder on the other side of the chasm. Enemy bullets do not destroy the posts (their explosions do). Some valleys keep the old bridge on a support (sometimes over spikes).
+- **Teaching**: mission 2 (Mudslide) always has a rope bridge with soldiers and a fuel depot (2 drums, a pipe, guards). Until first use, hints appear: "SHOOT THE POST" over the nearer post, "SHOOT: LEAK" over the nearest drum/pipe, "FIRE IT UP!" over a leaking one.
+- **Placement**: a fuel depot as a segment (less often in the jungle, most often in the desert), single drums on flat ground and next to explosive barrels, a drum on the ground floor of the headquarters (HQ), a pipe at every fuel depot in sabotage missions (punctured and ignited, it burns the depot).
 
-### 5.4 Jeńcy, życia, bohaterowie
-- Start: 3 życia (co-op 5; Recruit +2, Veteran −2). Jeniec w klatce: dotknięcie = **+1 życie (max 9) + zamiana na losowego odblokowanego bohatera** (innego niż obecny). Klatkę można też rozbić z daleka — wtedy jeniec czeka, aż do niego podbiegniesz.
-- Jeniec, który odblokowuje nowego bohatera, **od razu go daje** (karta „NEW HERO!”).
-- W co-op uwolnienie jeńca najpierw wskrzesza partnera, który czeka bez żyć.
-- **Ulubiony bohater**: na ekranie HEROES można wybrać bohatera, którym zaczyna się każda misja; zamiany po jeńcach dalej są losowe.
-- Śmierć → nowy losowy bohater zrzucony śmigłowcem na ostatnim checkpoincie.
-- **Podpowiedź po śmierci (1.19)**: pasek z żółtą etykietą TIP (od 1.27 na dole ekranu, nad napisem Grimma; 5.10) mówi, co zrobić następnym razem (np. „SHIELDS STOP BULLETS - KNIFE HIM OR HIT HIS BACK”, „MORTAR SHELLS LAND ON THE RED MARK - STEP OFF IT”). Każda przyczyna najwyżej 2 razy na gracza (`Save.tips`); teksty w `DEATH_TIPS` w `src/world.js`.
-- Brak żyć → ekran porażki: **Kontynuuj za reklamę (+3 życia, raz na podejście)**, powtórz, menu.
-- **Posiłki po porażce (1.19)**: każda przegrana misja kampanii daje w następnej próbie +1 życie (najwyżej +2; licznik `Save.fails` zeruje się po ukończeniu misji). Przycisk mówi to wprost: „RETRY +1 LIFE”, a na starcie misji pojawia się „REINFORCEMENTS: +1 LIFE”. Ściana trudności ma się dać przejść w 2–3 próbach, a nie kończyć sesję.
-- **HUD (1.7)**: serca w panelu bohatera to jego punkty życia (utracone szarzeją, ostatnie pulsuje), hełm „×N” to zapas bohaterów (życia), obok licznik uwolnionych jeńców. Wcześniej serce oznaczało życia, a punkty życia były małymi paskami na portrecie, co łatwo było pomylić. Od 1.27 to wszystko jest na nieśmiertelniku (5.10).
+### 5.4 Prisoners, lives, heroes
+- Start: 3 lives (co-op 5; Recruit +2, Veteran −2). Prisoner in a cage: touch = **+1 life (max 9) + swap to a random unlocked hero** (different from the current one). The cage can also be broken from a distance — then the prisoner waits until you run up to him.
+- A prisoner who unlocks a new hero **gives him to you immediately** (a "NEW HERO!" card).
+- In co-op, freeing a prisoner first revives a partner who is waiting with no lives.
+- **Favorite hero**: on the HEROES screen you can pick the hero every mission starts with; swaps after prisoners are still random.
+- Death → a new random hero dropped by helicopter at the last checkpoint.
+- **Hint after death (1.19)**: a bar with a yellow TIP label (from 1.27 at the bottom of the screen, above Grimm's caption; 5.10) says what to do next time (e.g. "SHIELDS STOP BULLETS - KNIFE HIM OR HIT HIS BACK", "MORTAR SHELLS LAND ON THE RED MARK - STEP OFF IT"). Each cause at most 2 times per player (`Save.tips`); texts in `DEATH_TIPS` in `src/world.js`.
+- Out of lives → defeat screen: **Continue for an ad (+3 lives, once per attempt)**, retry, menu.
+- **Reinforcements after defeat (1.19)**: every lost campaign mission gives +1 life on the next attempt (at most +2; the `Save.fails` counter resets after the mission is completed). The button says it plainly: "RETRY +1 LIFE", and "REINFORCEMENTS: +1 LIFE" appears at the mission start. A difficulty wall should be beatable in 2–3 attempts rather than end the session.
+- **HUD (1.7)**: the hearts in the hero panel are his hit points (lost ones turn grey, the last one pulses), the "×N" helmet is the hero reserve (lives), next to it the freed-prisoner counter. Previously a heart meant lives and hit points were small bars on the portrait, which was easy to confuse. From 1.27 all of this is on the dog tag (5.10).
 
-### 5.5 Cel misji i ewakuacja
-- Checkpointy: flagi wroga podmieniane na własne (nowy punkt odrodzenia).
-- Koniec misji: flaga ewakuacji → fala posiłków wroga → śmigłowiec spuszcza drabinkę → dotknięcie zabiera cały oddział → **baza wylatuje w powietrze** (seria eksplozji, kamera zostaje na miejscu) → podsumowanie.
-- Misje z bossem: arena zamyka kamerę, po zniszczeniu bossa przylatuje śmigłowiec.
-- **Cele specjalne** (flaga ewakuacji działa dopiero po ich wykonaniu; cel widać na trasie misji u góry ekranu — czaszka pułkownika, beczki składów, flaga czerwona, dopóki cel nie jest wykonany (5.10) — a strzałka przy krawędzi ekranu wskazuje kierunek):
-  - **Zamach** — pułkownik (6 HP, pistolet) na piętrze kwatery; strzela z dystansu i ucieka, gdy gracz podejdzie. +2500 pkt.
-  - **Sabotaż** — 3 składy paliwa (16 HP, kule wroga ich nie ranią) wybuchają kulą ognia. +1500 pkt za każdy.
-  - **Ucieczka** — autodestrukcja bazy: ściana detonacji nadciąga od lewej, dogania do ok. ekranu za graczem i zwalnia w ostatnich krokach; po śmierci gracza cofa się za punkt zrzutu. Zatrzymuje się po podniesieniu flagi ewakuacji. Mniej wrogów, brak alarmów.
+### 5.5 Mission objective and extraction
+- Checkpoints: enemy flags swapped for your own (a new respawn point).
+- End of mission: extraction flag → a wave of enemy reinforcements → the helicopter lowers a ladder → touching it takes the whole squad → **the base blows up** (a series of explosions, the camera stays in place) → summary.
+- Boss missions: the arena locks the camera; after the boss is destroyed the helicopter arrives.
+- **Special objectives** (the extraction flag works only after they are done; the objective is shown on the mission route at the top of the screen — the colonel's skull, depot barrels, a red flag until the objective is done (5.10) — and an arrow at the edge of the screen points the way):
+  - **Assassination** — the colonel (6 HP, pistol) on the upper floor of the headquarters; he shoots from a distance and runs away when the player gets close. +2500 pts.
+  - **Sabotage** — 3 fuel depots (16 HP, enemy bullets do not damage them) explode in a fireball. +1500 pts each.
+  - **Escape** — base self-destruct: a detonation wall advances from the left, catches up to about a screen behind the player and slows down over the last stretch; after the player dies it falls back behind the drop point. It stops once the extraction flag is raised. Fewer enemies, no alarms.
 
-### 5.6 Punkty i gwiazdki
-- Zabójstwa 100–600 pkt (wg typu wroga), jeniec 1000, checkpoint 250, boss 10 000. (Mnożnik combo z 1.0–1.2 usunięty — był niewidoczny i niezrozumiały.)
-- **Nazwane zabójstwa** — premia za użycie świata, napis nad wrogiem:
+### 5.6 Score and stars
+- Kills 100–600 pts (by enemy type), prisoner 1000, checkpoint 250, boss 10,000. (The combo multiplier from 1.0–1.2 was removed — it was invisible and confusing.)
+- **Named kills** — a bonus for using the world, with a caption above the enemy:
 
-  | Nazwa | Jak | Premia |
+  | Name | How | Bonus |
   |---|---|---|
-  | CHAIN REACTION | beczka, butla, skład paliwa, mina, wieżyczka | +150 |
-  | CRUSHED | spadające bloki, skrzynie | +150 |
-  | SPLAT | upadek z wysokości | +150 |
-  | FRIENDLY FIRE | wybuch wroga (bomber, granat, rakieta, moździerz) zabija innego wroga | +200 |
-  | BOWLED OVER | wróg trafiony lecącym ciałem | +200 |
-  | BARREL KICK | kopnięta beczka / butla | +200 |
-  | RETURN TO SENDER | odbity pocisk lub granat | +250 |
-  | STOMPED / TACKLED | deptanie / ślizg | +100 |
-  | AIRBORNE | zestrzelenie wroga w powietrzu | +100 |
-  | TOASTED | ogień | +50 |
-  | FLASH FIRE | wróg zapalony płonącym paliwem albo pochodnią z beczki/rury | +150 |
-  | BRIDGE OUT | wróg spadł z zerwanym mostem albo przygniotły go jego deski | +200 |
+  | CHAIN REACTION | barrel, gas tank, fuel depot, mine, turret | +150 |
+  | CRUSHED | falling blocks, crates | +150 |
+  | SPLAT | fall from a height | +150 |
+  | FRIENDLY FIRE | an enemy explosion (bomber, grenade, rocket, mortar) kills another enemy | +200 |
+  | BOWLED OVER | enemy hit by a flying body | +200 |
+  | BARREL KICK | kicked barrel / gas tank | +200 |
+  | RETURN TO SENDER | deflected projectile or grenade | +250 |
+  | STOMPED / TACKLED | stomp / slide | +100 |
+  | AIRBORNE | enemy shot in mid-air | +100 |
+  | TOASTED | fire | +50 |
+  | FLASH FIRE | enemy ignited by burning fuel or a torch from a drum/pipe | +150 |
+  | BRIDGE OUT | enemy fell with a collapsed bridge or was crushed by its planks | +200 |
 
-- **Multi-kill**: kilka zabójstw z jednego zdarzenia (wybuch, przebijający strzał, seria śrutu, domino ciał, łańcuch piorunów) → DOUBLE / TRIPLE / MULTI KILL ×n, premia 50·n·(n−1) (100, 300, 600…).
-- Podsumowanie misji pokazuje liczbę nazwanych zabójstw.
-- Premie końcowe: czas (vs. tempo odniesienia), komplet jeńców +2000, bez straty bohatera +2000.
-- **Gwiazdki**: ★ ukończenie (COMPLETE), ★ wszyscy jeńcy (ALL PRISONERS), ★ bez straty bohatera (NO LOSSES). Od 1.13 każda gwiazdka to osobny medal, który zostaje na stałe: można zdobyć „wszystkich jeńców” w jednym podejściu, a „bez strat” w innym (zapis `Save.data.medals`, maska bitowa 1/2/4). Warunki są pokazane w karcie misji na ekranie wyboru, na żywo w pauzie i przy każdej gwiazdce w podsumowaniu; gwiazdka zdobyta pierwszy raz miga na zielono.
+- **Multi-kill**: several kills from one event (explosion, piercing shot, shotgun blast, body domino, lightning chain) → DOUBLE / TRIPLE / MULTI KILL ×n, bonus 50·n·(n−1) (100, 300, 600…).
+- The mission summary shows the number of named kills.
+- End bonuses: time (vs. a reference pace), all prisoners +2000, no hero lost +2000.
+- **Stars**: ★ completion (COMPLETE), ★ all prisoners (ALL PRISONERS), ★ no hero lost (NO LOSSES). Since 1.13 each star is a separate medal that is kept permanently: you can earn "all prisoners" in one attempt and "no losses" in another (saved in `Save.data.medals`, bitmask 1/2/4). The conditions are shown on the mission card on the selection screen, live in the pause menu and next to each star in the summary; a star earned for the first time flashes green.
 
 ---
 
-### 5.7 Czytelność zdarzeń — język czasu (1.14–1.15)
+### 5.7 Event readability — the language of time (1.14–1.15)
 
-Każde ważne zdarzenie ma trzy fazy: **zapowiedź** (przyczyna widoczna przed skutkiem), **moment** (klatka trzymana na tyle długo, żeby oko ją złapało) i **skutek** (widoczny przez chwilę, potem trwały). Sterowanie bohaterem zostaje natychmiastowe (reakcja < 100 ms): zwalniamy skutki, nie gracza.
+Every important event has three phases: **telegraph** (the cause is visible before the effect), **moment** (a frame held long enough for the eye to catch it) and **aftermath** (visible for a while, then persistent). Hero control stays instant (response < 100 ms): we slow down the consequences, not the player.
 
-Skąd te liczby:
-- zdarzenie krótsze niż ok. 100 ms (6 klatek) łatwo przeoczyć w ferworze gry; czas reakcji człowieka to ok. 250 ms;
-- oko płynnie śledzi ruch do ok. 20–30°/s, szybsze obiekty widać tylko jako smugę;
-- stop-klatka przy trafieniu w grach akcji trwa 50–200 ms i rośnie z siłą ciosu;
-- bohater ma ok. 15 px, więc 1 m to ok. 8,5 px. Grawitacja gry (900 px/s²) to ok. 11 razy więcej niż prawdziwa w tej skali. Dla skoku bohatera to dobrze (tak robi każda platformówka), ale przedmioty spadające tak szybko wyglądają jak zabawki. To ten sam „efekt makiety” co w kinie, gdzie modele kręci się w zwolnionym tempie (czas skaluje się pierwiastkiem ze skali). Dlatego rzeczy — ciała, gruz, klocki, krew, iskry — mają wspólną „filmową” grawitację ×0,6, a żywi (bohater, żołnierze) zwykłą.
+Where the numbers come from:
+- an event shorter than about 100 ms (6 frames) is easy to miss in the heat of play; human reaction time is about 250 ms;
+- the eye smoothly tracks motion up to about 20–30°/s; faster objects are seen only as a streak;
+- hit-stop in action games lasts 50–200 ms and grows with the strength of the blow;
+- the hero is about 15 px tall, so 1 m is about 8.5 px. The game's gravity (900 px/s²) is about 11 times the real one at this scale. For the hero's jump that is fine (every platformer does it), but objects falling that fast look like toys. It is the same "miniature effect" as in cinema, where models are shot in slow motion (time scales with the square root of the scale). That is why objects — bodies, debris, blocks, blood, sparks — share a "cinematic" gravity of ×0.6, while the living (hero, soldiers) use normal gravity.
 
-| Faza | Cel | W grze |
+| Phase | Target | In the game |
 |---|---|---|
-| zapowiedź zagrożenia dla gracza | 0,35–0,7 s (reakcja + ruch) | linia celownika wroga, laser snajpera + 0,35 s namierzania, 0,55 s płomyka miotacza, tykanie kamizelki 1,1 s, dym i znaczniki nalotu |
-| zapowiedź zdarzenia w otoczeniu | 0,3–0,5 s | teren bez podparcia trzeszczy 0,45 s (pęknięcia, drżenie, pył); most ugina się 0,3 s |
-| moment trafienia | 50–100 ms stop-klatki według siły, najwyżej co 0,2 s | zabójstwo kulą 45 ms, nożem ok. 70 ms, duży wybuch 45–70 ms, trafienie bohatera 80 ms |
-| reakcja trafionego | 80–120 ms | biały błysk wroga (0,1 s) i ciała (0,09 s), odrzut |
-| lecący pocisk | ≤ ok. 30°/s albo długa smuga; duży, nie „realistyczny” | kula bohatera 480 px/s (×0,8 przy tym samym zasięgu), 2-pikselowy pocisk ze smugą 18 px i poświatą, błysk w miejscu trafienia |
-| skutek | 0,4–1 s w powietrzu, potem trwałość | lot ciała 0,65–0,8 s na 50–90 px, ciała leżą 9 s, gruz i krew ×0,6 grawitacji |
-| wybuch | błysk 2 klatki, kula ognia 0,5–1 s, dym 2–4 s | ×1,3 dłużej od 1.14; beczki w łańcuchu co 0,22–0,45 s, wylatując w górę |
-| zwolnienie czasu | tylko rzadkie wielkie chwile, 0,4–0,8 s | boss, potrójne zabójstwo (co najwyżej co 6 s), śmierć bohatera: 0,8 s z napisem przyczyny i kamerą na miejscu |
+| telegraph of a threat to the player | 0.35–0.7 s (reaction + movement) | enemy aiming line, sniper laser + 0.35 s lock-on, 0.55 s flamethrower pilot flame, vest ticking 1.1 s, smoke and airstrike markers |
+| telegraph of an environmental event | 0.3–0.5 s | unsupported terrain creaks for 0.45 s (cracks, shaking, dust); a bridge sags for 0.3 s |
+| moment of impact | 50–100 ms of hit-stop by strength, at most every 0.2 s | bullet kill 45 ms, knife about 70 ms, big explosion 45–70 ms, hero hit 80 ms |
+| reaction of the one hit | 80–120 ms | white flash of the enemy (0.1 s) and of the body (0.09 s), knockback |
+| projectile in flight | ≤ about 30°/s or a long tracer; big, not "realistic" | hero bullet 480 px/s (×0.8 at the same range), a 2-pixel projectile with an 18 px tracer and glow, a flash at the point of impact |
+| aftermath | 0.4–1 s in the air, then persistence | body flight 0.65–0.8 s over 50–90 px, bodies lie for 9 s, debris and blood at ×0.6 gravity |
+| explosion | flash 2 frames, fireball 0.5–1 s, smoke 2–4 s | ×1.3 longer since 1.14; barrels in a chain every 0.22–0.45 s, flying upward |
+| slow motion | only rare big moments, 0.4–0.8 s | boss, triple kill (at most every 6 s), hero death: 0.8 s with a cause caption and the camera in place |
 
-Czego nie robimy: nie spowalniamy całej gry, bohatera ani jego broni — gra traci tempo i kontrolę. Nie zwalniamy czasu co chwilę, bo spowolnienie przestaje wtedy działać. Nie przedłużamy nietykalności.
+What we do not do: we do not slow down the whole game, the hero or his weapon — the game loses pace and control. We do not slow time every other moment, because then the slowdown stops working. We do not extend invulnerability.
 
-Wszystkie czasy są w panelu F2 (grupa GRA i STRZELANIE): prędkość pocisków, stop-klatka, długość wybuchów, trzeszczenie przed zawaleniem, grawitacja rzeczy, zwolnienie przy śmierci.
+All the timings are in the F2 panel (groups GAME and SHOOTING): projectile speed, hit-stop, explosion duration, creaking before collapse, object gravity, slowdown on death.
 
-### 5.8 Waga strzału i ślady walki (1.21)
+### 5.8 Weight of shots and traces of battle (1.21)
 
-Zasada: każdy strzał i każdy wybuch zostawia ślad, a każda broń ma własny ciężar. Po walce widać, co się działo.
+Principle: every shot and every explosion leaves a trace, and every weapon has its own weight. After a fight you can see what happened.
 
-- **Ślady:**
-  - kule robią dziury w terenie: w ziemi i kamieniu ciemne z cieniem, w stali jasne rysy, w drewnie drzazgi; znikają razem z kaflem;
-  - łuski wylatują z broni: mosiądz 2 px z karabinów, 1 px z pistoletów i SMG, większe z minigunu, snajperki i mecha. Czerwona łuska strzelby wypada przy przeładowaniu, 0,3 s po strzale. Łuski brzęczą przy pierwszym dotknięciu ziemi (łuska strzelby głucho) i leżą 3,5–5 s;
-  - z lufy unosi się dym;
-  - zniszczone kafle sypią się kawałkami 2–3 px, które zostają na ziemi kilka sekund.
-- **Rykoszety:** kula, która trafi stal, kamień albo cegłę, w 30% przypadków odbija iskrę ze świstem.
-- **Wybuch porządkuje otoczenie:**
-  - podrzuca leżące łuski, gruz i odłamki;
-  - poza zasięgiem obrażeń (do 1,6× promienia) odrzuca żołnierzy (nie ciężkich), przerywa im celowanie i serię, czasem zrzuca ich z krawędzi;
-  - popycha ciała.
-- **Ciężar broni** (mnożnik stop-klatki przy zabójstwie):
+- **Traces:**
+  - bullets make holes in the terrain: dark with a shadow in dirt and stone, bright scratches in steel, splinters in wood; they disappear together with the tile;
+  - casings fly out of weapons: 2 px brass from rifles, 1 px from pistols and SMGs, bigger ones from the minigun, sniper rifle and mech. The red shotgun shell drops out on reload, 0.3 s after the shot. Casings clink on first touching the ground (the shotgun shell with a dull thud) and lie for 3.5–5 s;
+  - smoke rises from the barrel;
+  - destroyed tiles crumble into 2–3 px pieces that stay on the ground for a few seconds.
+- **Ricochets:** a bullet that hits steel, stone or brick bounces off as a whistling spark in 30% of cases.
+- **An explosion rearranges its surroundings:**
+  - it tosses up casings, debris and fragments lying around;
+  - beyond its damage radius (up to 1.6× the radius) it knocks soldiers back (not heavies), interrupts their aiming and bursts, and sometimes knocks them off ledges;
+  - it pushes bodies.
+- **Weapon weight** (hit-stop multiplier on a kill):
 
-  | Broń | Mnożnik | Uwagi |
+  | Weapon | Multiplier | Notes |
   |---|---|---|
-  | minigun | 0,6 | seria nie może się jąkać |
-  | karabin, SMG | 1 | |
-  | strzelba | 1,2 | z bliska (do 52 px) 1,6, a ciało leci przez pół ekranu (siła 280) |
-  | nóż | 1,5 | |
-  | snajperka | 1,8 | siła 240 |
+  | minigun | 0.6 | the burst must not stutter |
+  | rifle, SMG | 1 | |
+  | shotgun | 1.2 | at close range (up to 52 px) 1.6, and the body flies across half the screen (force 280) |
+  | knife | 1.5 | |
+  | sniper rifle | 1.8 | force 240 |
 
-- **Żonglerka:** każda kula podbija trafione ciało (stałe podbicie, bez sumowania). Ciało, które trafisz co najmniej 2 razy w powietrzu, daje AIR JUGGLE ×N (50 pkt × N).
-- **Świst:** kula wroga, która przeleci tuż obok bohatera, świszcze. Słychać, że jesteś pod ostrzałem.
-- **Ruch:**
-  - **twarde lądowanie** po spadku z co najmniej 7 kafli (112 px) daje głuche uderzenie, wstrząs, pierścień kurzu i falę uderzeniową o zasięgu 36–62 px (BRUTUS +12). Fala przewraca i ogłusza żołnierzy (na 0,8 s, ciężkich na 0,45 s) i nigdy nie zabija; podrzuca też ciała i beczki. Za każdego żołnierza SHOCKWAVE +50. Tak kończą się skoki na własnym wybuchu, zejścia jetpackiem i zeskoki z dachów;
-  - **salto:** odbicie od ściany i skok z wślizgu to pełny obrót (0,3 i 0,36 s);
-  - **seria odbić od ścian** podnosi ton skoku i sypie więcej kurzu, od trzeciego odbicia z liniami pędu;
-  - **bieg** sypie kurzem spod butów, w arktyce śniegiem.
-- **Napisy** (punkty, style, przyczyny śmierci) zawsze mieszczą się w kadrze.
+- **Juggling:** every bullet bumps the body it hits (a fixed bump, not cumulative). A body you hit at least 2 times in the air gives AIR JUGGLE ×N (50 pts × N).
+- **Whiz:** an enemy bullet that flies right past the hero whizzes. You can hear that you are under fire.
+- **Movement:**
+  - **a hard landing** after falling at least 7 tiles (112 px) gives a dull thud, a shake, a ring of dust and a shockwave with a range of 36–62 px (BRUTUS +12). The wave knocks down and stuns soldiers (for 0.8 s, heavies for 0.45 s) and never kills; it also tosses bodies and barrels. Each soldier gives SHOCKWAVE +50. This is how explosion jumps, jetpack descents and jumps off roofs end;
+  - **flip:** a wall jump and a jump out of a slide are a full rotation (0.3 and 0.36 s);
+  - **a series of wall jumps** raises the pitch of the jump sound and kicks up more dust, with speed lines from the third bounce;
+  - **running** kicks up dust from the boots, snow in the arctic.
+- **Captions** (points, styles, causes of death) always fit inside the frame.
 
-### 5.8.1 Sekrety (1.23)
+### 5.8.1 Secrets (1.23)
 
-Każda misja kampanii i każdy etap Arcade ma jeden sekret: ukryty skarbiec tuż pod powierzchnią (`placeSecret` w `src/levels.js`).
-- **Budowa:** komora 5×2 kafle obudowana cegłą, a w niej złota skrzynia z przedmiotem specjalnym. Stropem jest pas 5 kafli popękanej ziemi (30% HP, co rysuje się jako mocne pęknięcia). Co kilka sekund z pęknięć unosi się błysk.
-- **Ukrycie:** dopóki ktoś się nie przebije, komora i skrzynia rysują się jak lita ziemia, a krawędzie sąsiednich kafli też jej nie zdradzają (`Terrain.mask`). Zniszczenie stropu, ściany albo podłogi odsłania komorę.
-- **Jak wejść:** skok na popękaną ziemię (lądowanie szybsze niż 200 px/s, czyli właściwie każdy skok, ale nie zwykłe przejście), wybuch albo kopanie z boku.
-- **Nagroda:** „SECRET FOUND!”, +1000 pkt, +50 $ i złota skrzynia. W kampanii znalezisko zapisuje się od razu (`Save.secrets`), nawet jeśli misja potem się nie uda.
-- **Gdzie widać znalezione sekrety:** w podsumowaniu misji („¤ SECRET FOUND”), na przycisku misji (złoty kwadrat) i na karcie misji („¤ SECRET”, złote po znalezieniu).
-- **Położenie:** 20–92% długości misji, na płaskim, naturalnym gruncie (bez budowli, znaków, flag, klatek, składów i wstawionych kafli), nie przy punkcie kontrolnym. Może leżeć nad zwykłą jaskinią, jeśli dzieli je co najmniej rząd ziemi.
+Every campaign mission and every Arcade stage has one secret: a hidden vault just below the surface (`placeSecret` in `src/levels.js`).
+- **Structure:** a 5×2-tile chamber lined with brick, containing a gold crate with a special item. Its ceiling is a strip of 5 tiles of cracked dirt (30% HP, which draws as heavy cracks). Every few seconds a glint rises from the cracks.
+- **Concealment:** until someone breaks through, the chamber and the crate draw like solid dirt, and the edges of neighboring tiles do not give it away either (`Terrain.mask`). Destroying the ceiling, a wall or the floor reveals the chamber.
+- **How to get in:** jumping onto the cracked dirt (landing faster than 200 px/s, i.e. practically any jump, but not just walking over it), an explosion, or digging in from the side.
+- **Reward:** "SECRET FOUND!", +1000 pts, +$50 and a gold crate. In the campaign the find is saved immediately (`Save.secrets`), even if the mission later fails.
+- **Where found secrets are shown:** in the mission summary ("¤ SECRET FOUND"), on the mission button (a gold square) and on the mission card ("¤ SECRET", gold once found).
+- **Location:** 20–92% of the mission length, on flat, natural ground (no buildings, signs, flags, cages, depots or placed tiles), not next to a checkpoint. It can lie above an ordinary cave if at least one row of dirt separates them.
 
-### 5.9 Sceny filmowe (1.22)
+### 5.9 Cinematic scenes (1.22)
 
-- **Przelot z działkiem:** pierwsza misja nowej strefy (misja 6 i misja 11, a w Arcade każdy etap zmieniający strefę) zaczyna się na pokładzie śmigłowca (`src/rail.js`).
-  - **Trasa:** śmigłowiec nadlatuje z prawej nad pierwsze ok. 84 kafle bazy (64 px/s, ok. 20 s). W drzwiach siedzi bohater, który potem wyląduje.
-  - **Sterowanie:** strzałki lub drążek (albo ruch myszy) przesuwają celownik, strzał to minigun w stronę celownika, specjal to rakieta (5 na przelot). Kule kopią w terenie, rakiety mogą zniszczyć skład paliwa albo wieżę już z powietrza.
-  - **Ogień z dołu:** żołnierze na dole strzelają w śmigłowiec, a rakietnicy odpalają rakiety. Trafienia dzwonią o kadłub i trzęsą obrazem („TAKING FIRE!”), ale przelotu nie da się przegrać — to pokaz przed zrzutem.
-  - **Pominięcie:** przytrzymany skok (0,6 s) pomija przelot.
-  - **Lądowanie:** na końcu ten sam śmigłowiec płynnie schodzi do zwykłego zrzutu i pokazuje „LANDING ZONE: N KILLS”.
-  - **Kiedy nie ma przelotu:** przy powtórce po przegranej i w co-op.
-- **Pasy kinowe:** czarne pasy u góry i u dołu ekranu (16 px) pojawiają się przy wejściu bossa (razem z 1,1 s zwolnienia do 45%), przy jego zniszczeniu i przy wybuchu bazy na koniec misji. Przez cały przelot widać węższe pasy (10 px).
+- **Door-gunner flyover:** the first mission of a new zone (mission 6 and mission 11, and in Arcade every stage that changes zone) starts aboard the helicopter (`src/rail.js`).
+  - **Route:** the helicopter flies in from the right over the first ~84 tiles of the base (64 px/s, about 20 s). The hero who will later land sits in the door.
+  - **Controls:** arrows or stick (or mouse movement) move the crosshair, shoot fires the minigun toward the crosshair, special fires a rocket (5 per flyover). Bullets dig into the terrain, rockets can destroy a fuel depot or a tower from the air.
+  - **Fire from below:** soldiers on the ground shoot at the helicopter and rocketeers fire rockets. Hits clang off the hull and shake the view ("TAKING FIRE!"), but the flyover cannot be lost — it is a show before the drop.
+  - **Skip:** holding jump (0.6 s) skips the flyover.
+  - **Landing:** at the end the same helicopter smoothly descends into the normal drop and shows "LANDING ZONE: N KILLS".
+  - **When there is no flyover:** on a retry after a loss and in co-op.
+- **Cinematic bars:** black bars at the top and bottom of the screen (16 px) appear when a boss enters (together with 1.1 s of slowdown to 45%), when it is destroyed and when the base blows up at the end of the mission. Narrower bars (10 px) are visible throughout the flyover.
 
-### 5.10 HUD i samouczek (1.27)
+### 5.10 HUD and tutorial (1.27)
 
-Gracz zgłosił: „HUD wygląda tanio, za dużo tekstu, niejasne ikony, wyskakujące okna przerywają”. HUD przebudowano w kierunku „B — wojskowy”, wybranym z trzech makiet.
+The player reported: "the HUD looks cheap, too much text, unclear icons, pop-ups interrupt". The HUD was rebuilt in the "B — military" direction, chosen from three mockups.
 
-- **Osobna warstwa:** HUD rysuje się na własnym płótnie nad grą, w rozdzielczości ekranu (`src/hud.js`).
-  - Piksel HUD to ok. 2/3 piksela gry, więc napisy są drobniejsze i ostrzejsze niż świat.
-  - Warstwa nie przyjmuje kliknięć, jest czyszczona co klatkę i pusta w menu i pod pauzą.
-- **Nieśmiertelnik** (lewy górny róg, w co-op drugi po prawej): stalowa blaszka na łańcuszku.
-  - Na blaszce: portret we wgłębieniu, wybite imię, serca, specjale z klawiszem, który je rzuca (np. [K]; pad: B; na dotyku bez klawisza), złota skrzynka z przedmiotem.
-  - Na blaszce P1 także hełm ×życia i jeńcy jako klatki (uwolnieni na zielono).
-  - Nowy bohater: blaszka podskakuje, imię błyska złotem, a pod nią na 2 s pojawia się pasek z bronią i specjalem („DEPLOYED / SHOTGUN + DYNAMITE”), nigdy szerszy niż blaszka. Zastępuje dużą kartę bohatera na dole ekranu.
-  - W pojeździe zamiast serc: nazwa pojazdu i pasek pancerza.
-- **Trasa misji** (u góry na środku) zamiast paska postępu: twarz bohatera jedzie po trasie do flagi.
-  - Na trasie są klatki jeńców, składy paliwa, czaszka pułkownika (✓ po likwidacji) i ściana detonacji w ucieczce.
-  - Flaga jest czerwona, dopóki cel misji nie jest wykonany.
-- **Wynik i pauza:** mała szklana tabliczka i ikona w prawym górnym rogu.
-- **Grimm jak napisy w filmie:** ikona radia, „GRIMM” i kwestia pisana na bieżąco, jedna linia (najwyżej dwie) na dole ekranu. Zastępuje zielony ekran z twarzą.
-- **TIP po śmierci:** szklany pasek z żółtą etykietą TIP nad napisem Grimma.
-- **INTEL przy pierwszym spotkaniu wroga (7):** karta pod trasą z twarzą wroga w czerwonej ramce, nazwą i sposobem na niego („SNIPER / MOVE WHEN THE LASER TURNS WHITE”).
-  - Pokazuje się jedna karta naraz i nie w trakcie dużych napisów; następna czeka na swoją kolej.
-  - Wcześniej trzy takie zdania potrafiły wyskoczyć naraz na środku ekranu.
-- **Klawisze nad bohaterem:** podpowiedzi sterowania to klawisze, a nie zdania.
-  - W misji 1: [D] ▶, [J] ▶, [SPACE] ↑. W pojeździe: HOLD [S] ▶ EXIT. Z plecakiem odrzutowym: HOLD [SPACE] ▶ FLY.
-  - Klawisze unoszą się nad dymkiem bohatera i czekają, jeśli zasłoniłyby duży napis.
-  - Pokazują przypisania gracza; w co-op klawisze P2 (druga kolumna przypisań).
-- **Układ:** paski układają się w stosy i nie nachodzą na siebie.
-  - Pod trasą, w kolumnie między nieśmiertelnikami: wynik w co-op, pasek bossa, INTEL.
-  - U dołu: Grimm i nad nim TIP. Na dotyku oba idą na górę, z dala od przycisków.
-  - Gdy między blaszkami jest za ciasno (co-op na małym ekranie), paski idą pod blaszki, a pasek z bronią nowego bohatera się nie pokazuje.
-  - Duże napisy („MISSION 1”, „CHECKPOINT!”) zostają w pikselach gry i zaczynają się pod stosem pasków.
-  - W scenach z pasami kinowymi HUD przygasa do 35%.
-- **Tabliczki samouczka to piktogramy z klawiszami** zamiast zdań:
-  - „◀ [A][D] ▶”, „[W][SPACE] ↑”, „[J] ▶ beczka beczka”, „RUN + [S] ▶ SLIDE”, „klatka ▶ hełm +1”;
-  - „ściana [D] ↑ / [A] TURN + SHOOT”, „[K] ▶ granat / [L] ▶ beczka”, „[L] ▶ nóż / HOLD [L] = GRAB”;
-  - „[W] ↑ drabina”, „[SPACE] ▶ ↓ głowa”, „flaga = CHECKPOINT”, „flaga ▶ śmigłowiec”.
-  - Na dotyku i padzie klawisze zmieniają się w przyciski (DRAG, FIRE, A, X…). Dymki bohaterów omijają tabliczki.
-- **Koszt:** ok. 0,8 ms na klatkę przy ekranie 1353×894.
-- **Menu, pauza i wyniki (1.28)** w tym samym stylu, po makietach. Gracz wybrał grubszy tekst w pikselach gry zamiast drobnego jak w HUD, bo w menu ważniejsza jest czytelność, także na telefonie.
-  - **Wspólny zestaw elementów** (`src/uikit.js`): stalowe płyty z fazą i nitami, żółta płyta w pasy ostrzegawcze dla jednej głównej akcji na ekranie, mosiądz dla bieżącego wyboru, szkło, klawisze, medale i ikony 7×7 zamiast części słów. Rysuje się na warstwie HUD, a układ zostaje w pikselach gry (tam są sprawdzane kliknięcia).
-  - **Tytuł (do 1.30; od 1.31 zob. 5.13):** przyciski z ikonami (flaga, skrzyżowane miecze, kalendarz, hełm, belki, dwa hełmy), postęp jako plakietki (★ 27/45, hełm 12/12, $), sterowanie na dole jako klawisze z obrazkami. Logo i hasło zostają w swoich dużych literach.
-  - **Wybór misji:** trzy trasy stref (dżungla, pustynia, arktyka) z misjami na linii. Linia jest złota tam, gdzie już walczono, szara do następnej misji i przerywana dalej. Przy następnej misji widać twarz bohatera. Pod trasami teczka misji: nazwa, HP i życia jako obrazki, cel z ikoną, medale, trudność.
-  - **Pauza:** RESUME jako główna akcja, dźwięk i muzyka jako przełączniki z ikonami, u góry misja i cel, u dołu medale na żywo (w Arcade karty biegu).
-  - **Wyniki:** medale przypinane po kolei (lądują duże i osiadają), liczby na tablicy z ikonami, gotówka nalicza się na oczach, paczka zaopatrzenia jako skrzynia.
-  - **Pozostałe ekrany:** bohaterowie, garderoba, ulepszenia, opcje, porażka, karty Arcade i zwycięstwo mają te same płyty i ramkę zaznaczenia.
-  - **Przyciski dotykowe:** obrazek nad słowem. Słowo zostaje, bo takie same napisy są na tabliczkach samouczka.
+- **Separate layer:** the HUD is drawn on its own canvas above the game, at screen resolution (`src/hud.js`).
+  - A HUD pixel is about 2/3 of a game pixel, so text is finer and sharper than the world.
+  - The layer does not take clicks, is cleared every frame and is empty in menus and under pause.
+- **Dog tag** (top-left corner, in co-op a second one on the right): a steel tag on a chain.
+  - On the tag: a recessed portrait, an embossed name, hearts, specials with the key that throws them (e.g. [K]; gamepad: B; no key on touch), a gold crate with the item.
+  - The P1 tag also shows the helmet ×lives and prisoners as cages (freed ones in green).
+  - New hero: the tag bounces, the name flashes gold, and below it a bar with the weapon and special appears for 2 s ("DEPLOYED / SHOTGUN + DYNAMITE"), never wider than the tag. It replaces the large hero card at the bottom of the screen.
+  - In a vehicle, instead of hearts: the vehicle name and an armor bar.
+- **Mission route** (top center) instead of a progress bar: the hero's face travels along the route to the flag.
+  - The route shows prisoner cages, fuel depots, the colonel's skull (✓ once eliminated) and the detonation wall in escape missions.
+  - The flag is red until the mission objective is done.
+- **Score and pause:** a small glass plate and an icon in the top-right corner.
+- **Grimm like movie subtitles:** a radio icon, "GRIMM" and the line typed out live, one line (at most two) at the bottom of the screen. Replaces the green screen with a face.
+- **TIP after death:** a glass bar with a yellow TIP label above Grimm's caption.
+- **INTEL on first meeting an enemy (7):** a card under the route with the enemy's face in a red frame, its name and how to deal with it ("SNIPER / MOVE WHEN THE LASER TURNS WHITE").
+  - One card is shown at a time and not during big captions; the next one waits its turn.
+  - Previously three such sentences could pop up at once in the middle of the screen.
+- **Keys above the hero:** control hints are keys, not sentences.
+  - In mission 1: [D] ▶, [J] ▶, [SPACE] ↑. In a vehicle: HOLD [S] ▶ EXIT. With a jetpack: HOLD [SPACE] ▶ FLY.
+  - The keys float above the hero's speech bubble and wait if they would cover a big caption.
+  - They show the player's bindings; in co-op the P2 keys (the second binding column).
+- **Layout:** bars stack and never overlap.
+  - Under the route, in the column between the dog tags: score in co-op, boss bar, INTEL.
+  - At the bottom: Grimm, with the TIP above him. On touch both move to the top, away from the buttons.
+  - When it is too cramped between the tags (co-op on a small screen), the bars move under the tags and the new hero's weapon bar is not shown.
+  - Big captions ("MISSION 1", "CHECKPOINT!") stay in game pixels and start below the stack of bars.
+  - In scenes with cinematic bars the HUD dims to 35%.
+- **Tutorial signs are pictograms with keys** instead of sentences:
+  - "◀ [A][D] ▶", "[W][SPACE] ↑", "[J] ▶ barrel barrel", "RUN + [S] ▶ SLIDE", "cage ▶ helmet +1";
+  - "wall [D] ↑ / [A] TURN + SHOOT", "[K] ▶ grenade / [L] ▶ barrel", "[L] ▶ knife / HOLD [L] = GRAB";
+  - "[W] ↑ ladder", "[SPACE] ▶ ↓ head", "flag = CHECKPOINT", "flag ▶ helicopter".
+  - On touch and gamepad the keys turn into buttons (DRAG, FIRE, A, X…). Hero speech bubbles avoid the signs.
+- **Cost:** about 0.8 ms per frame at a 1353×894 screen.
+- **Menu, pause and results (1.28)** in the same style, after mockups. The player chose thicker text in game pixels rather than fine text like in the HUD, because in menus readability matters more, including on phones.
+  - **Shared element kit** (`src/uikit.js`): steel plates with bevels and rivets, a yellow plate with hazard stripes for the one main action on a screen, brass for the current selection, glass, keys, medals and 7×7 icons in place of some words. It is drawn on the HUD layer, while the layout stays in game pixels (that is where clicks are checked).
+  - **Title (until 1.30; from 1.31 see 5.13):** buttons with icons (flag, crossed swords, calendar, helmet, bars, two helmets), progress as badges (★ 27/45, helmet 12/12, $), controls at the bottom as keys with pictures. The logo and tagline keep their big letters.
+  - **Mission select:** three zone routes (jungle, desert, arctic) with missions on the line. The line is gold where you have already fought, grey up to the next mission and dashed beyond. The hero's face is shown at the next mission. Below the routes is the mission folder: name, HP and lives as pictures, objective with an icon, medals, difficulty.
+  - **Pause:** RESUME as the main action, sound and music as toggles with icons, mission and objective at the top, live medals at the bottom (in Arcade, the run's cards).
+  - **Results:** medals pinned one by one (they land big and settle), numbers on a board with icons, cash counts up before your eyes, the supply drop as a crate.
+  - **Other screens:** heroes, wardrobe, upgrades, options, defeat, Arcade cards and victory use the same plates and selection frame.
+  - **Touch buttons:** a picture above a word. The word stays because the same labels appear on the tutorial signs.
 
-### 5.11 Języki (1.29)
+### 5.11 Languages (1.29)
 
-Gra mówi po angielsku, hiszpańsku, portugalsku (Brazylia), niemiecku, francusku i polsku. To największe rynki portali poza angielskim.
-- **Wybór języka:** przy pierwszym uruchomieniu według języka przeglądarki, potem według zapisu. Zmiana w OPTIONS → LANGUAGE (także w pauzie).
-- **Jak to działa:** kod gry dalej pisze po angielsku, a tłumaczenie dzieje się przy rysowaniu. Każdy napis przechodzi przez `Font` (`src/gfx.js`), który pyta `L10N.tr` (`src/lang.js`):
-  - najpierw całe zdanie w tabeli języka (`src/lang_*.js`, ok. 520 zwrotów w każdym);
-  - potem reguły dla zdań z liczbami i nazwami (`L10N_RULES`), np. „SHOT BY A SNIPER” → „STRZAŁ: SNAJPER”, „LANDING ZONE: 5 KILLS” → „LĄDOWISKO: 5 ZABÓJSTW” (polska liczba mnoga w trzech formach);
-  - wyniki są zapamiętywane, więc koszt jest niezauważalny (czas rysowania taki sam jak po angielsku).
-- **Czego nie tłumaczymy:** imion bohaterów, bossów, nazw klawiszy i losowych nazw operacji w Arcade. Modyfikator RICOCHET ma w nazwie niewidoczny miękki dywiz, żeby nie tłumaczył się bohater RICOCHET.
-- **Czcionka:** doszły wielkie litery z akcentami (ĄĆĘŁŃÓŚŹŻ, ÁÉÍÑÓÚÜ, ÀÂÇÈÊËÎÏÔÙÛŸ, ÃÕ, ÄÖ) oraz ¡ i ¿. Akcent siedzi nad literą, a sama litera zostaje tam, gdzie była. ß jest pisane jako SS.
-- **Długie słowa:** tłumaczenia są dłuższe od angielskiego (niemiecki o ok. 30%).
-  - Długie słowa łamią się z dywizem w miejscu miękkiego dywizu z tabeli (`\u00AD`, np. FLAMMEN-WERFER). Nigdy między dowolnymi literami, jeśli da się inaczej.
-  - Napis, który się nie mieści, dostaje drobniejsze litery (o krok pikseli ekranu) zamiast wyjść poza płytę. Tekst na żółtym przycisku zostaje między pasami.
-  - Na kartach bohaterów na najmniejszym ekranie (384×216) odstępy są węższe, żeby w linii zmieściło się 9 liter.
-  - Wynik: na 384×216 żaden ekran w żadnym języku nie musi zmniejszać liter.
-- **Sprawdzanie:** `python tools/check_lang.py` sprawdza, czy każda litera tłumaczeń jest w czcionce i czy wszystkie języki mają te same zwroty. Ekrany w każdym języku były oglądane przy 384×216, 342×256, 427×240, 451×298 i 500×280.
+The game speaks English, Spanish, Portuguese (Brazil), German, French and Polish. These are the largest portal markets besides English.
+- **Language selection:** on first launch by browser language, afterwards from the save. Change it in OPTIONS → LANGUAGE (also in pause).
+- **How it works:** the game code still writes in English, and translation happens at draw time. Every string goes through `Font` (`src/gfx.js`), which asks `L10N.tr` (`src/lang.js`):
+  - first the whole sentence in the language table (`src/lang_*.js`, about 520 phrases each);
+  - then rules for sentences with numbers and names (`L10N_RULES`), e.g. "SHOT BY A SNIPER" → "STRZAŁ: SNAJPER", "LANDING ZONE: 5 KILLS" → "LĄDOWISKO: 5 ZABÓJSTW" (Polish plural in three forms);
+  - results are cached, so the cost is unnoticeable (draw time the same as in English).
+- **What we do not translate:** hero names, boss names, key names and random operation names in Arcade. The RICOCHET modifier has an invisible soft hyphen in its name so that the hero RICOCHET is not translated.
+- **Font:** added accented capitals (ĄĆĘŁŃÓŚŹŻ, ÁÉÍÑÓÚÜ, ÀÂÇÈÊËÎÏÔÙÛŸ, ÃÕ, ÄÖ) plus ¡ and ¿. The accent sits above the letter, and the letter itself stays where it was. ß is written as SS.
+- **Long words:** translations are longer than English (German by about 30%).
+  - Long words break with a hyphen at the soft hyphen from the table (`­`, e.g. FLAMMEN-WERFER). Never between arbitrary letters if it can be avoided.
+  - A caption that does not fit gets smaller letters (one screen-pixel step) instead of spilling off the plate. Text on the yellow button stays between the stripes.
+  - On hero cards on the smallest screen (384×216) the spacing is narrower so that 9 letters fit on a line.
+  - Result: at 384×216 no screen in any language needs to shrink its letters.
+- **Checking:** `python tools/check_lang.py` checks that every letter of the translations is in the font and that all languages have the same phrases. Screens in every language were reviewed at 384×216, 342×256, 427×240, 451×298 and 500×280.
 
-### 5.12 Kamera (1.30)
+### 5.12 Camera (1.30)
 
-Po pytaniu „jak upłynnić pracę kamery?”. Najpierw pomiar: symulowany gracz przeszedł misje 1–6, a każda klatka kamery trafiła do zapisu (`tools/camprobe.js`). Dopiero potem zmiany, każda sprawdzona tym samym pomiarem. Nowa kamera jest w `src/camera.js`. Stara (1.29) zostaje w panelu F2 do porównania: „Kamera: nowa (1) / stara (0)”. Wszystkie ustawienia są w grupie KAMERA.
-- **Bez przerzutów:**
-  - **Po śmierci** kamera nie goni już śmigłowca przez pół poziomu (było 1440–2340 px/s, z miejsca w jednej klatce). Jeśli nowy bohater ląduje najwyżej 1 ekran dalej, kamera tam płynnie jedzie (rozpędza się i hamuje, najwyżej ok. 600 px/s). Dalej jest krótkie ściemnienie (0,2 s) i cięcie. Śmigłowiec wlatuje w kadr docelowy, gdy kamera już tam jest. Nowy bohater pojawia się po takim samym czasie jak wcześniej (ok. 3,5 s od śmierci).
-  - **Arena bossa:** kamera wjeżdża w kadr areny pod paskami kinowymi (najwyżej 3,6 px na klatkę), zamiast przeskoczyć o 129 px w jednej klatce.
-  - **Pominięcie przelotu** (przytrzymany skok) to ściemnienie zamiast przerzutu o ok. 1300 px.
-- **Sprężyna zamiast wygładzania:** kamera podąża za bohaterem jak krytycznie tłumiona sprężyna, więc rusza i hamuje miękko. Nagłe zmiany prędkości kamery (ponad 1 px/klatkę w jednej klatce): w poziomie 0–5 na minutę zamiast 0–31. Opóźnienie za bohaterem: 0,2 s w poziomie, 0,28 s w pionie.
-- **Spokój w pionie:** nierówności do 20 px (ponad kafel) nie ruszają kamery. Zmienia wysokość dopiero, gdy bohater stanie na innym poziomie. Gdy bohater jest na ziemi, kamera jedzie w pionie w 7–12% klatek zamiast 10–33%.
-- **Bohater stoi w kadrze:** gdy kamera jedzie razem z bohaterem, zaokrągla się do pikseli razem z nim. Bohater nie drga już o piksel 12–14 razy na sekundę (teraz 0–0,4).
-- **Patrzenie w dół przy spadaniu:** kamera przewiduje z toru lotu, gdzie bohater wyląduje. Trzyma go wyżej w kadrze, a potem czeka na niego przy lądowisku, więc hamuje przed lądowaniem, a nie po nim. Zaczyna na szczycie skoku, gdy pod bohaterem jest już przepaść. Podskok przy krawędzi dziury i przeskok nad szczeliną nie ruszają obrazu.
-  - Spadki symulowanego gracza w misjach 2–6: lądowisko widać 0,3 s przed dotknięciem ziemi w 16 z 16 spadków (było 9 z 14). Bohater schodzi najniżej do 66% wysokości ekranu (mediana; było 82%).
-  - Szyby 3–16 kafli: bohater najniżej na 59–62% ekranu (było 63–99%), bez odbicia. Kamera uspokaja się po 0,2–0,4 s (było 0,9–1,5 s).
-  - Twarda granica: stopy bohatera nigdy niżej niż 80% ekranu, głowa co najmniej 36 px pod górną krawędzią (pod HUD) i ciało 36 px od boków. W arenie bossa granica nie wypycha kamery za ścianę areny.
-- **Kadrowanie bossa:** przy bossie i przy obudzonym mini-bossie kamera przesuwa się w stronę punktu między nim a bohaterem („Kadrowanie bossa” 0,5; przy mini-bossie o 40% słabiej).
-- **Wstrząsy:** płynne drżenie (dwie fale na oś) zamiast nowego losowego położenia w każdej klatce. Słabe wstrząsy są delikatne, duże wybuchy dalej mocne (najwyżej 7 px). W misjach 1–6 najwyżej 3–6 px zamiast 8–10.
-- **Odrzut broni:** miękkie pchnięcie (sprężyna) o tej samej sile, zamiast skoku o całą wartość naraz.
-- **Płynność na każdym monitorze:** fizyka dalej liczy się 60 razy na sekundę, ale obraz jest rysowany pomiędzy dwoma ostatnimi krokami (bohaterowie, wrogowie, pociski, ciała, śmigłowce, cząsteczki, napisy, pogoda, kamera).
-  - Na monitorach 75–240 Hz obraz już nie powtarza się w nierównym rytmie (na 144 Hz 58% klatek było kopią poprzedniej).
-  - Na 60 i 120 Hz pętla dopasowuje się do odświeżania, więc wahania zegara nie dają już klatki z dwoma krokami obok klatki bez kroku.
-  - Testy i nagrania się nie zmieniają (ten sam krok 60 Hz). W pauzie obraz stoi. Po rysowaniu wszystkie pozycje wracają co do bitu, a koszt jest niezauważalny.
-- **Pomiar:** `tools/camprobe.js`:
-  - `CAMPROBE()`: symulowany gracz i zapis kamery;
-  - `CAMTEST()`: kontrolowane scenariusze na każdą kamerę (`TUNE.camNew` 0/1): zatrzymanie, zwrot, spadki w wykopane szyby, podskok przy krawędzi, przeskok szczeliny, respawn z 150–1500 px, arena.
+After the question "how do we make the camera smoother?". Measurement first: a simulated player played missions 1–6, and every camera frame was recorded (`tools/camprobe.js`). Only then the changes, each verified with the same measurement. The new camera is in `src/camera.js`. The old one (1.29) stays in the F2 panel for comparison: "Camera: new (1) / old (0)". All settings are in the CAMERA group.
+- **No jump cuts:**
+  - **After death** the camera no longer chases the helicopter across half the level (it was 1440–2340 px/s, from a standstill in a single frame). If the new hero lands at most 1 screen away, the camera travels there smoothly (accelerating and braking, at most about 600 px/s). Farther than that there is a short fade (0.2 s) and a cut. The helicopter flies into the target frame once the camera is already there. The new hero appears after the same time as before (about 3.5 s after death).
+  - **Boss arena:** the camera glides into the arena framing under the cinematic bars (at most 3.6 px per frame), instead of jumping 129 px in one frame.
+  - **Skipping the flyover** (holding jump) is a fade instead of a jump of about 1300 px.
+- **Spring instead of smoothing:** the camera follows the hero like a critically damped spring, so it starts and stops softly. Abrupt camera speed changes (over 1 px/frame within one frame): horizontally 0–5 per minute instead of 0–31. Lag behind the hero: 0.2 s horizontally, 0.28 s vertically.
+- **Vertical calm:** bumps of up to 20 px (more than a tile) do not move the camera. It changes height only when the hero stands on a different level. When the hero is on the ground, the camera moves vertically in 7–12% of frames instead of 10–33%.
+- **The hero stays still in the frame:** when the camera moves together with the hero, it rounds to pixels together with him. The hero no longer jitters by a pixel 12–14 times per second (now 0–0.4).
+- **Looking down while falling:** the camera predicts from the trajectory where the hero will land. It keeps him higher in the frame and then waits for him at the landing spot, so it brakes before the landing, not after it. It starts at the top of the jump once there is already a drop below the hero. A hop at the edge of a hole and a jump over a gap do not move the view.
+  - Simulated player falls in missions 2–6: the landing spot is visible 0.3 s before touchdown in 16 of 16 falls (previously 9 of 14). The hero gets down to at most 66% of the screen height (median; previously 82%).
+  - Shafts of 3–16 tiles: the hero at most at 59–62% of the screen (previously 63–99%), with no bounce. The camera settles after 0.2–0.4 s (previously 0.9–1.5 s).
+  - Hard limit: the hero's feet never below 80% of the screen, the head at least 36 px below the top edge (below the HUD) and the body 36 px from the sides. In the boss arena the limit does not push the camera past the arena wall.
+- **Boss framing:** with a boss and with an awakened mini-boss the camera shifts toward a point between it and the hero ("Boss framing" 0.5; 40% weaker for a mini-boss).
+- **Shakes:** smooth shaking (two waves per axis) instead of a new random position every frame. Weak shakes are gentle, big explosions are still strong (at most 7 px). In missions 1–6 at most 3–6 px instead of 8–10.
+- **Weapon kick:** a soft push (spring) of the same strength, instead of jumping the full amount at once.
+- **Smoothness on every monitor:** physics still runs 60 times per second, but the picture is drawn between the last two steps (heroes, enemies, projectiles, bodies, helicopters, particles, captions, weather, camera).
+  - On 75–240 Hz monitors the picture no longer repeats in an uneven rhythm (at 144 Hz, 58% of frames were a copy of the previous one).
+  - At 60 and 120 Hz the loop locks to the refresh rate, so clock jitter no longer produces a frame with two steps next to a frame with no step.
+  - Tests and recordings are unchanged (the same 60 Hz step). The picture freezes in pause. After drawing, all positions are restored bit for bit, and the cost is unnoticeable.
+- **Measurement:** `tools/camprobe.js`:
+  - `CAMPROBE()`: simulated player and camera recording;
+  - `CAMTEST()`: controlled scenarios for each camera (`TUNE.camNew` 0/1): stopping, turning, falls into dug shafts, a hop at an edge, jumping a gap, respawn from 150–1500 px, arena.
 
-### 5.13 Ekran startowy (1.31)
+### 5.13 Title screen (1.31)
 
-Gracz: „nie jestem przekonany co do ekranu startowego”. Zaznaczył wszystkie cztery problemy: za dużo naraz, wygląda tanio i płasko, nie sprzedaje gry, a nowemu graczowi ekran w ogóle nie jest potrzebny. Z trzech makiet narysowanych w grze (żywa scena z gry, plakat filmu akcji, obóz wojskowy; `tools/titlemock.js`) wybrał żywą scenę.
-- **Pierwsze uruchomienie bez menu:** nowy gracz od razu jest w misji 1. Nowy to taki, który nie zaczął żadnej misji, nic nie ukończył, nie uwolnił jeńca i nie ma wyniku w Arcade ani w misji dnia.
-  - Logo i hasło wjeżdżają na ok. 3 s nad zrzut ze śmigłowca, jak tytuł na początku filmu, zamiast napisów „MISSION 1 / OPERATION…”. Potem logo odjeżdża w górę, a HUD (nieśmiertelnik, trasa, Grimm, klawisze nad bohaterem) pojawia się dopiero wtedy.
-  - Menu zobaczy przy następnej wizycie (`Save.data.played`). Nowy tester z panelu F3 też zaczyna od misji 1.
-- **Za menu gra prawdziwa misja** (`src/attract.js`). Pilot demo prowadzi losowego odblokowanego bohatera według reguł bota testowego: biegnie w prawo, strzela w to, co przed nim, wspina się i przekopuje, wsiada do pojazdów, co 2,5 s rzuca specjal.
-  - Cztery klipy po 16–17 s, cięte przez czerń: nalot w dżungli (TIGER CLAW), czołg w śniegu (AVALANCHE), składy paliwa na pustyni (SANDSTORM), mech w śniegu (DEEP FREEZE). Każda wizyta na ekranie zaczyna od kolejnego klipu.
-  - Zrzut ze śmigłowca, a w klipach z pojazdem także pierwsze 8–9 s misji, przewijają się bez obrazu (kilka kroków na klatkę), więc pojazd pojawia się po paru sekundach klipu.
-  - Klip kończy się wcześniej, gdy bohater przez 4,5 s nie posunie się o 40 px.
-  - Wybrane pomiarem 11 misji (3 przejazdy po 20 s): najwięcej akcji, bohater zawsze w kadrze, zero utknięć. Kadry, w których widać prawie samą skałę: 0–14%.
-  - Kamera demo trzyma bohatera w pasie między logo a menu, w 100% próbek na 384×216 i 451×298.
-- **Demo niczego nie zmienia** (`World.demo`):
-  - gra bez dźwięku (słychać muzykę tytułową), a bohater nie może zginąć;
-  - nic nie trafia do zapisu: jeńcy, gotówka, jednorazowe podpowiedzi i karty INTEL zostają dla gracza;
-  - bez zdarzeń playtestu, sygnałów rozgrywki dla portalu (`gameplayStart`, `happyTime`) i wibracji;
-  - bez napisów w świecie: punktów, dymków, Grimma, strzałki celu, „MECH / ↑ ENTER”, nazw mini-bossów i podpowiedzi przy beczkach i moście.
-  - Sprawdzone: po 210 s ekranu tytułowego zapis, localStorage i dziennik playtestu są bez zmian, a wywołań `gameplayStart`, `haptic`, `Music.play` i `Save.save` jest 0.
-- **Na ekranie jest tylko:**
-  - nowe logo z połyskiem co 5,5 s;
-  - jeden duży przycisk: KONTYNUUJ i następna misja;
-  - jeden rząd: MISJE, ARCADE, DZIENNA, POSTACIE, ULEPSZENIA oraz CO-OP poza dotykiem, z lampką, gdy coś czeka;
-  - w prawym rogu głośnik (cały dźwięk; efekty i muzyka osobno w OPCJACH), ustawienia i skrzynia dostawy;
-  - wersja w lewym górnym rogu (5 stuknięć otwiera panel testów).
-  - Zniknęły plakietki postępu, linia reguły dnia, klawisze na dole, rząd postaci i hasło. Gwiazdki są w MISJACH, klawiszy uczy samouczek.
-  - Na wąskim ekranie przyciski rzędu się zwężają, a zestaw UI najpierw usuwa obrazki. Sprawdzone w EN/DE/FR przy 384×216, 342×256, 427×240, 451×298 i 500×280: nic na siebie nie nachodzi.
-- **Nowe logo** (`Logo` w `src/ui.js`):
-  - BLAST ręcznie rysowanymi literami (kreska 2 px na siatce 7×10), pochylonymi do przodu, od bladozłotego do czerwieni, z głębią i obrysem;
-  - BATTALION na oliwkowej wstędze z wciętymi końcami i dwiema gwiazdami;
-  - rozmiar liter 2 na telefonie, 3 na typowym ekranie i 4 na wysokim.
-- **Koszt:** jak zwykła misja, bo to ten sam świat. Aktualizacja średnio 1 ms na krok (razem z tworzeniem świata i przewijaniem), rysowanie ok. 5,8 ms przy 1353×894 w ukrytej karcie.
+The player: "I'm not convinced about the title screen". He ticked all four problems: too much at once, looks cheap and flat, does not sell the game, and a new player does not need the screen at all. Out of three mockups drawn in the game (a live game scene, an action-movie poster, a military camp; `tools/titlemock.js`) he chose the live scene.
+- **First launch without a menu:** a new player goes straight into mission 1. New means one who has not started any mission, completed anything, freed a prisoner, and has no score in Arcade or the daily mission.
+  - The logo and tagline slide in for about 3 s over the helicopter drop, like a title at the start of a movie, instead of the "MISSION 1 / OPERATION…" captions. Then the logo slides up and away, and only then does the HUD (dog tag, route, Grimm, keys above the hero) appear.
+  - The player sees the menu on the next visit (`Save.data.played`). A new tester from the F3 panel also starts with mission 1.
+- **A real mission plays behind the menu** (`src/attract.js`). A demo pilot drives a random unlocked hero using the test bot's rules: runs right, shoots whatever is ahead, climbs and digs through, gets into vehicles, throws a special every 2.5 s.
+  - Four clips of 16–17 s each, cut through black: an airstrike in the jungle (TIGER CLAW), a tank in the snow (AVALANCHE), fuel depots in the desert (SANDSTORM), a mech in the snow (DEEP FREEZE). Each visit to the screen starts with the next clip.
+  - The helicopter drop, and in vehicle clips also the first 8–9 s of the mission, are fast-forwarded without rendering (several steps per frame), so the vehicle appears a few seconds into the clip.
+  - A clip ends early when the hero has not advanced 40 px in 4.5 s.
+  - Chosen by measuring 11 missions (3 runs of 20 s each): the most action, the hero always in frame, zero getting stuck. Frames showing almost nothing but rock: 0–14%.
+  - The demo camera keeps the hero in the band between the logo and the menu, in 100% of samples at 384×216 and 451×298.
+- **The demo changes nothing** (`World.demo`):
+  - the game runs without sound (the title music plays), and the hero cannot die;
+  - nothing goes into the save: prisoners, cash, one-time hints and INTEL cards stay for the player;
+  - no playtest events, gameplay signals to the portal (`gameplayStart`, `happyTime`) or vibration;
+  - no captions in the world: points, speech bubbles, Grimm, the objective arrow, "MECH / ↑ ENTER", mini-boss names and hints at barrels and the bridge.
+  - Verified: after 210 s on the title screen the save, localStorage and the playtest log are unchanged, and there are 0 calls to `gameplayStart`, `haptic`, `Music.play` and `Save.save`.
+- **The screen shows only:**
+  - the new logo with a shine every 5.5 s;
+  - one big button: CONTINUE and the next mission;
+  - one row: MISSIONS, ARCADE, DAILY, HEROES, UPGRADES and CO-OP (except on touch), with an indicator light when something is waiting;
+  - in the right corner a speaker (all sound; effects and music separately in OPTIONS), settings and the supply crate;
+  - the version in the top-left corner (5 taps open the test panel).
+  - Removed: the progress badges, the daily rule line, the keys at the bottom, the row of characters and the tagline. Stars are in MISSIONS, the tutorial teaches the keys.
+  - On a narrow screen the row buttons get narrower, and the UI kit drops the pictures first. Verified in EN/DE/FR at 384×216, 342×256, 427×240, 451×298 and 500×280: nothing overlaps.
+- **New logo** (`Logo` in `src/ui.js`):
+  - BLAST in hand-drawn letters (2 px stroke on a 7×10 grid), slanted forward, from pale gold to red, with depth and an outline;
+  - BATTALION on an olive ribbon with notched ends and two stars;
+  - letter size 2 on a phone, 3 on a typical screen and 4 on a tall one.
+- **Cost:** like a normal mission, because it is the same world. Update on average 1 ms per step (including world creation and fast-forwarding), drawing about 5.8 ms at 1353×894 in a hidden tab.
 
-### 5.14 Animacja i reakcje postaci (1.32)
+### 5.14 Character animation and reactions (1.32)
 
-Prośba gracza: „dopracować zachowania, animacje, czas i reakcje postaci przy konkretnych zdarzeniach, we wszystkich postaciach”. Wcześniej postać miała kilka klatek (stanie, bieg, skok, spadanie, rzut) i reagowała głównie ikoną („!”, „?”) albo białym błyskiem. Teraz reaguje całym ciałem, według tej samej zasady co zdarzenia w 5.7: **zapowiedź → moment → skutek**.
+The player's request: "polish the behavior, animations, timing and reactions of characters to specific events, for all characters". Previously a character had a few frames (idle, run, jump, fall, throw) and reacted mostly with an icon ("!", "?") or a white flash. Now it reacts with its whole body, following the same rule as events in 5.7: **telegraph → moment → aftermath**.
 
-**Zasada dla bohatera:** żadna poza nie opóźnia sterowania. Poza pokazuje się tylko wtedy, gdy bohater nie robi niczego, co wymaga innej (strzał, bieg, skok od razu ją przerywają). Zmieniamy wygląd, nie ruch; fizyka bohatera jest taka sama jak w 1.31.
+**Rule for the hero:** no pose delays control. A pose is shown only when the hero is not doing anything that needs a different one (shooting, running, jumping interrupt it immediately). We change the look, not the movement; the hero's physics are the same as in 1.31.
 
-**Pozy (`src/sprites.js`):** 27 nowych póz dla wszystkich 27 wyglądów postaci. Poza ma nowe parametry: pochylenie tułowia (stopy zostają w miejscu), przesunięcie głowy, broni i tarczy oraz wariant bez czapki. Pozy rysują się przy pierwszym użyciu, a resztę gra dorysowuje w tle (ok. 1 ms na klatkę, najpierw obsada bieżącej misji).
+**Poses (`src/sprites.js`):** 27 new poses for all 27 character looks. A pose has new parameters: torso lean (the feet stay in place), head, weapon and shield offset, and a variant without a cap. Poses are drawn on first use, and the game draws the rest in the background (about 1 ms per frame, the current mission's cast first).
 
-**Bieg wszystkich postaci:** klatki nóg idą za przebytą drogą (krok ok. 24 px w marszu, 34 px w biegu), więc stopy nie ślizgają się po ziemi. Wcześniej nogi przebierały w stałym tempie (12 lub 7 klatek na sekundę) bez względu na prędkość.
+**Running for all characters:** leg frames follow the distance traveled (a step of about 24 px when walking, 34 px when running), so feet do not slide on the ground. Previously the legs cycled at a fixed rate (12 or 7 frames per second) regardless of speed.
 
-**Bohaterowie:**
+**Heroes:**
 
-| Zdarzenie | Co widać | Czas |
+| Event | What you see | Time |
 |---|---|---|
-| zrzut ze śmigłowca | lądowanie na jedno kolano i kurz | 0,45 s |
-| lądowanie | ugięte kolana; po spadku z 7+ kafli przyklęk | 0,11 s / 0,3 s |
-| zawracanie w biegu | poślizg: odchylenie, noga zaparta z przodu | póki hamuje (2–3 klatki) |
-| szczyt skoku | podkulone nogi | póki \|vy\| < 55 |
-| strzał w miejscu | postawa strzelecka, broń cofa się po każdym strzale; rozkręcany minigun – celowanie | 0,09 s po strzale |
-| trafienie | odrzut: głowa i tułów do tyłu, broń w górę, noga w powietrzu (jeśli nie strzela) | 0,24 s |
-| nóż | pchnięcie z wyciągniętą ręką i ostrzem | 0,16 s |
-| złapany żołnierz | obie ręce na nim | póki go trzyma |
-| rzut (granat, dysk, specjal) | zamach, potem dokończenie ruchu ręką w dół | 0,08 s + reszta |
-| burza Volta, spowolnienie Chrono, przedmioty z kieszeni | ręce w górze | 0,45 s |
-| railgun Deadeye'a / ground pound Brutusa | ładowanie na kolanie / pięści w górze, potem w dół | cały specjal |
-| uwolnienie jeńca, punkt kontrolny, potrójne zabójstwo, sekret, mini-boss, boss | pięść w górze | 1,1 / 0,9 / 1 / 1,2 / 1,4 / 1,8 s |
-| bezczynność | po 3,5 s co 5,2 s rozgląda się (ręka nad oczami) albo sprawdza broń; na ostatnim punkcie życia oddycha szybciej | 1,1 s |
-| ewakuacja | macha na pożegnanie z drabinki odlatującego śmigłowca | do końca |
-| śmierć | ciało najpierw drga, potem leci bezwładnie; kapelusz, hełm czy korona spada osobno | – |
+| helicopter drop | landing on one knee with dust | 0.45 s |
+| landing | bent knees; after a fall of 7+ tiles, a kneel | 0.11 s / 0.3 s |
+| turning around while running | skid: leaning back, leg braced in front | while braking (2–3 frames) |
+| top of the jump | tucked legs | while \|vy\| < 55 |
+| shooting while standing | shooting stance, the weapon kicks back after every shot; spinning-up minigun – aiming | 0.09 s after the shot |
+| hit | recoil: head and torso back, weapon up, a leg in the air (if not shooting) | 0.24 s |
+| knife | thrust with the arm and blade extended | 0.16 s |
+| grabbed soldier | both hands on him | while holding him |
+| throw (grenade, disc, special) | wind-up, then follow-through with the arm down | 0.08 s + the rest |
+| Volt's storm, Chrono's slowdown, pocket items | arms up | 0.45 s |
+| Deadeye's railgun / Brutus's ground pound | charging on one knee / fists up, then down | the whole special |
+| freeing a prisoner, checkpoint, triple kill, secret, mini-boss, boss | fist in the air | 1.1 / 0.9 / 1 / 1.2 / 1.4 / 1.8 s |
+| idle | after 3.5 s, every 5.2 s looks around (hand over the eyes) or checks the weapon; on the last hit point breathes faster | 1.1 s |
+| extraction | waves goodbye from the ladder of the departing helicopter | until the end |
+| death | the body first twitches, then flies limp; a hat, helmet or crown falls off separately | – |
 
-**Żołnierze:**
+**Soldiers:**
 
-| Zdarzenie | Co widać | Czas |
+| Event | What you see | Time |
 |---|---|---|
-| „!” (zauważył) | drgnięcie (odchylenie, broń w górę) i podskok ok. 5 px; pies szczeka | 0,24 s, czas reakcji bez zmian |
-| „?” (hałas) | ręka nad oczami, patrzy w stronę hałasu | póki szuka |
-| celowanie (czerwona linia) | broń do oka, ugięte kolana; snajper w półprzysiadzie, laser zaczyna się przy lufie | cała linia celownika |
-| strzał | odrzut broni; ciężki strzelec trzęsie się przy serii, miotacz przy strumieniu | 0,07 s |
-| po serii | przeładowanie: broń opuszczona, ręka przy magazynku, co drugą serię wypada magazynek z brzękiem; ciężkiemu dymią lufy; snajper przeładowuje zamek (duża łuska, „klik-klik”) | 0,55 s / 0,9 s / 0,55 s |
-| granatnik | wyciąga zawleczkę (brzęk, zawleczka leci) i unosi rękę z granatem, potem rzut z dokończeniem ruchu; trafiony w trakcie zamachu zawsze upuszcza odbezpieczony granat | **0,35 s zamachu (nowe)** |
-| moździerzysta | wkłada pocisk do lufy, strzał (dym, lufa drga), zatyka uszy | **0,3 s (nowe)** + 0,75 s |
-| oficer | słuchawka przy uchu, druga ręka wskazuje cel przez całe wezwanie nalotu | 1,3 s |
-| tarczownik | odciąga tarczę przed uderzeniem, potem wypycha ją 3 px do przodu | 0,35 s + 0,2 s |
-| pies | przysiad przed skokiem (zad w górze, uszy po sobie); szczeka przy „!”; węszy i macha ogonem w patrolu | 0,22 s |
-| zamachowiec | szarżuje z rękami w górze; lampka kamizelki mruga i pikanie przyspiesza, im bliżej jest (co 0,3 → 0,1 s) | – |
-| zwiadowca biegnący do syreny, pułkownik uciekający przed bohaterem, panika, płonący | bieg z rękami w górze | – |
-| trafienie (nie zabity) / podmuch wybuchu zza zasięgu | drgnięcie / zatoczenie się | 0,2 s / 0,15–0,35 s |
-| fala twardego lądowania bohatera | leży na plecach, wstaje przez przyklęk (ogłuszenie trwa tyle co wcześniej) | 0,55 s + 0,25 s |
-| długi upadek (ponad 3,5 kafla) | wymachuje rękami i krzyczy, zanim uderzy (SPLAT) | – |
-| spadochroniarz | trzyma się linek; ląduje w przysiadzie i dopiero potem strzela; czasza opada na niego, zsuwa się na bok i znika | **0,35 s (nowe)**; czasza 1,25 s |
-| złapany przez bohatera | wierzga rękami i nogami | – |
-| nieświadomy (straż, patrol) | co 6,5 s: rozgląda się, przeciąga, sprawdza broń; oficer rozmawia przez radio, pułkownik podnosi pięść | ok. 1,1 s |
-| śmierć | w chwili trafienia drgnięcie, potem bezwładne ciało; hełm lub czapka spada (przy kuli w 75% przypadków, przy wybuchu, nożu i zmiażdżeniu zawsze), odbija się do 2 razy (metalowy brzęczy) i leży 7 s | 0,14 s + lot |
-| upadek ostatniego bohatera | pięść w górze, podskoki i jeden okrzyk („GOT HIM!”, „HA HA!”, „TOO EASY!”); w tym czasie nie strzelają. W co-op, gdy drugi bohater walczy, nikt się nie cieszy | ok. 1,2 s po 0,25–0,6 s |
+| "!" (spotted) | a flinch (leaning back, weapon up) and a hop of about 5 px; a dog barks | 0.24 s, reaction time unchanged |
+| "?" (noise) | hand over the eyes, looking toward the noise | while searching |
+| aiming (red line) | weapon to the eye, bent knees; the sniper in a half-crouch, the laser starts at the muzzle | the whole aiming line |
+| shot | weapon recoil; the heavy gunner shakes during a burst, the flamethrower during the stream | 0.07 s |
+| after a burst | reload: weapon lowered, hand at the magazine, every second burst a magazine drops with a clink; the heavy's barrels smoke; the sniper works the bolt (big casing, "click-click") | 0.55 s / 0.9 s / 0.55 s |
+| grenadier | pulls the pin (clink, the pin flies) and raises the hand with the grenade, then throws with a follow-through; if hit during the wind-up he always drops a live grenade | **0.35 s wind-up (new)** |
+| mortarman | drops a shell into the tube, fires (smoke, the tube jolts), covers his ears | **0.3 s (new)** + 0.75 s |
+| officer | handset at the ear, the other hand points at the target during the whole airstrike call | 1.3 s |
+| shield soldier | pulls the shield back before a bash, then shoves it 3 px forward | 0.35 s + 0.2 s |
+| dog | crouch before the leap (rear up, ears back); barks at "!"; sniffs and wags its tail on patrol | 0.22 s |
+| bomber | charges with arms up; the vest light blinks and the beeping speeds up the closer he gets (every 0.3 → 0.1 s) | – |
+| lookout running to the siren, colonel fleeing from the hero, panic, burning | running with arms up | – |
+| hit (not killed) / blast from beyond range | flinch / stagger | 0.2 s / 0.15–0.35 s |
+| hero's hard-landing shockwave | lies on his back, gets up via a kneel (the stun lasts as long as before) | 0.55 s + 0.25 s |
+| long fall (over 3.5 tiles) | flails his arms and screams before impact (SPLAT) | – |
+| paratrooper | holds the lines; lands in a crouch and only then shoots; the canopy settles on him, slides off to the side and disappears | **0.35 s (new)**; canopy 1.25 s |
+| grabbed by the hero | kicks his arms and legs | – |
+| unaware (guard, patrol) | every 6.5 s: looks around, stretches, checks his weapon; the officer talks on the radio, the colonel raises a fist | about 1.1 s |
+| death | a flinch at the moment of the hit, then a limp body; the helmet or cap falls off (from a bullet in 75% of cases, always from an explosion, knife or crushing), bounces up to 2 times (a metal one clinks) and lies for 7 s | 0.14 s + flight |
+| the last hero going down | fist up, hops and one shout ("GOT HIM!", "HA HA!", "TOO EASY!"); they do not shoot meanwhile. In co-op, while the other hero is still fighting, nobody celebrates | about 1.2 s after 0.25–0.6 s |
 
-**Jeńcy:**
-- **w klatce:** siedzi zgarbiony i co jakiś czas wygląda; macha, gdy bohater jest bliżej niż ok. 14 kafli; podskakuje, gdy jest bliżej niż ok. 6; zatyka uszy przez 1,1 s po wybuchu w pobliżu. Klatka ma ciemne wnętrze, na nim jeńca i kraty na wierzchu;
-- **uwolniony z daleka:** wyskakuje z rękami w górze, biegnie do bohatera (do ok. 15 kafli, gdy droga jest wolna, więc nie trzeba po niego wracać), a czekając skacze z radości.
+**Prisoners:**
+- **in a cage:** sits hunched and peeks out now and then; waves when the hero is closer than about 14 tiles; jumps when closer than about 6; covers his ears for 1.1 s after a nearby explosion. The cage has a dark interior, the prisoner on it and bars on top;
+- **freed from a distance:** jumps out with arms up, runs to the hero (up to about 15 tiles when the way is clear, so you do not have to go back for him), and jumps for joy while waiting.
 
-**Bossowie:** każdy atak ma zapowiedź w samej maszynie, nie tylko znacznik na ziemi:
-- **IRON HOG:** przed strzałem z działa lufa staje, a jej wylot żarzy się coraz jaśniej (0,35 s). Strzał cofa czołg, lufa wraca na miejsce, spod gąsienic leci kurz. Przed serią z karabinu przy ziemi port KM miga na czerwono (0,45 s).
-- **SKYREAPER:** pochyla się nosem w stronę lotu. Wyrzutnia świeci 0,3 s przed rakietą, luk otwiera się 0,25 s przed bombą.
-- **GRIMM WALKER:** przysiada przed skokiem (do 5 px), osiada przy lądowaniu, chwieje się z otwartym kokpitem. Miotacz parska i świeci 0,4 s przed strumieniem, działo szarpie korpusem.
-- **JUGGERNAUT:** odchyla się przed pchnięciem barkiem.
+**Bosses:** every attack is telegraphed on the machine itself, not just by a marker on the ground:
+- **IRON HOG:** before a cannon shot the barrel stops and its muzzle glows brighter and brighter (0.35 s). The shot pushes the tank back, the barrel returns to place, dust flies from under the tracks. Before a ground-level machine-gun burst the MG port blinks red (0.45 s).
+- **SKYREAPER:** pitches its nose in the direction of flight. The launcher glows 0.3 s before a rocket, the hatch opens 0.25 s before a bomb.
+- **GRIMM WALKER:** crouches before a jump (up to 5 px), settles on landing, sways with the cockpit open. The flamethrower sputters and glows 0.4 s before the stream, the cannon jerks the body.
+- **JUGGERNAUT:** leans back before a shoulder shove.
 
-**Dźwięki:** brzęk zawleczki, „klik-klik” przeładowania i zamka, krzyk spadającego żołnierza.
+**Sounds:** the clink of a grenade pin, the "click-click" of a reload and a bolt, the scream of a falling soldier.
 
-**Panel F2, grupa POSTACIE:**
-- „Animacje postaci: nowe (1) / stare (0)” – do porównania z 1.31;
-- „Długość póz ×” (lądowanie, drgnięcie, radość, przeładowanie);
-- „Podskok wroga na „!”” (95 px/s);
-- „Granatnik: zamach przed rzutem” (0,35 s);
-- „Moździerzysta: pocisk do lufy” (0,3 s);
-- „Fala uderzeniowa: żołnierz leży” (0,55 s);
-- „Wrogowie cieszą się ze śmierci bohatera” (1,2 s);
-- „Wiercenie się w bezruchu po” (3,5 s);
-- „Zapowiedzi ataków bossów ×” (0 = jak w 1.31).
+**F2 panel, CHARACTERS group:**
+- "Character animations: new (1) / old (0)" – for comparison with 1.31;
+- "Pose duration ×" (landing, flinch, celebration, reload);
+- "Enemy hop on "!"" (95 px/s);
+- "Grenadier: wind-up before the throw" (0.35 s);
+- "Mortarman: shell into the tube" (0.3 s);
+- "Shockwave: soldier stays down" (0.55 s);
+- "Enemies cheer when the hero dies" (1.2 s);
+- "Idle fidget after" (3.5 s);
+- "Boss attack telegraphs ×" (0 = as in 1.31).
 
-**Wydajność:** obrys sprite'a liczy się teraz w jednym przebiegu po pikselach, a odbicie lustrzane i biały błysk powstają przy pierwszym użyciu. Obraz jest taki sam co do piksela (sprawdzone sumą kontrolną wszystkich sprite'ów). Budowanie grafiki przy starcie gry trwa 0,35 s zamiast 2,7 s, a nowa poza ok. 0,7 ms.
+**Performance:** the sprite outline is now computed in a single pass over the pixels, and the mirror image and white flash are created on first use. The picture is identical to the pixel (verified with a checksum of all sprites). Building the graphics at game start takes 0.35 s instead of 2.7 s, and a new pose about 0.7 ms.
 
-**Sprawdzenie:**
-- `tools/posesheet.js`: arkusz wszystkich postaci we wszystkich pozach;
-- `tools/animfilm.js`: taśmy filmowe scen (klatki obok siebie), np. żołnierz od „!” do przeładowania, granatnik, moździerz, snajper, psy, panika, przewrócenie falą, radość wrogów, śmierci, jeńcy, spadochroniarz i bossowie;
-- `REGRESS()`: PASS, 0 błędów, bot ukończył 6 z 15 misji (zwykle 5–10).
-- Symulowani gracze (`HUMANBOSS`), test A/B nowe / stare animacje, przebiegi na zmianę, 15 par na bossa: ukończenia IRON HOG 13/15 vs 15/15, SKYREAPER 6/15 vs 3/15, GRIMM WALKER 8/15 vs 6/15. Różnice idą w obie strony i mieszczą się w szumie (bot czasem przekopuje się w skałę, raz w jednej, raz w drugiej wersji), więc trudność się nie zmieniła. Zapowiedzi nie spowalniają ataków: przerwa przed kolejnym strzałem z działa i przed miotaczem mecha jest krótsza o czas zapowiedzi, a rakiety, bomby i serie KM mają to samo tempo co w 1.31. Pierwsza wersja zapowiedzi wydłużała cykl działa czołgu o 0,35 s.
+**Verification:**
+- `tools/posesheet.js`: a sheet of all characters in all poses;
+- `tools/animfilm.js`: film strips of scenes (frames side by side), e.g. a soldier from "!" to reload, grenadier, mortar, sniper, dogs, panic, knocked down by a shockwave, enemies celebrating, deaths, prisoners, paratrooper and bosses;
+- `REGRESS()`: PASS, 0 errors, the bot completed 6 of 15 missions (usually 5–10).
+- Simulated players (`HUMANBOSS`), A/B test of new / old animations, alternating runs, 15 pairs per boss: completions IRON HOG 13/15 vs 15/15, SKYREAPER 6/15 vs 3/15, GRIMM WALKER 8/15 vs 6/15. The differences go both ways and are within noise (the bot sometimes digs itself into rock, sometimes in one version, sometimes in the other), so the difficulty has not changed. The telegraphs do not slow down the attacks: the pause before the next cannon shot and before the mech's flamethrower is shorter by the telegraph time, and rockets, bombs and MG bursts have the same pace as in 1.31. The first version of the telegraphs lengthened the tank cannon cycle by 0.35 s.
 
-### 5.15 Tekst w grze (1.33)
+### 5.15 In-game text (1.33)
 
-Uwaga gracza: czcionka była nieczytelna, a w akcji pojawiało się tyle napisów naraz, że nie było wiadomo, na czym się skupić („start gry i 50 napisów jeden na drugim”; „jak mam je przeczytać i jednocześnie grać?”). Komentarze postaci są fajne, ale nie mogą grać głównej roli. Zmierzone przed zmianą: bot w misjach 1, 4 i 7 miał na ekranie do 10 napisów naraz. Po zmianie: nigdy więcej niż 1.
+The player's note: the font was unreadable, and during action so many captions appeared at once that it was unclear what to focus on ("game start and 50 captions on top of each other"; "how am I supposed to read them and play at the same time?"). Character comments are fun, but they must not take the lead. Measured before the change: the bot in missions 1, 4 and 7 had up to 10 captions on screen at once. After the change: never more than 1.
 
-**Zasada: w trakcie akcji nie ma tekstu do czytania.** Co się dzieje, pokazują obraz, dźwięk i piktogramy. Zostały tylko:
-- **jedno hasło naraz**, gdy trzeba coś zrobić: „UCIEKAJ!” (samozniszczenie bazy), „NA DRABINKĘ!”, zamknięta flaga („NAJPIERW ZLIKWIDUJ PUŁKOWNIKA!”), w co-opie „UWOLNIJ JEŃCA, BY OŻYWIĆ P2!” i sterowanie w locie śmigłowcem. Nowe hasło zastępuje poprzednie (`World.announce`);
-- **co cię zabiło**, nad ciałem, gdy kamera trzyma się śmierci (sprawiedliwe śmierci, 5.7). Nikt wtedy nic nie mówi;
-- **komentarze** (bohater, żołnierze, jeńcy „POMOCY!”, Grimm w radiu): jeden naraz, 1,5 s przerwy między dwoma, żaden w czasie hasła ani napisu o śmierci. Kwestia Grimma czeka na ciszę do 6 s, potem przepada (`World.quiet`, `say`, `radioSay`);
-- piktogramy: klawisze nad bohaterem, tabliczki, „!” i „?” nad wrogami, strzałki (paliwo i słupy mostów mają teraz strzałkę zamiast „STRZEL: WYCIEK” / „STRZEL W SŁUP”), „↑ WSIADAJ” przy pojeździe.
+**Rule: during action there is no text to read.** What is happening is shown by visuals, sound and pictograms. All that remains:
+- **one call-out at a time**, when something has to be done: "RUN!" (base self-destruct), "GET ON THE LADDER!", a locked flag ("ELIMINATE THE COLONEL FIRST!"), in co-op "FREE A PRISONER TO REVIVE P2!" and the helicopter flyover controls. A new call-out replaces the previous one (`World.announce`);
+- **what killed you**, above the body, while the camera holds on the death (fair deaths, 5.7). Nobody says anything then;
+- **comments** (hero, soldiers, prisoners' "HELP!", Grimm on the radio): one at a time, 1.5 s gap between two, none during a call-out or a death caption. A Grimm line waits up to 6 s for silence, then is dropped (`World.quiet`, `say`, `radioSay`);
+- pictograms: keys above the hero, signs, "!" and "?" above enemies, arrows (fuel and bridge posts now have an arrow instead of "SHOOT: LEAK" / "SHOOT THE POST"), "↑ ENTER" next to a vehicle.
 
-**Usunięte:** punkty nad wrogami (+100, +250…), nazwy stylowych zabójstw i serii (wynik dalej rośnie, dźwięk zostaje), KOP!, ZŁAPANY!, ODBITE!, NALOT!, WABIK!, FALA UDERZENIOWA!, BRAK AMMO, AU!/OSTATNIE TRAFIENIE!, +1 ŻYCIE, +1 HP, AMUNICJA!, SŁABY PUNKT!, PANCERZ ROZBITY!, ODEPCHNIĘTY!; tytuły na starcie misji (numer, operacja, cel, posiłki, reguła dnia: są na ekranach przed misją, a cel na trasie u góry); CEL ZLIKWIDOWANY, SKŁADY, CHECKPOINT, EWAKUACJA, SEKRET ZNALEZIONY + nagrody, NOWY BOHATER (jest na ekranie wyników), SPECJAL GOTOWY, ALARM, CIĘŻARÓWKA, NALOT NADCHODZI, CZAS SPOWOLNIONY, SZAŁ, pojazdy online/stracone, zapowiedzi bossów i minibossów (nazwa jest na pasku zdrowia), nazwy nad minibossami i pojazdami; karty „intel” przy pierwszym wrogu danego typu, porady po śmierci i porada o ścianie; pasek broni nowego bohatera pod nieśmiertelnikiem.
+**Removed:** points above enemies (+100, +250…), names of style kills and streaks (the score still goes up, the sound stays), KICK!, GRABBED!, RETURN!, AIRSTRIKE!, DECOY!, SHOCKWAVE!, NO AMMO, OUCH!/LAST HIT!, +1 LIFE, +1 HP, AMMO!, WEAK SPOT!, ARMOR BROKEN!, SHOVED!; titles at the mission start (number, operation, objective, reinforcements, daily rule: they are on the pre-mission screens, and the objective is on the route at the top); TARGET ELIMINATED, DEPOTS, CHECKPOINT, EXTRACTION, SECRET FOUND + rewards, NEW HERO (it is on the results screen), SPECIAL READY, ALARM, TROOP TRUCK, AIRSTRIKE INCOMING, TIME WARP, BERSERK, vehicles online/lost, boss and mini-boss announcements (the name is on the health bar), names above mini-bosses and vehicles; "intel" cards on the first enemy of each type, tips after death and the wall tip; the new hero's weapon bar under the dog tag.
 
-**Krój: Russo One** (wybrany z czterech krojów pokazanych w grze; licencja SIL OFL, `src/fonts/OFL.txt`). Pliki woff2 (łacina + łacina rozszerzona, razem 12 KB) są w `src/fonts/`, a build wpisuje je do kodu (`tools/build.mjs`), więc każda paczka działa bez internetu.
-- Wszystko, co napisane, jest na warstwie HUD w rozdzielczości ekranu (`Font` w `src/gfx.js`, płótno z `hiRes`): menu, HUD, a teraz też dymki, hasło, napis o śmierci, P1/P2, etykieta celu za krawędzią i napisy lotu. Wielkie litery mają 7 jednostek, jak w bitmapie, więc układ ekranów się nie zmienił.
-- Obrazki między literami (← → ↑ ↓ ★ ♥ • ▶ ◀ ✓ ♪ ⚙ ¤) zostają z bitmapy: Russo One nie ma ich wszystkich, a zastępcza czcionka rysowałaby je po swojemu.
-- Russo One jest ok. 13% szersza od bitmapy. Tekst, który się nie mieści, zmniejsza się co ¼ zamiast od razu o połowę (`Font.step`).
-- Bitmapa 5×7 zostaje dla płótna gry (klawisze na tabliczkach, znaki nad głowami) i jako zapas, zanim krój się wczyta (start czeka na niego do 2 s).
-- Sprawdzone: przegląd ekranów po polsku przy 480×270 i 342×256 oraz po niemiecku przy 384×216. Nic nie wychodzi poza ramki, `tools/check_lang.py` ok.
+**Typeface: Russo One** (chosen from four typefaces shown in the game; SIL OFL license, `src/fonts/OFL.txt`). The woff2 files (Latin + Latin Extended, 12 KB together) are in `src/fonts/`, and the build inlines them into the code (`tools/build.mjs`), so every package works offline.
+- Everything written is on the HUD layer at screen resolution (`Font` in `src/gfx.js`, canvas from `hiRes`): menus, HUD, and now also speech bubbles, call-outs, the death caption, P1/P2, the off-screen objective label and the flyover captions. Capitals are 7 units tall, as in the bitmap font, so screen layouts did not change.
+- Symbols between letters (← → ↑ ↓ ★ ♥ • ▶ ◀ ✓ ♪ ⚙ ¤) still come from the bitmap font: Russo One does not have them all, and a fallback font would draw them its own way.
+- Russo One is about 13% wider than the bitmap font. Text that does not fit shrinks in steps of ¼ instead of straight to half (`Font.step`).
+- The 5×7 bitmap font stays for the game canvas (keys on signs, marks above heads) and as a fallback until the typeface loads (the start waits up to 2 s for it).
+- Verified: a review of screens in Polish at 480×270 and 342×256 and in German at 384×216. Nothing spills out of frames, `tools/check_lang.py` OK.
 
-## 6. Bohaterowie
+## 6. Heroes
 
-Postacie są autorskimi archetypami kina akcji lat 80 (bez nazw i wizerunków istniejących postaci).
+The characters are original 80s action-movie archetypes (no names or likenesses of existing characters).
 
-| Bohater | Broń główna | Specjal (ładunki) | Odblokowanie | Rola |
+| Hero | Main weapon | Special (charges) | Unlock | Role |
 |---|---|---|---|---|
-| **Max Havoc** | karabin szturmowy (ogień ciągły) | granaty odłamkowe (3) | start | uniwersalny |
-| **Buckshot** | strzelba (6 śrucin, odrzut) | dynamit (3, duży wybuch) | start | bliski dystans, kopanie |
-| **Scorch** | miotacz ognia, **ognioodporny** | koktajl zapalający (3) | 2 jeńców | podpalanie budowli |
-| **Ronin** | katana — **odbija pociski** | shadow dash (3), nietykalny | 5 | ryzyko/nagroda |
-| **Chrono** | karabin serią (3 strzały) | **Time Warp** — wrogowie i ich pociski ×0,28 przez 5 s (2) | 8 | kontrola tempa |
-| **Boomer** | wyrzutnia rakiet | nalot 5 rakiet (2) | 11 | niszczenie terenu |
-| **Skyhawk** | podwójne pistolety; **plecak odrzutowy** (przytrzymaj skok = lot) | **Missile Swarm** — 6 samonaprowadzających rakiet (3) | 15 | mobilność |
-| **Brutus** | minigun (rozkręcanie, spowolnienie) | ground pound (3) | 19 | ściana ognia |
-| **Ricochet** | tnące dyski — przebijają, odbijają się od ścian, **wracają** (max 2) | **Blade Storm** — 8 dysków dookoła (3) | 24 | pozycjonowanie |
-| **Deadeye** | snajperka — przebija 5 wrogów i 3 kafle | railgun przez cały ekran (2) | 29 | precyzja |
-| **Phantom** | wyciszony pistolet maszynowy (minimalny hałas) | **Decoy + Cloak** — wybuchający hologram ściąga ogień, 3 s niewidzialności (3) | 35 | skradanie |
-| **Volt** | działo Tesli — łańcuch na 4 cele | burza piorunów na cały ekran (2) | 42 | kontrola tłumu |
+| **Max Havoc** | assault rifle (continuous fire) | frag grenades (3) | start | all-rounder |
+| **Buckshot** | shotgun (6 pellets, knockback) | dynamite (3, big explosion) | start | close range, digging |
+| **Scorch** | flamethrower, **fireproof** | incendiary cocktail (3) | 2 prisoners | setting buildings on fire |
+| **Ronin** | katana — **deflects projectiles** | shadow dash (3), invulnerable | 5 | risk/reward |
+| **Chrono** | burst rifle (3 shots) | **Time Warp** — enemies and their projectiles ×0.28 for 5 s (2) | 8 | tempo control |
+| **Boomer** | rocket launcher | airstrike of 5 rockets (2) | 11 | terrain destruction |
+| **Skyhawk** | twin pistols; **jetpack** (hold jump = fly) | **Missile Swarm** — 6 homing missiles (3) | 15 | mobility |
+| **Brutus** | minigun (spin-up, slowdown) | ground pound (3) | 19 | wall of fire |
+| **Ricochet** | cutting discs — pierce, bounce off walls, **come back** (max 2) | **Blade Storm** — 8 discs all around (3) | 24 | positioning |
+| **Deadeye** | sniper rifle — pierces 5 enemies and 3 tiles | railgun across the whole screen (2) | 29 | precision |
+| **Phantom** | silenced SMG (minimal noise) | **Decoy + Cloak** — an exploding hologram draws fire, 3 s of invisibility (3) | 35 | stealth |
+| **Volt** | Tesla gun — chains to 4 targets | full-screen lightning storm (2) | 42 | crowd control |
 
-Pierwsze odblokowania przychodzą szybko (już w misji 1–2); cała dwunastka po ok. 10 misjach (4–6 jeńców na misję). Kampania ma 72 jeńców.
-
----
-
-## 7. Wrogowie (armia Generała Grimma)
-
-| Wróg | HP | Zachowanie | Od misji |
-|---|---|---|---|
-| **Grunt** | 1 | patrol, serie po 3 strzały, podchodzi/odsuwa się | 1 |
-| **Bomber** | 1 | biegnie i wybucha; zabity też wybucha | 2 |
-| **Pies** | 1 | szybki, skacze do gardła | 3 |
-| **Grenadier** | 1 | rzuca granaty po paraboli wycelowanej w gracza | 4 |
-| **RPG** | 1 | rakiety niszczące teren | 6 |
-| **Heavy** | 14 | minigun, serie po 10, odporny na odrzut | 8 |
-| **Wieżyczka** | 9 | stała, obraca się z opóźnieniem | 7 |
-| **Tarczownik** | 2 | tarcza zatrzymuje kule od przodu, uderza z bliska; nóż / wybuch / ogień / railgun rozbijają tarczę | 4 |
-| **Obserwator** | 1 | nieuzbrojony, z radiem; biegnie do syreny alarmowej i po drodze alarmuje innych | 2 |
-| **Spadochroniarz** | 1 | dowolny żołnierz zrzucony przez syrenę; w locie bezbronny | 2 |
-| **Pułkownik** | 6 | cel zamachu: pistolet, cofa się przed graczem, broni się w narożniku | 4 |
-| **Moździerzysta** | 1 | stoi w miejscu; pocisk spada pionowo z nieba ~1,25 s po pojawieniu się **czerwonego znacznika „X”** (i linii z góry) pod graczem — dach nad głową chroni, pocisk można zestrzelić | 7 |
-| **Miotacz ognia** (1.9) | 3 | ognioodporny; podchodzi na ~70 px, **dysza rozbłyskuje przez 0,55 s** (ostrzeżenie, „!”), potem 1,1 s strumienia ognia (~70 px, 1 HP, podpala paliwo i drewno). Trafienie przerywa rozbłysk. Po śmierci **zbiornik syczy 0,9 s** i wybucha z płonącą plamą (od wybuchu — od razu); rani też jego kolegów (FRIENDLY FIRE) | 4 |
-| **Snajper** (1.9) | 1 | stoi (najchętniej na **wieżyczce snajperskiej** — otwarta platforma na palach z drabiną); widzi daleko (400 px) i pod kątem do ±60°. **Czerwony laser śledzi bohatera** ~1,25 s z ograniczoną prędkością obrotu, potem **robi się biały i staje na 0,35 s** — strzał (640 px/s, 1 HP) leci dokładnie po zatrzymanej linii. Ucieczka z linii, zasłona albo ślizg pod linią = unik. Trafienie albo świst kuli obok (przed zablokowaniem) psuje mu celowanie | 6 |
-| **Oficer z radiem** (1.9) | 2 | trzyma dystans (cofa się, gdy podchodzisz), z bliska strzela z pistoletu. Co 8–10 s **wzywa nalot**: 1,3 s przez radio (fale nad anteną, „!”) — trafienie przerywa wezwanie; potem **czerwona raca** pod graczem i **5 znaczników** w pasie ~100 px, po ~1,5 s przelatuje odrzutowiec i spadają bomby (rani gracza i wrogów) | 8 |
-| **Ciężarówka z desantem** (1.9) | 22 | raz na misję w części misji od 6 (i w Arcade od 6. etapu): po minięciu połowy mapy nadjeżdża z przodu, staje ~130 px przed bohaterem i wypuszcza 3–5 żołnierzy (hełmy widać nad burtą). **Wysadzona wcześniej zabija wszystkich w środku** (CHAIN REACTION + multi-kill). Potem stoi jako osłona. Kule wroga jej nie niszczą | 6 |
-
-**Pierwsze spotkanie** (1.9): gdy dany typ wroga (i ciężarówka) pierwszy raz pojawi się na ekranie, pod trasą misji pojawia się jednorazowa karta INTEL: twarz wroga, nazwa i sposób na niego, np. „SNIPER / MOVE WHEN THE LASER TURNS WHITE”, „RIOT SHIELD / KNIFE HIM OR SHOOT HIS BACK”. Jedna karta naraz i nie w trakcie dużych napisów (1.27, 5.10; wcześniej zdanie na środku ekranu) (zapis w `Save.data.tips`; lista w `ENEMY_INTRO`, `src/army.js`).
-
-Stany AI: patrol → **„?”** (hałas, strzały, wybuchy w pobliżu) → **„!”** (zobaczył gracza: zasięg, kierunek, linia wzroku) → atak → zgubienie celu. Alarm rozchodzi się na pobliskich żołnierzy. Wróg przeskakuje przeszkody o wysokości 1 kafla, nie spada z urwisk w patrolu. **Panika**: ogień, żywe ładunki wybuchowe w pobliżu i krwawe zabójstwa nożem sprawiają, że żołnierze uciekają. Zabity kulą bomber zostawia tykającą kamizelkę; grenadier często upuszcza odbezpieczony granat.
+The first unlocks come quickly (already in missions 1–2); all twelve after about 10 missions (4–6 prisoners per mission). The campaign has 72 prisoners.
 
 ---
 
-## 8. Bossowie
+## 7. Enemies (General Grimm's army)
 
-| Misja | Boss | Ataki | Słabości / taktyka |
+| Enemy | HP | Behavior | From mission |
 |---|---|---|---|
-| 5 | **IRON HOG** (czołg) | pocisk balistyczny wycelowany w gracza, seria z KM przy ziemi, desant piechoty z włazu, taran | skacz nad serią, eksplozje ×1,6 obrażeń; **słaby punkt: beczki z paliwem na tyle** (×2,5 — trzeba zajść od tyłu albo rzucić granat za czołg); wybuch w otwartym włazie podczas desantu ×3 |
-| 10 | **SKYREAPER** (śmigłowiec) | rakiety w punkt przy graczu (1.19: jedna na salwę, w drugiej fazie dwie; miejsce trafienia oznaczone czerwonym krzyżykiem), bomby (też ze znacznikiem), nalot koszący nisko przez całą arenę | wspinaj się na filary, strzelaj gdy schodzi nisko; **słaby punkt: ogon** (×2,2, miga światło przekładni) |
-| 15 | **GRIMM WALKER** (mech z generałem) | salwa rakiet z oznaczeniem celu, skok z falą uderzeniową, miotacz ognia, działko | uciekaj ze znaczników; **słaby punkt: kokpit, gdy jest otwarty** (×3) — po każdym lądowaniu mech chwieje się 1,4 s z uniesioną osłoną, kokpit jest też otwarty, gdy zieje ogniem |
+| **Grunt** | 1 | patrols, 3-shot bursts, advances/backs off | 1 |
+| **Bomber** | 1 | runs up and explodes; also explodes when killed | 2 |
+| **Attack Dog** | 1 | fast, leaps for the throat | 3 |
+| **Grenadier** | 1 | throws grenades in an arc aimed at the player | 4 |
+| **RPG** | 1 | terrain-destroying rockets | 6 |
+| **Heavy** | 14 | minigun, bursts of 10, resistant to knockback | 8 |
+| **Turret** | 9 | stationary, turns with a delay | 7 |
+| **Riot Shield** | 2 | the shield stops bullets from the front, bashes at close range; knife / explosion / fire / railgun break the shield | 4 |
+| **Lookout** | 1 | unarmed, with a radio; runs to the alarm siren and alerts others on the way | 2 |
+| **Paratrooper** | 1 | any soldier dropped by a siren; defenseless while in the air | 2 |
+| **Colonel** | 6 | assassination target: pistol, backs away from the player, defends himself in a corner | 4 |
+| **Mortarman** | 1 | stands still; the shell falls vertically from the sky ~1.25 s after a **red "X" marker** (and a line from above) appears under the player — a roof overhead protects you, the shell can be shot down | 7 |
+| **Flamethrower** (1.9) | 3 | fireproof; closes to ~70 px, **the nozzle flares for 0.55 s** (warning, "!"), then 1.1 s of a fire stream (~70 px, 1 HP, ignites fuel and wood). A hit interrupts the flare. On death **the tank hisses for 0.9 s** and explodes with a burning patch (from an explosion — immediately); it also hurts his comrades (FRIENDLY FIRE) | 4 |
+| **Sniper** (1.9) | 1 | stands (preferably on a **sniper tower** — an open platform on stilts with a ladder); sees far (400 px) and at angles up to ±60°. **A red laser tracks the hero** for ~1.25 s with a limited turn speed, then **turns white and freezes for 0.35 s** — the shot (640 px/s, 1 HP) flies exactly along the frozen line. Leaving the line, cover or sliding under the line = a dodge. A hit or a bullet whizzing past (before the lock) spoils his aim | 6 |
+| **Radio Officer** (1.9) | 2 | keeps his distance (backs off when you approach), shoots a pistol at close range. Every 8–10 s **calls in an airstrike**: 1.3 s on the radio (waves above the antenna, "!") — a hit interrupts the call; then a **red flare** under the player and **5 markers** in a ~100 px strip, after ~1.5 s a jet flies over and bombs fall (hurting the player and enemies) | 8 |
+| **Troop Truck** (1.9) | 22 | once per mission in some missions from 6 on (and in Arcade from stage 6): after the halfway point of the map it drives in from ahead, stops ~130 px in front of the hero and unloads 3–5 soldiers (helmets visible above the side). **Blown up early, it kills everyone inside** (CHAIN REACTION + multi-kill). Afterwards it stays as cover. Enemy bullets do not destroy it | 6 |
 
-**Słabe punkty** (1.9): trafienie w nie pokazuje „WEAK SPOT!” i daje metaliczny dźwięk; na starcie walki pod nazwą bossa pojawia się podpowiedź, gdzie celować. Kule i wybuchy niosą punkt trafienia (wybuch liczy się ze środka).
+**First encounter** (1.9): when a given enemy type (and the truck) first appears on screen, a one-time INTEL card appears under the mission route: the enemy's face, name and how to deal with it, e.g. "SNIPER / MOVE WHEN THE LASER TURNS WHITE", "RIOT SHIELD / KNIFE HIM OR SHOOT HIS BACK". One card at a time and not during big captions (1.27, 5.10; previously a sentence in the middle of the screen) (saved in `Save.data.tips`; list in `ENEMY_INTRO`, `src/army.js`).
 
-**Uczciwe trafienia (1.19)**: zderzenie z bossem kosztuje 1 punkt życia i odrzuca bohatera (wcześniej natychmiastowa śmierć — w symulacji graczy częsty zgon przy czołgu). Pociski z działa IRON HOG-a oraz rakiety i bomby SKYREAPER-a zostawiają na ziemi czerwony znacznik miejsca upadku, taki sam jak pocisk moździerza: „czerwony krzyżyk = zejdź” znaczy w całej grze to samo. SKYREAPER strzela mniej rakiet naraz (1 zamiast 2, w drugiej fazie 2 zamiast 3) — w symulacji był największą ścianą kampanii (ok. 5,6 utraconego bohatera na próbę, 1 wygrana na 18; po zmianie 4,1 i 5 na 18). Śmierć od bossa daje podpowiedź dla tego bossa (np. „CLIMB THE PILLARS - SHOOT IT WHEN IT FLIES LOW”).
-
-Wspólne: druga faza poniżej ~45% HP (szybsze ataki), taranowanie przeszkód, wrak zostaje na polu bitwy. Arena ma skalną podłogę, żeby walka nie zapadała się w dół.
-
-### 8.1 Mini-bossowie (1.24)
-
-W środku zwykłej misji stoi ciężki przeciwnik z nazwą i paskiem pancerza. Ma jeden sposób, który działa dużo lepiej od reszty (`src/miniboss.js`).
-
-| Mini-boss | Gdzie | Zachowanie | Jak go pokonać |
-|---|---|---|---|
-| **THE DOZER** (buldożer) | misje 7 i 14, Arcade | Jedzie na gracza i mieli teren przed sobą (poza skałą macierzystą). Wjeżdża na stopnie, pcha przed sobą beczki i ciała, rozjeżdża żołnierzy. Co 4,5–6,5 s rozgrzewa silnik przez 0,8 s: czerwone światło, dym, drgania, „!” i czerwone kreski na ziemi wzdłuż toru szarży. Potem szarżuje z prędkością 132 px/s przez 1,1 s. Poniżej 40% HP jest szybszy i płonie. | Lemiesz zatrzymuje kule lecące z przodu. **Kabina ×3** (strzelaj w skoku), **silnik z tyłu ×2**, wybuchy ×1,6. Beczki pchane przez lemiesz najlepiej zestrzelić, gdy są tuż przy nim. |
-| **JUGGERNAUT** (strzelec w kombinezonie saperskim) | misje 4 i 11, Arcade | Podchodzi powoli na ok. 120 px i obraca się z opóźnieniem 0,9 s. Minigun rozkręca się przez 0,9 s (czerwony laser pokazuje linię serii, narasta świst, pojawia się „!”). Potem strzela serię 13 pocisków (w szale 18) i powoli prowadzi ją za graczem. Stojącego tuż przed nim bohatera odpycha barkiem (zapowiedź 0,3 s, bez obrażeń), żeby zrobić miejsce na serię. | Przód ×0,4 (iskry), a przy 50% HP odpada płyta pancerza („ARMOR BROKEN!”) i przód traci osłonę (×1). **Zasobnik z amunicją na plecach ×2,5**, więc trzeba go przeskoczyć albo zajść od tyłu. Wybuchy ×1,6. |
-
-- **Przebudzenie:** śpi, dopóki bohater nie podejdzie (ok. 230 px, w kadrze) albo go nie trafi. Wtedy pojawia się „MINI-BOSS!”, nazwa i podpowiedź, na 2,2 s wchodzą pasy kinowe z krótkim zwolnieniem, a Grimm odzywa się przez radio.
-- **Zasady:** liczy się jak boss, czyli nie działają na niego natychmiastowe zabójstwa (deptanie, łapanie, zgniecenie). Nie ma jednak areny ani blokady kamery. Nie odchodzi dalej niż ok. 300 px od swojego miejsca.
-- **Uczciwe trafienia:**
-  - szarża buldożera kosztuje 1 HP z odrzutem, a powolne pchnięcie tylko odpycha;
-  - seria JUGGERNAUTA trwa ok. 1 s, czyli krócej niż nietykalność po trafieniu (1,2 s), więc jedna seria trafia najwyżej raz (w szale może dwa razy);
-  - śmierć od mini-bossa daje jego własną podpowiedź („RED LIGHT = THE DOZER CHARGES - JUMP OVER IT”, „RED LASER = A LONG BURST - TAKE COVER OR GET BEHIND HIM”).
-- **Wytrzymałość i nagroda:** HP = 60 (buldożer) lub 55 (JUGGERNAUT) × (1 + 0,6 × trudność misji), w co-op ×1,4. Za zniszczenie jest 3000 pkt (× mnożnik poziomu trudności), +40 $ i złota skrzynia.
-- **Rozmieszczenie:** płaski odcinek o szerokości co najmniej 10 kafli, od 55% długości misji (najpóźniej wymuszony na 68%). Nie ma tam innych wrogów ani min. Przy każdym stoją dwie beczki: przed lemieszem buldożera i tuż obok JUGGERNAUTA (jeden strzał, dwa wybuchy). W Arcade mini-boss pojawia się od 3. etapu z szansą 35%, z pominięciem etapów z bossem i ucieczką.
-- **Iskry zamiast krwi:** trafienia w maszyny (bossowie, buldożer) sypią iskrami.
-- **Symulacja:** `HUMANBOSS`, 3 profile × 3 próby na misję.
-  - DRY BONES z buldożerem: 7 z 9 prób ukończonych, buldożer zniszczony w 5 z 9 (walka 13–26 s), 0,2 utraconego bohatera na próbę z jego powodu.
-  - COLD FEET z JUGGERNAUTEM: ukończeń tyle samo co w wariancie bez mini-bossa (5 z 9), 0,56 utraconego bohatera na próbę z jego powodu (przed strojeniem 0,9).
-  - Pierwsza wersja uderzenia barkiem zabierała HP i boty stojące przy nim ginęły seriami, dlatego odepchnięcie jest bez obrażeń.
-  - Pękanie pancerza skróciło walkę od samego przodu z ok. 50 s do ok. 10 s ciągłego ognia.
+AI states: patrol → **"?"** (noise, shots, explosions nearby) → **"!"** (saw the player: range, direction, line of sight) → attack → lose the target. The alarm spreads to nearby soldiers. Enemies hop over obstacles 1 tile high and do not walk off cliffs while patrolling. **Panic**: fire, live explosives nearby and bloody knife kills make soldiers flee. A bomber killed by a bullet leaves a ticking vest; a grenadier often drops a live grenade.
 
 ---
 
-## 9. Kampania i poziomy
+## 8. Bosses
 
-| # | Operacja | Strefa | Cel | Nowość |
+| Mission | Boss | Attacks | Weaknesses / tactics |
+|---|---|---|---|
+| 5 | **IRON HOG** (tank) | ballistic shell aimed at the player, ground-level MG burst, infantry deployed from the hatch, ram | jump over the burst, explosions ×1.6 damage; **weak spot: the fuel drums on the back** (×2.5 — you have to get behind it or throw a grenade behind the tank); an explosion in the open hatch during deployment ×3 |
+| 10 | **SKYREAPER** (helicopter) | rockets aimed at a spot near the player (1.19: one per volley, two in the second phase; the impact point marked with a red cross), bombs (also with a marker), a low strafing run across the whole arena | climb the pillars, shoot when it comes in low; **weak spot: the tail** (×2.2, the gearbox light blinks) |
+| 15 | **GRIMM WALKER** (mech with the general) | rocket volley with target marking, jump with a shockwave, flamethrower, cannon | get off the markers; **weak spot: the cockpit while it is open** (×3) — after every landing the mech sways for 1.4 s with the canopy raised, and the cockpit is also open while it breathes fire |
+
+**Weak spots** (1.9): hitting them shows "WEAK SPOT!" and plays a metallic sound; at the start of the fight a hint about where to aim appears under the boss's name. Bullets and explosions carry a hit point (an explosion counts from its center).
+
+**Fair hits (1.19)**: colliding with a boss costs 1 hit point and knocks the hero back (previously instant death — a frequent death at the tank in the player simulation). IRON HOG's cannon shells and SKYREAPER's rockets and bombs leave a red impact marker on the ground, the same as a mortar shell: "red cross = step off" means the same thing throughout the game. SKYREAPER fires fewer rockets at once (1 instead of 2, in the second phase 2 instead of 3) — in the simulation it was the biggest wall of the campaign (about 5.6 heroes lost per attempt, 1 win out of 18; after the change 4.1 and 5 out of 18). Death by a boss gives a hint for that boss (e.g. "CLIMB THE PILLARS - SHOOT IT WHEN IT FLIES LOW").
+
+Common: a second phase below ~45% HP (faster attacks), ramming through obstacles, the wreck stays on the battlefield. The arena has a rock floor so the fight does not sink downward.
+
+### 8.1 Mini-bosses (1.24)
+
+In the middle of a regular mission stands a heavy opponent with a name and an armor bar. It has one counter that works much better than anything else (`src/miniboss.js`).
+
+| Mini-boss | Where | Behavior | How to beat it |
+|---|---|---|---|
+| **THE DOZER** (bulldozer) | missions 7 and 14, Arcade | Drives at the player and grinds the terrain in front of it (except bedrock). Climbs steps, pushes barrels and bodies ahead of it, runs over soldiers. Every 4.5–6.5 s it revs its engine for 0.8 s: a red light, smoke, shaking, "!" and red dashes on the ground along the charge path. Then it charges at 132 px/s for 1.1 s. Below 40% HP it is faster and burns. | The blade stops bullets from the front. **Cab ×3** (shoot while jumping), **engine at the back ×2**, explosions ×1.6. Barrels pushed by the blade are best shot when they are right next to it. |
+| **JUGGERNAUT** (gunner in a bomb suit) | missions 4 and 11, Arcade | Slowly approaches to about 120 px and turns with a 0.9 s delay. The minigun spins up for 0.9 s (a red laser shows the burst line, a rising whine, "!" appears). Then it fires a burst of 13 rounds (18 when enraged) and slowly tracks the player with it. A hero standing right in front of it gets shoulder-shoved (0.3 s telegraph, no damage) to make room for the burst. | Front ×0.4 (sparks), and at 50% HP an armor plate falls off ("ARMOR BROKEN!") and the front loses its protection (×1). **Ammo pack on the back ×2.5**, so you have to jump over it or get behind it. Explosions ×1.6. |
+
+- **Awakening:** it sleeps until the hero comes close (about 230 px, in frame) or hits it. Then "MINI-BOSS!", the name and a hint appear, cinematic bars come in for 2.2 s with a short slowdown, and Grimm speaks up on the radio.
+- **Rules:** it counts as a boss, so instant kills (stomp, grab, crushing) do not work on it. However, there is no arena and no camera lock. It does not move more than about 300 px from its spot.
+- **Fair hits:**
+  - the bulldozer's charge costs 1 HP with knockback, and the slow push only shoves;
+  - the JUGGERNAUT's burst lasts about 1 s, shorter than the post-hit invulnerability (1.2 s), so one burst hits at most once (twice when enraged);
+  - death by a mini-boss gives its own hint ("RED LIGHT = THE DOZER CHARGES - JUMP OVER IT", "RED LASER = A LONG BURST - TAKE COVER OR GET BEHIND HIM").
+- **Durability and reward:** HP = 60 (bulldozer) or 55 (JUGGERNAUT) × (1 + 0.6 × mission difficulty), ×1.4 in co-op. Destroying it gives 3000 pts (× difficulty level multiplier), +$40 and a gold crate.
+- **Placement:** a flat stretch at least 10 tiles wide, from 55% of the mission length (forced at 68% at the latest). No other enemies or mines there. Each has two barrels next to it: in front of the bulldozer's blade and right next to the JUGGERNAUT (one shot, two explosions). In Arcade a mini-boss appears from stage 3 with a 35% chance, skipping boss and escape stages.
+- **Sparks instead of blood:** hits on machines (bosses, the bulldozer) throw sparks.
+- **Simulation:** `HUMANBOSS`, 3 profiles × 3 attempts per mission.
+  - DRY BONES with the bulldozer: 7 of 9 attempts completed, the bulldozer destroyed in 5 of 9 (fight 13–26 s), 0.2 heroes lost per attempt because of it.
+  - COLD FEET with the JUGGERNAUT: as many completions as in the variant without a mini-boss (5 of 9), 0.56 heroes lost per attempt because of it (0.9 before tuning).
+  - The first version of the shoulder shove took HP, and bots standing next to it died in series, which is why the shove does no damage.
+  - Armor breaking shortened a fight against the front alone from about 50 s to about 10 s of continuous fire.
+
+---
+
+## 9. Campaign and levels
+
+| # | Operation | Zone | Objective | New element |
 |---|---|---|---|---|
-| 1 | Wake-Up Call | Dżungla | ewakuacja | samouczek (tabliczki, od 1.27 piktogramy z klawiszami: ruch, skok, strzał, ślizg, jeńcy, wspinaczka, specjal, nóż i łapanie przy strażniku odwróconym tyłem, flaga, deptanie, drabina) |
-| 2 | Mudslide | Dżungla | ewakuacja | bombowce, pierwsze syreny |
-| 3 | Hot Pursuit | Dżungla | **ucieczka** | psy |
-| 4 | Tiger Claw | Dżungla | **zamach** | granatnicy, tarczownicy, miny, mini-boss **Juggernaut** |
-| 5 | Steel Rain | Dżungla | boss | **Iron Hog** |
-| 6 | Sandstorm | Pustynia | **sabotaż** | RPG |
-| 7 | Dry Bones | Pustynia | ewakuacja | wieżyczki, mini-boss **The Dozer** |
-| 8 | Scorpion Nest | Pustynia | **zamach** | heavy |
-| 9 | Mirage | Pustynia | **ucieczka** | mieszanka |
-| 10 | Dust Devil | Pustynia | boss | **Skyreaper** |
-| 11 | Cold Feet | Arktyka | **sabotaż** | rosnąca trudność, mini-boss **Juggernaut** |
-| 12 | Avalanche | Arktyka | **ucieczka** | |
-| 13 | Whiteout | Arktyka | **zamach** | |
-| 14 | Deep Freeze | Arktyka | ewakuacja | najdłuższa misja, mini-boss **The Dozer** |
-| 15 | Last Stand | Arktyka | boss | **Grimm Walker** |
+| 1 | Wake-Up Call | Jungle | extraction | tutorial (signs, from 1.27 pictograms with keys: movement, jump, shoot, slide, prisoners, climbing, special, knife and grab on a guard facing away, flag, stomp, ladder) |
+| 2 | Mudslide | Jungle | extraction | bombers, first sirens |
+| 3 | Hot Pursuit | Jungle | **escape** | dogs |
+| 4 | Tiger Claw | Jungle | **assassination** | grenadiers, shield soldiers, mines, mini-boss **Juggernaut** |
+| 5 | Steel Rain | Jungle | boss | **Iron Hog** |
+| 6 | Sandstorm | Desert | **sabotage** | RPG |
+| 7 | Dry Bones | Desert | extraction | turrets, mini-boss **The Dozer** |
+| 8 | Scorpion Nest | Desert | **assassination** | heavy |
+| 9 | Mirage | Desert | **escape** | mix |
+| 10 | Dust Devil | Desert | boss | **Skyreaper** |
+| 11 | Cold Feet | Arctic | **sabotage** | rising difficulty, mini-boss **Juggernaut** |
+| 12 | Avalanche | Arctic | **escape** | |
+| 13 | Whiteout | Arctic | **assassination** | |
+| 14 | Deep Freeze | Arctic | extraction | longest mission, mini-boss **The Dozer** |
+| 15 | Last Stand | Arctic | boss | **Grimm Walker** |
 
-**Generator** (deterministyczny seed na misję — każdy gra ten sam poziom): poziom składa się z segmentów (płasko, pagórki, klify w górę/dół, wąwozy z mostami — czasem z kolcami na dnie, kopce z tunelem, jaskinie z ukrytym jeńcem lub złotą skrzynią) i **prefabrykatów** (wieża strażnicza, stalowa wieża, chata, bunkier z wieżyczką, ruiny świątyni, gniazdo z workami, **kwatera pułkownika**). Przed częścią budowli stoi **posterunek z syreną** i obserwatorem (maks. 2–3 na misję). Cele specjalne mają własne segmenty: skład paliwa z workami i strażą (ok. 26/51/76% długości) oraz kwatera od ok. 58% długości. Wagi segmentów zależą od strefy, gęstość wrogów od trudności misji i poziomu trudności; co ~50 kolumn checkpoint, klatki rozłożone równomiernie. Dodanie misji = jeden wiersz w `LEVELS` (`src/levels.js`, pole `goal`: `extract` / `target` / `depots` / `escape`).
+**Generator** (deterministic seed per mission — everyone plays the same level): a level is built from segments (flat, hills, cliffs up/down, ravines with bridges — sometimes with spikes at the bottom, mounds with a tunnel, caves with a hidden prisoner or a gold crate) and **prefabs** (watchtower, steel tower, hut, bunker with a turret, temple ruins, sandbag nest, **the colonel's headquarters**). In front of some buildings stands a **siren post** with a lookout (max 2–3 per mission). Special objectives have their own segments: a fuel depot with sandbags and guards (at about 26/51/76% of the length) and the headquarters from about 58% of the length. Segment weights depend on the zone, enemy density on the mission difficulty and the difficulty level; a checkpoint every ~50 columns, cages spread evenly. Adding a mission = one row in `LEVELS` (`src/levels.js`, field `goal`: `extract` / `target` / `depots` / `escape`).
 
-**Arcade:** generowane misje (`arcadeDef`) — strefa zmienia się co 3 etapy, boss co 5, pula wrogów rośnie, cel losowany (ewakuacja, zamach, sabotaż, od 3. etapu ucieczka); życia i punkty przechodzą między etapami.
+**Arcade:** generated missions (`arcadeDef`) — the zone changes every 3 stages, a boss every 5, the enemy pool grows, the objective is random (extraction, assassination, sabotage, escape from stage 3); lives and score carry over between stages.
 
-**Karty ulepszeń w Arcade (1.20)** — Arcade jako „rajd”: po każdym ukończonym etapie gracz wybiera 1 z 3 kart, która działa do końca biegu (`PERKS` w `src/mods.js`, ekran `PerkOverlay` w `src/ui.js`). Karty łączą się z losową zmianą bohatera, więc każdy bieg jest inny — motyw „jeszcze jedna runda”.
+**Arcade upgrade cards (1.20)** — Arcade as a "run": after each completed stage the player picks 1 of 3 cards, which lasts until the end of the run (`PERKS` in `src/mods.js`, screen `PerkOverlay` in `src/ui.js`). The cards combine with the random hero swap, so every run is different — the "just one more run" motif.
 
-| Karta | Poziomy | Działanie |
+| Card | Levels | Effect |
 |---|---|---|
-| EXPLOSIVE ROUNDS | 3 | co 6. / 4. / 3. kula bohatera wybucha przy trafieniu (mały wybuch, bohatera nie rani) |
-| BIG BOOM | 3 | wybuchy bohatera +30% promienia na poziom |
-| CHAIN LIGHTNING | 3 | zabójstwo razi piorunem 1–3 najbliższych żołnierzy (2 obrażenia, w linii wzroku) |
-| RICOCHET | 2 | kule odbijają się od ścian (1–2 razy), obtłukując je |
-| HEAVY METAL | 1 | polegli żołnierze wybuchają po 0,35 s (błysk + sygnał), łańcuchy przez całe grupy |
-| SUPPLY PACK | 3 | +1 specjal na poziom każdemu bohaterowi |
-| BODY ARMOR | 2 | +1 punkt życia na poziom |
-| REINFORCEMENTS | bez limitu | +2 życia od razu (od 3. etapu) |
-| ROCKET BOOTS | 1 | każdy bohater lata (przytrzymany skok), jak SKYHAWK |
-| BARREL RAIN | 1 | co 3–5 s beczka spada z nieba na żołnierza w kadrze (nigdy nad bohaterem); zgniata go albo czeka na strzał |
-| VAMPIRE | 2 | co 8. / 5. zabójstwo leczy 1 punkt życia |
-| FAST HANDS | 3 | strzelanie +20% szybciej na poziom |
-| FLEET FOOT | 2 | bieg +12% na poziom |
-| BOUNTY | 2 | +50% pieniędzy za etap na poziom |
+| EXPLOSIVE ROUNDS | 3 | every 6th / 4th / 3rd hero bullet explodes on impact (small explosion, does not hurt the hero) |
+| BIG BOOM | 3 | hero explosions +30% radius per level |
+| CHAIN LIGHTNING | 3 | a kill zaps 1–3 nearest soldiers with lightning (2 damage, in line of sight) |
+| RICOCHET | 2 | bullets bounce off walls (1–2 times), chipping them |
+| HEAVY METAL | 1 | fallen soldiers explode after 0.35 s (flash + beep), chains through whole groups |
+| SUPPLY PACK | 3 | +1 special per level for every hero |
+| BODY ARMOR | 2 | +1 hit point per level |
+| REINFORCEMENTS | unlimited | +2 lives immediately (from stage 3) |
+| ROCKET BOOTS | 1 | every hero flies (held jump), like SKYHAWK |
+| BARREL RAIN | 1 | every 3–5 s a barrel falls from the sky onto a soldier in frame (never above the hero); it crushes him or waits for a shot |
+| VAMPIRE | 2 | every 8th / 5th kill heals 1 hit point |
+| FAST HANDS | 3 | shooting +20% faster per level |
+| FLEET FOOT | 2 | running +12% per level |
+| BOUNTY | 2 | +50% money per stage per level |
 
-Wybór jest powtarzalny (ziarno biegu + etap), więc powtórzenie etapu nie losuje kart od nowa. Karty biegu widać w pauzie (dolny pasek) i na ekranie końca biegu; gdy specjali jest więcej, niż mieści nieśmiertelnik, HUD pokazuje ikonę i licznik.
+The choice is repeatable (run seed + stage), so replaying a stage does not reroll the cards. The run's cards are visible in pause (bottom bar) and on the end-of-run screen; when there are more specials than the dog tag can fit, the HUD shows an icon and a counter.
 
-**Misja dnia (DAILY):** jedna generowana misja na dobę (seed = data RRRRMMDD, trudność jak etapy Arcade 4–9, bez bossa) — wszyscy gracze dostają tego dnia ten sam poziom; zapisywany jest najlepszy wynik dnia (pokazany na ekranie tytułowym). Powód do codziennego powrotu (retencja D1/D7).
+**Daily mission (DAILY):** one generated mission per day (seed = date YYYYMMDD, difficulty like Arcade stages 4–9, no boss) — all players get the same level that day; the best score of the day is saved (shown on the title screen). A reason to come back every day (D1/D7 retention).
 
-**Reguła dnia (1.20)** — misja dnia ma szalony warunek, ten sam dla wszystkich; reguły idą w stałej kolejce, więc każda wraca dokładnie co 9 dni (`DAILY_RULES` w `src/mods.js`): BARREL RAIN, LOW GRAVITY (grawitacja ×0,55), EXPLOSIVE ROUNDS (co 3. kula), HERO DAY (każdy bohater tego dnia to jeden z 12, także zablokowany — darmowa próba; w kolejnym takim dniu inny), HEAVY METAL, ROCKET BOOTS, RICOCHET, DOUBLE TIME (cała gra 25% szybciej), BIG BOOM (wybuchy bohatera +90%). Tytuł pokazuje „DAILY: <reguła>” (z najlepszym wynikiem dnia), a przycisk DAILY ma kropkę, dopóki misja dnia nie jest ukończona — każdego dnia jest nowy powód, żeby wrócić. Reguły i karty Arcade to te same efekty (`World.mods`).
-
----
-
-### 9.1 Charakter i humor (1.20)
-
-Obsada mówi — krótkie, własne teksty (żadnych cytatów z filmów), w dymkach nad postacią (`src/chatter.js`):
-- **bohaterowie** rzucają kwestię przy zrzucie i po uwolnieniu (SCORCH: „WHO ORDERED BARBECUE?”, BRUTUS: „MEET BERTHA!”) i czasem przechwalają się po potrójnym zabójstwie („TOO EASY!”, najwyżej raz na 8 s);
-- **żołnierze** krzyczą, gdy cię zauważą („INTRUDER!”), panikują („MEDIC!”, „NOPE!”), rzucają granat („FIRE IN THE HOLE!”) albo szarżują jako zamachowcy („FOR GRIMM!”) — okrzyki przy granatach i szarżach są przy okazji zapowiedzią ataku; najwyżej jeden okrzyk na 2,6–4,2 s;
-- **Generał Grimm** odzywa się przez radio (od 1.27 jak napisy w filmie: ikona radia i kwestia pisana na bieżąco na dole ekranu, 5.10): osobna kwestia na start każdej z 15 misji kampanii („WHO KEEPS BLOWING UP MY BRIDGES?!”), pule dla Arcade i misji dnia według celu, zapowiedź każdego bossa i żal po jego zniszczeniu („THAT WAS A RENTAL!”), reakcje na likwidację pułkownika i zniszczenie składów.
-
-## 10. Progresja i retencja
-
-**Interfejs (1.13)** — zasady, według których zbudowane są menu:
-- **Jeden główny przycisk na ekran**, pomarańczowy (także na dotyku, gdzie nie rysujemy fokusu): ▶ PLAY / ▶ CONTINUE na tytule, NEXT po misji, RETRY po porażce. Fokus klawiatury, pada i myszy jest żółty.
-- **Tytuł**: główny przycisk zawsze gra — nowy gracz startuje misję 1 (samouczek), powracający następną nieukończoną misję (podpis „MISSION 7 - DRY BONES”); jedno kliknięcie do rozgrywki. Pod nim MISSIONS / ARCADE / DAILY, HEROES i PLAYERS (co-op; na dotyku ukryte). Dźwięk, muzyka i opcje to ikony w rogu. Linia postępu: gwiazdki, bohaterowie, rekord Arcade.
-- **Wybór misji**: karta wybranej misji — nazwa, cel („ELIMINATE THE COLONEL, THEN EXTRACT”), najlepszy wynik, trzy medale ze stanem, HP i życia; trudność jako trzy segmenty RECRUIT / SOLDIER / VETERAN w tym samym miejscu, w którym wybiera się misję. Małe ekrany pomijają linię celu.
-- **Pauza**: pasek u góry z misją i celem, pasek u dołu z trzema medalami na żywo (jeńcy 2/5, czerwona gwiazdka po stracie bohatera).
-- **Podsumowanie**: podpis pod każdą gwiazdką; nowe medale migają.
-
-
-- Odblokowywanie misji po kolei, gwiazdki (45 łącznie), rekordy punktowe per misja, rekord Arcade (etap + punkty), najlepszy wynik misji dnia.
-- 12 bohaterów odblokowywanych jeńcami (także przy powtarzaniu misji i w Arcade); wybór ulubionego bohatera startowego; po każdej misji pasek „NEXT HERO” pokazuje, ilu jeńców brakuje.
-- **Pieniądze i ulepszenia (1.17)** — powód, żeby grać dłużej i wracać (średni czas sesji, D1):
-  - za misję: 40 $ + 20 $ za każdą gwiazdkę + 30 $ za każdy medal zdobyty pierwszy raz + 5 $ za jeńca; Arcade: 20 $ + 10 $ × etap; misja dnia: 60 $ + gwiazdki; porażka: 10 $ + 3 $ za jeńca;
-  - sklep UPGRADES: FIREPOWER +15% obrażeń (3 poziomy: 120/280/500), SUPPLY PACK +1 specjal każdemu bohaterowi (150/350), RESERVES +1 życie na misję (200/450), BODY ARMOR +1 HP (400); razem ok. 2450 $, czyli mniej więcej kampania z powtórkami; pierwszy zakup możliwy już po misji 1;
-  - codzienna dostawa: 50–150 $ rosnąco za kolejne dni z rzędu (przerwa zeruje serię); pojawia się dopiero po pierwszej ukończonej misji, żeby nowy gracz od razu grał;
-  - przycisk UPGRADES i skrzynia mają migający znacznik, gdy coś czeka;
-  - **dostawa po pierwszej misji dnia (1.19)**: gdy dostawa czeka, po podsumowaniu pierwszej ukończonej misji danego dnia wyskakuje panel „SUPPLY DROP +$50 — DAY 1 — TOMORROW +$60” z przyciskiem CLAIM. Wcześniej skrzynia była tylko na ekranie tytułowym, a gracz przechodzący misje przyciskiem NEXT mógł jej w pierwszej sesji w ogóle nie zobaczyć — i nie dowiedzieć się, że jutro czeka większa nagroda (to główny powód powrotu następnego dnia, D1).
-- **Garderoba (1.25)** — cel na długo, gdy ulepszenia są już kupione (ok. 2450 $, czyli mniej więcej kampania z powtórkami). Kosmetyka zmienia tylko wygląd, nigdy siłę (`src/wardrobe.js`, ekran `WardrobeScene` w `src/ui.js`).
-  - **Czapki (9):** BANDANA 200 $, GREEN BERET 250 $, BOONIE HAT 250 $, STEEL POT 300 $, STETSON 350 $, PARTY HAT 400 $, TOP HAT 500 $, VIKING HELM 700 $ (z rogami i brodą w kolorze włosów), CROWN 1200 $.
-  - **Malowania (7):** DESERT 150 $, ARCTIC 150 $, URBAN 200 $, NIGHT OPS 250 $, CRIMSON 300 $, NEON 400 $, GOLD PLATED 900 $. Zmieniają kolory koszuli, spodni i butów, a cechy bohatera (kamizelka, broń, plecak) zostają.
-  - Razem 6500 $, czyli ponad dwa razy więcej niż ulepszenia. Przedmiot kupuje się raz i może go nosić każdy bohater. Każdy bohater ma własny strój i zawsze może wrócić do swojego (karta z jego twarzą, pierwsza w rzędzie).
-  - **Jak to działa:** wygląd bohatera to dane (`LOOKS` w `src/sprites.js`), więc strój to nadpisanie tych danych i przebudowany zestaw klatek (`Wardrobe.apply`). Strój widać w misji, na portrecie na nieśmiertelniku i na trasie misji, w przelocie i na ekranie bohaterów. Wysokie czapki dostają dodatkowe wiersze nad głową, bo klatki są zakotwiczone w stopach.
-  - **Ekran WARDROBE** (przycisk w prawym górnym rogu ekranu HEROES):
-    - po lewej bohater na podeście (strzałki zmieniają bohatera);
-    - po prawej karty HATS / PAINT, każda z twarzą bieżącego bohatera już w danym przedmiocie;
-    - najechanie lub pierwsze kliknięcie **przymierza** przedmiot na dużej postaci, a drugie kliknięcie kupuje (także na dotyku nie da się nic kupić przypadkiem);
-    - przedmiot, który już masz, zakłada się od razu, a ponowne kliknięcie go zdejmuje;
-    - po założeniu bohater macha.
-  - **Znacznik** na HEROES i WARDROBE miga, gdy stać cię na coś nowego (`Wardrobe.hasNew`); gaśnie po zajrzeniu do garderoby.
-- Zapis: `localStorage`; na CrazyGames dodatkowo moduł `data` SDK (zapis w chmurze dla zalogowanych).
-- Ekran bohaterów pokazuje sylwetki zablokowanych z licznikiem „FREE N PRISONERS” — jasny cel.
+**Daily rule (1.20)** — the daily mission has a crazy condition, the same for everyone; the rules go in a fixed queue, so each one comes back exactly every 9 days (`DAILY_RULES` in `src/mods.js`): BARREL RAIN, LOW GRAVITY (gravity ×0.55), EXPLOSIVE ROUNDS (every 3rd bullet), HERO DAY (every hero that day is one of the 12, even a locked one — a free try; a different one on the next such day), HEAVY METAL, ROCKET BOOTS, RICOCHET, DOUBLE TIME (the whole game 25% faster), BIG BOOM (hero explosions +90%). The title shows "DAILY: <rule>" (with the best score of the day), and the DAILY button has a dot until the daily mission is completed — every day there is a new reason to come back. Rules and Arcade cards are the same effects (`World.mods`).
 
 ---
 
-## 11. Monetyzacja (reklamy platform)
+### 9.1 Personality and humor (1.20)
 
-| Moment | Typ | Uwagi |
+The cast talks — short, original lines (no movie quotes), in speech bubbles above the character (`src/chatter.js`):
+- **heroes** drop a line on deployment and after a rescue (SCORCH: "WHO ORDERED BARBECUE?", BRUTUS: "MEET BERTHA!") and sometimes brag after a triple kill ("TOO EASY!", at most once every 8 s);
+- **soldiers** shout when they spot you ("INTRUDER!"), panic ("MEDIC!", "NOPE!"), throw a grenade ("FIRE IN THE HOLE!") or charge as bombers ("FOR GRIMM!") — the shouts at grenades and charges double as attack telegraphs; at most one shout every 2.6–4.2 s;
+- **General Grimm** speaks over the radio (from 1.27 like movie subtitles: a radio icon and the line typed out live at the bottom of the screen, 5.10): a separate line at the start of each of the 15 campaign missions ("WHO KEEPS BLOWING UP MY BRIDGES?!"), pools for Arcade and the daily mission by objective, an announcement of every boss and regret after its destruction ("THAT WAS A RENTAL!"), reactions to the colonel being eliminated and the depots being destroyed.
+
+## 10. Progression and retention
+
+**Interface (1.13)** — the principles the menus are built on:
+- **One main button per screen**, orange (also on touch, where we do not draw focus): ▶ PLAY / ▶ CONTINUE on the title, NEXT after a mission, RETRY after a defeat. Keyboard, gamepad and mouse focus is yellow.
+- **Title**: the main button always plays — a new player starts mission 1 (tutorial), a returning one the next uncompleted mission (caption "MISSION 7 - DRY BONES"); one click to gameplay. Below it MISSIONS / ARCADE / DAILY, HEROES and PLAYERS (co-op; hidden on touch). Sound, music and options are icons in the corner. Progress line: stars, heroes, Arcade record.
+- **Mission select**: the selected mission's card — name, objective ("ELIMINATE THE COLONEL, THEN EXTRACT"), best score, three medals with their state, HP and lives; difficulty as three segments RECRUIT / SOLDIER / VETERAN in the same place where you pick the mission. Small screens skip the objective line.
+- **Pause**: a top bar with the mission and objective, a bottom bar with three live medals (prisoners 2/5, a red star after losing a hero).
+- **Summary**: a caption under each star; new medals flash.
+
+
+- Missions unlock in order, stars (45 in total), score records per mission, Arcade record (stage + score), best daily mission score.
+- 12 heroes unlocked by prisoners (also when replaying missions and in Arcade); choice of a favorite starting hero; after every mission a "NEXT HERO" bar shows how many prisoners are missing.
+- **Money and upgrades (1.17)** — a reason to play longer and come back (average session time, D1):
+  - per mission: $40 + $20 per star + $30 per medal earned for the first time + $5 per prisoner; Arcade: $20 + $10 × stage; daily mission: $60 + stars; defeat: $10 + $3 per prisoner;
+  - UPGRADES shop: FIREPOWER +15% damage (3 levels: 120/280/500), SUPPLY PACK +1 special for every hero (150/350), RESERVES +1 life per mission (200/450), BODY ARMOR +1 HP (400); about $2450 in total, roughly the campaign with replays; the first purchase is possible right after mission 1;
+  - daily supply drop: $50–150, increasing for consecutive days in a row (a break resets the streak); it appears only after the first completed mission, so a new player gets straight into the game;
+  - the UPGRADES button and the crate have a blinking marker when something is waiting;
+  - **supply drop after the first mission of the day (1.19)**: when a supply drop is waiting, after the summary of the first completed mission of the day a "SUPPLY DROP +$50 — DAY 1 — TOMORROW +$60" panel pops up with a CLAIM button. Previously the crate was only on the title screen, and a player going through missions with the NEXT button might not see it at all in the first session — and not learn that a bigger reward waits tomorrow (the main reason to come back the next day, D1).
+- **Wardrobe (1.25)** — a long-term goal once the upgrades are bought (about $2450, roughly the campaign with replays). Cosmetics change only the look, never power (`src/wardrobe.js`, screen `WardrobeScene` in `src/ui.js`).
+  - **Hats (9):** BANDANA $200, GREEN BERET $250, BOONIE HAT $250, STEEL POT $300, STETSON $350, PARTY HAT $400, TOP HAT $500, VIKING HELM $700 (with horns and a beard in the hair color), CROWN $1200.
+  - **Paints (7):** DESERT $150, ARCTIC $150, URBAN $200, NIGHT OPS $250, CRIMSON $300, NEON $400, GOLD PLATED $900. They change the colors of the shirt, trousers and boots, while the hero's features (vest, weapon, backpack) stay.
+  - $6500 in total, more than twice the upgrades. An item is bought once and any hero can wear it. Each hero has his own outfit and can always go back to his own (the card with his face, first in the row).
+  - **How it works:** a hero's look is data (`LOOKS` in `src/sprites.js`), so an outfit is an override of that data and a rebuilt set of frames (`Wardrobe.apply`). The outfit is visible in the mission, on the dog-tag portrait and on the mission route, in the flyover and on the heroes screen. Tall hats get extra rows above the head, because the frames are anchored at the feet.
+  - **WARDROBE screen** (button in the top-right corner of the HEROES screen):
+    - on the left the hero on a pedestal (arrows switch heroes);
+    - on the right the HATS / PAINT cards, each with the current hero's face already wearing the item;
+    - hovering or the first click **tries on** the item on the big figure, and the second click buys it (so nothing can be bought by accident, even on touch);
+    - an item you already own is put on immediately, and clicking it again takes it off;
+    - after putting something on, the hero waves.
+  - **A marker** on HEROES and WARDROBE blinks when you can afford something new (`Wardrobe.hasNew`); it goes out after you look into the wardrobe.
+- Saving: `localStorage`; on CrazyGames additionally the SDK `data` module (cloud save for logged-in users).
+- The heroes screen shows the silhouettes of locked heroes with a "FREE N PRISONERS" counter — a clear goal.
+
+---
+
+## 11. Monetization (platform ads)
+
+| Moment | Type | Notes |
 |---|---|---|
-| „Next” po ukończeniu misji | midgame / commercialBreak | naturalna przerwa |
-| „Retry”, „Restart”, „Replay” | midgame / commercialBreak | SDK sam ogranicza częstotliwość |
-| „Continue +3 lives” po porażce | **rewarded** | tylko raz na podejście; odmowa/błąd reklamy = czytelny komunikat |
+| "Next" after completing a mission | midgame / commercialBreak | a natural break |
+| "Retry", "Restart", "Replay" | midgame / commercialBreak | the SDK limits frequency itself |
+| "Continue +3 lives" after a defeat | **rewarded** | only once per attempt; refusal/ad error = a clear message |
 
-Podczas reklamy: gra wstrzymana, dźwięk wyciszony (AudioContext zawieszony), `gameplayStop()` przed reklamą, `gameplayStart()` po powrocie. Brak reklam w trakcie akcji. Brak własnych reklam i linków zewnętrznych.
+During an ad: the game is paused, sound muted (AudioContext suspended), `gameplayStop()` before the ad, `gameplayStart()` after returning. No ads during action. No own ads and no external links.
 
 ---
 
-## 12. Wymagania portali — jak spełnione
+## 12. Portal requirements — how they are met
 
-| Wymóg | Realizacja |
+| Requirement | Implementation |
 |---|---|
-| SDK: init, loading, gameplay start/stop | `src/platform.js` — adapter Poki v2 / CrazyGames v3 / lokalny |
-| Reklamy midgame + rewarded, wyciszenie | j.w., `Sound.setAdMuted()` |
-| Happy time (CrazyGames) | ukończenie misji, pokonanie bossa |
-| Brak przewijania strony strzałkami/spacją | `preventDefault` w obsłudze klawiatury |
-| Pauza przy utracie fokusu / ukryciu karty | `blur` + `visibilitychange` → menu pauzy, wyciszenie |
-| Mobile | dotyk, skalowanie do każdej proporcji, plansza „obróć urządzenie” |
-| Rozmiar i czas ładowania | 60 KB ZIP, start < 1 s |
-| Zapisy | localStorage + CrazyGames `data` |
-| Brak linków zewnętrznych / cudzego brandingu | tak |
-| Treść | kreskówkowa przemoc (piksele, bez realistycznej krwi), bez realnych symboli i postaci |
+| SDK: init, loading, gameplay start/stop | `src/platform.js` — Poki v2 / CrazyGames v3 / local adapter |
+| Midgame + rewarded ads, muting | as above, `Sound.setAdMuted()` |
+| Happy time (CrazyGames) | mission completed, boss defeated |
+| No page scrolling with arrows/space | `preventDefault` in keyboard handling |
+| Pause on focus loss / hidden tab | `blur` + `visibilitychange` → pause menu, muting |
+| Mobile | touch, scaling to any aspect ratio, "rotate your device" screen |
+| Size and load time | 60 KB ZIP, start < 1 s |
+| Saves | localStorage + CrazyGames `data` |
+| No external links / third-party branding | yes |
+| Content | cartoon violence (pixels, no realistic gore), no real-world symbols or people |
 
-**Uwaga:** Poki przyjmuje gry przez zgłoszenie w **Poki for Developers** (selekcja + testy), CrazyGames przez **Developer Portal** (Basic Launch → Full Launch po dobrych metrykach). Przed wysyłką przetestuj paczki w narzędziach testowych portali (Poki Inspector, podgląd/QA w CrazyGames Developer Portal).
+**Note:** Poki accepts games through a submission in **Poki for Developers** (selection + testing), CrazyGames through the **Developer Portal** (Basic Launch → Full Launch after good metrics). Before submitting, test the packages in the portals' testing tools (Poki Inspector, preview/QA in the CrazyGames Developer Portal).
 
 ---
 
-## 13. Architektura techniczna
+## 13. Technical architecture
 
-- Czysty JavaScript + Canvas 2D, **bez silnika i bez zależności**. Skrypty klasyczne (działa też z `file://`).
-- Stały krok symulacji 60 Hz, render co klatkę, rysowany pomiędzy dwoma ostatnimi krokami (1.30, płynny obraz na monitorach 75–240 Hz); niska rozdzielczość wewnętrzna (~270 px wysokości) skalowana całkowitą wielokrotnością → ostre piksele na każdym ekranie.
-- Teren w jednym canvasie-buforze, przerysowywane są tylko zmienione kafle.
-- Cząsteczki w pulach (struct-of-arrays, 3500 szt.), cache sprite'ów okręgów i tekstów.
-- Dźwięk: syntezowane efekty i sekwencer chiptune na WebAudio (0 plików audio).
-- Grafika: proceduralny pixel-art — postacie składane z części (głowa/nakrycie/tors/broń) z automatycznym konturem.
+- Plain JavaScript + Canvas 2D, **no engine and no dependencies**. Classic scripts (also works from `file://`).
+- Fixed 60 Hz simulation step, rendering every frame, drawn between the last two steps (1.30, a smooth picture on 75–240 Hz monitors); low internal resolution (~270 px tall) scaled by an integer multiple → crisp pixels on every screen.
+- Terrain in a single buffer canvas; only changed tiles are redrawn.
+- Particles in pools (struct-of-arrays, 3500 of them), a cache of circle and text sprites.
+- Sound: synthesized effects and a chiptune sequencer on WebAudio (0 audio files).
+- Art: procedural pixel art — characters assembled from parts (head/headgear/torso/weapon) with automatic outlines.
 
-| Plik | Odpowiedzialność |
+| File | Responsibility |
 |---|---|
-| `core.js` | stałe, matematyka, RNG z seedem, wejście (klawiatura/pad) |
-| `gfx.js` | skalowanie canvasu, font bitmapowy (z literami z akcentami, łamanie długich słów), pomocnicze funkcje sprite'ów |
-| `lang.js` | języki: wybór, tłumaczenie napisów przy rysowaniu, reguły dla zdań z liczbami (5.11) |
-| `lang_*.js` | tabele zwrotów: `es`, `pt` (Brazylia), `de`, `fr`, `pl` |
-| `sprites.js` | generowanie całej grafiki (postacie z pozami rysowanymi przy pierwszym użyciu, kafle, tła, rekwizyty) |
-| `audio.js` | efekty dźwiękowe i muzyka |
-| `terrain.js` | teren: obrażenia, ogień, zawalanie, render |
-| `fx.js` | cząsteczki i efekty |
-| `entities.js` | fizyka, pociski, beczki, klatki, flagi, śmigłowiec |
-| `heroes.js` / `enemies.js` / `bosses.js` | bohaterowie, wrogowie z AI, bossowie |
-| `miniboss.js` | mini-bossowie THE DOZER i JUGGERNAUT (8.1) |
-| `wardrobe.js` | garderoba: czapki i malowania bohaterów za pieniądze (10) |
-| `rail.js` | przelot z działkiem śmigłowca na starcie nowej strefy (5.9) |
-| `levels.js` | definicja kampanii i generator poziomów |
-| `world.js` | zasady misji, eksplozje, duże napisy, stara kamera z 1.29 (do porównania) |
-| `camera.js` | kamera (5.12): sprężyna, przejazd lub ściemnienie po śmierci, arena, patrzenie w dół przy spadaniu, kadrowanie bossa, wstrząsy, rysowanie między krokami fizyki |
-| `hud.js` | HUD na własnej warstwie w rozdzielczości ekranu: nieśmiertelnik, trasa misji, Grimm, TIP, INTEL, klawisze nad bohaterem (5.10) |
-| `uikit.js` | zestaw elementów menu na warstwie HUD: płyty, przyciski, plakietki, medale, ikony (5.10) |
-| `mech.js` | mech do przejęcia (zaparkowany i sterowany) |
-| `hazards.js` | paliwo (beczki, rury, kałuże, ogień) i mosty linowe |
-| `army.js` | ciężarówki z desantem, nalot oficera, karta INTEL przy pierwszym spotkaniu wroga |
-| `atmos.js` | pogoda stref, winieta, zbieranie świateł świata, automatyczne przejście na FX LITE |
-| `settings.js` | ekran OPTIONS, dostępność (mniej błysków, celowanie, auto-ogień, wibracje), zmiana klawiszy |
-| `platform.js` | SDK portali, reklamy, zapis |
-| `meta.js` | pieniądze, sklep UPGRADES, codzienna dostawa, pasek do następnego bohatera |
-| `mods.js` | karty ulepszeń Arcade i reguły dnia — wspólne efekty (`World.mods`) |
-| `chatter.js` | kwestie bohaterów, okrzyki żołnierzy, radio Generała Grimma |
-| `ui.js` / `main.js` | sceny, menu, sterowanie dotykowe, pętla gry |
-| `tune.js` | panel strojenia F2 (tylko wersje lokalna, webowa i artefakt) |
-| `playtest.js` | zapis sesji testowej i raport F3 (tylko wersje lokalna, webowa i artefakt) |
+| `core.js` | constants, math, seeded RNG, input (keyboard/gamepad) |
+| `gfx.js` | canvas scaling, bitmap font (with accented letters, long-word breaking), sprite helper functions |
+| `lang.js` | languages: selection, translating strings at draw time, rules for sentences with numbers (5.11) |
+| `lang_*.js` | phrase tables: `es`, `pt` (Brazil), `de`, `fr`, `pl` |
+| `sprites.js` | generation of all graphics (characters with poses drawn on first use, tiles, backgrounds, props) |
+| `audio.js` | sound effects and music |
+| `terrain.js` | terrain: damage, fire, collapse, rendering |
+| `fx.js` | particles and effects |
+| `entities.js` | physics, projectiles, barrels, cages, flags, helicopter |
+| `heroes.js` / `enemies.js` / `bosses.js` | heroes, enemies with AI, bosses |
+| `miniboss.js` | mini-bosses THE DOZER and JUGGERNAUT (8.1) |
+| `wardrobe.js` | wardrobe: hats and paints for heroes, bought with money (10) |
+| `rail.js` | helicopter door-gunner flyover at the start of a new zone (5.9) |
+| `levels.js` | campaign definition and level generator |
+| `world.js` | mission rules, explosions, big captions, the old camera from 1.29 (for comparison) |
+| `camera.js` | camera (5.12): spring, travel or fade after death, arena, looking down while falling, boss framing, shakes, drawing between physics steps |
+| `hud.js` | HUD on its own layer at screen resolution: dog tag, mission route, Grimm, TIP, INTEL, keys above the hero (5.10) |
+| `uikit.js` | menu element kit on the HUD layer: plates, buttons, badges, medals, icons (5.10) |
+| `mech.js` | the takeover mech (parked and piloted) |
+| `hazards.js` | fuel (drums, pipes, puddles, fire) and rope bridges |
+| `army.js` | troop trucks, the officer's airstrike, the INTEL card on first meeting an enemy |
+| `atmos.js` | zone weather, vignette, collecting world lights, automatic switch to FX LITE |
+| `settings.js` | OPTIONS screen, accessibility (fewer flashes, aim assist, auto fire, vibration), key rebinding |
+| `platform.js` | portal SDKs, ads, saving |
+| `meta.js` | money, UPGRADES shop, daily supply drop, next-hero bar |
+| `mods.js` | Arcade upgrade cards and daily rules — shared effects (`World.mods`) |
+| `chatter.js` | hero lines, soldier shouts, General Grimm's radio |
+| `ui.js` / `main.js` | scenes, menus, touch controls, game loop |
+| `tune.js` | F2 tuning panel (local, web and artifact builds only) |
+| `playtest.js` | test session recording and F3 report (local, web and artifact builds only) |
 
 ---
 
-## 14. Kierunek artystyczny i audio
+## 14. Art direction and audio
 
-- **Pixel-art 16 px**, grube kontury, nasycone kolory; każdy bohater ma unikalną sylwetkę (bandana, kowbojski kapelusz, maska gazowa, kaptur ninja…), wrogowie — ciemne mundury i **czerwone wizjery** (czytelność „swój/obcy” w ułamku sekundy).
-- 3 strefy z własną paletą i paralaksą: dżungla (zieleń, palmy), pustynia (piaski, mesy, kaktusy), arktyka (śnieg, sosny, góry).
-- Soczystość: screen shake, błysk trafienia, gibsy, łuski, dym, iskry, białe błyski dużych eksplozji, łańcuchy wybuchów.
-- **Efekty 1.10 („piękne i epickie”)**:
-  - **Światło**: wybuchy, ogień (kafle i paliwo), błyski luf, rakiety, lasery snajperów, pioruny, railgun, płonący żołnierze i pochodnie z beczek rozświetlają otoczenie — pasmowa poświata (7 pasm, w duchu pixel-artu) dodawana addytywnie.
-  - **Wybuch**: białe jądro, podwójna fala uderzeniowa (jasny pierścień + gorący za nim), kula ognia, słup ognia przy paliwie i beczkach, gęsty dym podświetlony ogniem, który szarzeje, wznosząc się, żarzące się odłamki ze smugami (odbijają się od ziemi), płonące kawałki ciągnące dym, fala pyłu wzdłuż ziemi; przy dużych (promień ≥ 44) promienie światła i **grzyb** z czapą i ognistym sercem.
-  - **Wielkie momenty**: triple kill i więcej — promienie, „wyskakujący” napis i 0,45 s spowolnienia (najwyżej raz na 6 s); śmierć bossa — trzy fale uderzeniowe jedna po drugiej, promienie na pół nieba, grzyb; wysadzenie bazy kończy się jednym wielkim wybuchem.
-  - **Broń**: błysk lufy w kształcie gwiazdy z językiem ognia i poświatą, iskry ze smugami i błyskiem przy trafieniach, duchy (after-images) przy szarży Ronina, linie prędkości przy ślizgu, railgun rozświetla całą linię.
-  - **Atmosfera stref**: dżungla — ukośne smugi światła przez korony drzew, migoczący pyłek, spadające liście; pustynia — piasek niesiony wiatrem z porywami; Arktyka — śnieg w dwóch głębiach z paralaksą; do tego lekka winieta. Z każdego ognia unoszą się żarzące iskry.
-  - **Ustawienie FX** (menu i pauza): AUTO (pełne, a gdy urządzenie przez 4 s nie utrzymuje ~40 FPS w misji — samo przechodzi na LITE), FULL, LITE (bez świateł i promieni, mniej cząsteczek i pogody).
-- Muzyka: 3 pętle (menu, akcja transponowana per strefa, boss), heroiczne molowe chiptune lat 80.
-- **Dźwięk przestrzenny** (1.5): efekty mają panoramę lewo–prawo według miejsca na ekranie, a poza ekranem są ciszej i głucho (filtr dolnoprzepustowy). Dźwięki bohatera zostają na środku.
-- **Każda broń brzmi inaczej**: karabin (trzask + uderzenie), seria Chrono (sci-fi), pistolety Skyhawka, tłumik Phantoma, minigun z basem, strzelba z przeładowaniem „chk-chk”, snajperka z echem; strzały wroga są głuchsze, żeby odróżnić je od własnych.
-- **Trafienia zależne od materiału**: ziemia, kamień/cegła, drewno, metal i ciało wroga mają osobne dźwięki. Wybuchy mają cztery warstwy: trzask, opadający szum, niski „sub” i grzechot odłamków. Kroki przy bieganiu; krótki sygnał przy nazwanym zabójstwie.
-- **Muzyka reaguje na walkę**: „temperatura walki” rośnie, gdy wrogowie na ekranie atakują lub celują i przy wybuchach, a opada w spokoju. Przy niskiej temperaturze melodia jest cichsza i bez hi-hatów; przy wysokiej dochodzą arpeggio i dodatkowa stopa. Przy dużym wybuchu, trafieniu bohatera i jego śmierci muzyka na chwilę przycicha (ducking), żeby akcent był mocniejszy.
-
----
-
-## 15. Kwestie prawne — inspiracja, nie kopia
-
-- Mechaniki gier nie podlegają prawu autorskiemu; **nazwy, postacie, grafika, dźwięk i znaki towarowe — tak**. Dlatego: własna nazwa, własny świat (Generał Grimm), autorskie postacie, cała grafika i audio generowane od zera.
-- Nie używać nazw innych gier, przedrostka „Bro-” w nazwach, parodii konkretnych aktorów/filmów ani cytatów filmowych w grze i opisach.
-- Na stronie gry można pisać „inspired by classic 80s action movies” zamiast odwołań do konkretnych tytułów.
+- **16 px pixel art**, thick outlines, saturated colors; every hero has a unique silhouette (bandana, cowboy hat, gas mask, ninja hood…), enemies — dark uniforms and **red visors** ("friend/foe" readable in a split second).
+- 3 zones with their own palette and parallax: jungle (greens, palms), desert (sands, mesas, cacti), arctic (snow, pines, mountains).
+- Juiciness: screen shake, hit flash, gibs, casings, smoke, sparks, white flashes of big explosions, explosion chains.
+- **Effects 1.10 ("beautiful and epic")**:
+  - **Light**: explosions, fire (tiles and fuel), muzzle flashes, rockets, sniper lasers, lightning, railgun, burning soldiers and drum torches light up the surroundings — a banded glow (7 bands, in the spirit of pixel art) added additively.
+  - **Explosion**: a white core, a double shockwave (a bright ring + a hot one behind it), a fireball, a pillar of fire at fuel and barrels, dense smoke lit by the fire that turns grey as it rises, glowing fragments with trails (bouncing off the ground), burning pieces trailing smoke, a dust wave along the ground; for big ones (radius ≥ 44) light rays and a **mushroom cloud** with a cap and a fiery heart.
+  - **Big moments**: triple kill and more — rays, a "popping" caption and 0.45 s of slowdown (at most once every 6 s); boss death — three shockwaves one after another, rays across half the sky, a mushroom cloud; blowing up the base ends with one huge explosion.
+  - **Weapons**: a star-shaped muzzle flash with a tongue of fire and a glow, sparks with trails and a flash on hits, after-images during Ronin's dash, speed lines while sliding, the railgun lights up its whole line.
+  - **Zone atmosphere**: jungle — slanted light shafts through the treetops, shimmering pollen, falling leaves; desert — wind-blown sand with gusts; arctic — snow at two depths with parallax; plus a light vignette. Glowing embers rise from every fire.
+  - **FX setting** (menu and pause): AUTO (full, and when the device cannot hold ~40 FPS in a mission for 4 s, it switches to LITE by itself), FULL, LITE (no lights or rays, fewer particles and less weather).
+- Music: 3 loops (menu, action transposed per zone, boss), heroic minor-key 80s chiptune.
+- **Spatial sound** (1.5): effects are panned left–right according to their position on screen, and off screen they are quieter and muffled (low-pass filter). Hero sounds stay centered.
+- **Every weapon sounds different**: rifle (crack + thump), Chrono's burst (sci-fi), Skyhawk's pistols, Phantom's suppressor, minigun with bass, shotgun with a "chk-chk" reload, sniper rifle with an echo; enemy shots are duller so they can be told apart from your own.
+- **Material-dependent hits**: dirt, stone/brick, wood, metal and enemy flesh have separate sounds. Explosions have four layers: crack, falling noise, a low "sub" and a rattle of fragments. Footsteps while running; a short jingle on a named kill.
+- **Music reacts to combat**: a "combat temperature" rises when enemies on screen attack or aim and with explosions, and falls when things are calm. At low temperature the melody is quieter and without hi-hats; at high temperature an arpeggio and an extra kick drum come in. On a big explosion, a hero hit and the hero's death the music briefly ducks so the accent hits harder.
 
 ---
 
-## 16. Roadmapa
+## 15. Legal — inspiration, not a copy
 
-| Wersja | Zawartość | Status |
+- Game mechanics are not protected by copyright; **names, characters, art, sound and trademarks are**. Therefore: our own name, our own world (General Grimm), original characters, all art and audio generated from scratch.
+- Do not use names of other games, the "Bro-" prefix in names, parodies of specific actors/movies, or movie quotes in the game or its descriptions.
+- On the game page you can write "inspired by classic 80s action movies" instead of referring to specific titles.
+
+---
+
+## 16. Roadmap
+
+| Version | Contents | Status |
 |---|---|---|
-| **1.1** | lokalny co-op na 2 graczy, tryb Arcade, poziomy trudności, nóż, ślady krwi | ✅ gotowe |
-| **1.2** | research gatunku: tarczownicy, obserwatorzy + syreny + spadochroniarze, moździerzyści ze znacznikiem celu, miny, kolce, cele misji (zamach / sabotaż / ucieczka), finał z wysadzeniem bazy, +4 bohaterów (12), złote skrzynie, ulubiony bohater, misja dnia, ustawienie wstrząsu | ✅ gotowe |
-| **1.3** | czucie gry: zmienna grawitacja, ślizg, deptanie, korekta narożników, squash & stretch, odrzut kamery; HP bohatera wg trudności, zapowiedziane strzały (linia celownika), węższy obrys trafień, rosnąca celność wrogów; kopanie beczek/ciał, efekt kręgli, upadki z wysokości, skoki na wybuchu; nazwane zabójstwa i multi-kille zamiast combo | ✅ gotowe |
-| **1.3.1–1.3.2** | dłuższy zasięg broni i wybuchów; lekkie wspomaganie celowania do wrogów poziom wyżej lub niżej | ✅ gotowe |
-| **1.4** | panel strojenia na żywo (F2): 33 parametry ruchu, strzelania i wrogów (dziś 38), kopiowanie zmian jako JSON | ✅ gotowe |
-| **1.5** | warstwa dźwięku: panorama i wyciszanie za ekranem, osobne dźwięki broni i materiałów, warstwowe wybuchy, muzyka reagująca na walkę | ✅ gotowe |
-| **1.6** | łapanie i rzucanie żołnierzy (żywa tarcza, efekt kręgli), mech do przejęcia w 4 misjach i w Arcade | ✅ gotowe |
-| **1.7** | narzędzia playtestu: zapis sesji, raport F3, tryb „nowy tester”, instrukcja [PLAYTEST.md](PLAYTEST.md) | ✅ gotowe |
-| **1.8** | świat jako broń, cz. 2: beczki i rury z paliwem, kałuże, ogień biegnący po śladzie, mosty linowe do zestrzelenia (FLASH FIRE, BRIDGE OUT) | ✅ gotowe |
-| **1.9** | wrogowie i bossowie: snajper z laserem, miotacz ognia, oficer wzywający nalot, ciężarówka z desantem, słabe punkty bossów, wskazówka przy pierwszym spotkaniu każdego wroga | ✅ gotowe |
-| **1.10** | efekty: światło, nowe wybuchy (fala, promienie, grzyb, żar, dym), atmosfera stref (smugi światła, pyłek, piasek, śnieg), winieta, błyski luf, wielkie momenty, ustawienie FX AUTO/FULL/LITE | ✅ gotowe |
-| **1.11** | telefony i dostępność: przycisk KNIFE na dotyku (łapanie działa na telefonie), ekran OPTIONS (menu i pauza), mniej błysków, wspomaganie celowania OFF/NORMAL/HIGH, auto-ogień, wibracje, zmiana klawiszy z podpowiedziami w samouczku | ✅ gotowe |
-| **1.12** | przygotowanie do wydania: układ ekranów na bardzo niskich ekranach (opcje w dwóch kolumnach i większe przyciski na dotyku, mniejsze logo, karty bohaterów), skalowanie ułamkowe dla ramek bez dobrej skali całkowitej (np. Poki 640×360) i pasy przy wąskim oknie, zgodność z zasadami reklam portali (RETRY nad CONTINUE, ikona filmu, bez zieleni), napisy punktowe układane w stos, test regresji `REGRESS()`, nowe okładki z efektami 1.10, wideo podglądu 16:9 i 2:3, lista [RELEASE.md](RELEASE.md) | ✅ gotowe |
-| **1.13** | UI/UX: jeden główny przycisk na ekran (pomarańczowy, widoczny też na dotyku), PLAY/CONTINUE prosto do następnej misji, karta misji z celem, medalami i trudnością, cel i medale w pauzie, podpisane gwiazdki w podsumowaniu, gwiazdki jako medale zbierane w różnych podejściach, ikony dźwięku/muzyki/opcji, co-op ukryty na telefonach | ✅ gotowe |
-| **1.14** | czytelność zdarzeń: pociski bohatera ×0,8 prędkości przy tym samym zasięgu, dłuższe świecące smugi i ślad trafienia; moment trafienia (biały błysk ciała, stop-klatka 45 ms co najwyżej co 0,2 s) i dłuższy lot ciał (grawitacja ciał ×0,75, wolniejsze obroty); teren bez podparcia trzeszczy 0,45 s przed upadkiem (pęknięcia, drżenie, pył, dźwięk); łańcuch beczek z opóźnieniem 0,22–0,45 s na ogniwo; wybuchy i dym ×1,3 dłużej; śmierć bohatera: zwolnienie 0,8 s, kamera zostaje na miejscu, napis z przyczyną („SHOT BY A SNIPER”); wszystko w panelu F2 | ✅ gotowe |
-| **1.15** | czytelność zdarzeń, część 2 (analiza w 5.7): wspólna „filmowa” grawitacja rzeczy ×0,6 (ciała, gruz, klocki, krew, iskry) z zawiśnięciem ciał na szczycie łuku; lot ciała skrócony do 50–90 px; większe pociski (2 px) z błyskiem w miejscu trafienia; mocniejsza stop-klatka przy zabójstwie nożem; most ugina się i trzeszczy 0,3 s przed zerwaniem | ✅ gotowe |
-| **1.16** | tryb bez krwi (domyślny w paczkach portalowych, PEGI 12): trafienia dają pył, wybuchy wyrzucają ciała zamiast je rozrywać, bez plam krwi; przełącznik BLOOD w opcjach; wideo podglądu nagrane bez krwi | ✅ gotowe |
-| **1.17** | pętla postępu: pieniądze za misje, sklep UPGRADES (4 stałe ulepszenia), codzienna dostawa z serią dni, pasek do następnego bohatera, nagroda za próbę po porażce; ciała bez krwi znikają po kilku trafieniach (nie pochłaniają kul) | ✅ gotowe |
-| **1.33** | tekst w grze (5.15): w akcji nie ma tekstu do czytania; najwyżej jedno hasło, gdy trzeba działać, i napis, co zabiło bohatera; komentarze postaci jeden naraz i z przerwami; usunięte punkty nad wrogami, nazwy stylowych zabójstw, tytuły na starcie, zapowiedzi, karty intel i porady; nowy krój Russo One w rozdzielczości ekranu dla menu, HUD i dymków | ✅ gotowe |
-| **1.32** | animacja i reakcje postaci (5.14): 27 nowych póz dla wszystkich postaci (lądowanie, poślizg, celowanie, odrzut, trafienie, przeładowanie, panika, radość, śmierć i inne); bieg w tempie przebytej drogi; zapowiedzi w ciele wroga (podskok przy „!”, zamach granatnika z zawleczką, pocisk do lufy moździerza, przysiad psa, radio oficera), przewracanie falą uderzeniową, spadające hełmy, radość wrogów po śmierci bohatera; jeńcy z nastrojami, uwolniony jeniec biegnie do bohatera; zapowiedzi ataków bossów; start gry szybszy o ok. 2 s | ✅ gotowe |
-| **1.31** | ekran startowy (5.13), kierunek „żywa scena” wybrany z trzech makiet: nowy gracz od razu w misji 1 z logo nad zrzutem; za menu gra prawdziwa misja (pilot demo, 4 klipy: dżungla, czołg, składy paliwa, mech; bez dźwięku, zapisu i napisów); nowe logo; na ekranie tylko logo, KONTYNUUJ, jeden rząd przycisków i róg z głośnikiem. Poprawka: od 1.20 komentarz w środku linii wyłączał odliczanie noża, cięcia i odrzutu (nóż działał raz na życie) | ✅ gotowe |
-| **1.30** | płynna kamera (5.12), zmierzona symulowanym graczem przed i po: sprężyna zamiast wygładzania (bez szarpnięć przy ruszaniu i hamowaniu); po śmierci płynny przejazd albo ściemnienie zamiast pościgu za śmigłowcem; płynny wjazd w arenę bossa; spokój w pionie (nierówności do 20 px); bohater bez drgania o piksel; patrzenie w dół przy spadaniu (przewidywane lądowisko); kadrowanie bossa; płynne wstrząsy i odrzut; obraz rysowany między krokami fizyki (płynność na 75–240 Hz); stara kamera w F2 do porównania | ✅ gotowe |
-| **1.29** | języki (5.11): hiszpański, portugalski (Brazylia), niemiecki, francuski i polski obok angielskiego; wybór według przeglądarki i w OPTIONS → LANGUAGE; tłumaczenie przy rysowaniu (tabele zwrotów i reguły dla zdań z liczbami, polska liczba mnoga); litery z akcentami w czcionce; napisy mieszczą się na płytach (łamanie długich słów z dywizem, drobniejsze litery tylko w ostateczności); imiona bohaterów zostają po angielsku | ✅ gotowe |
-| **1.28** | menu, pauza i wyniki w stylu HUD (5.10), po makietach, z grubszym tekstem: zestaw elementów `src/uikit.js` (płyty z nitami, żółty przycisk główny w pasy, mosiądz, szkło, medale, ikony); wybór misji jako trasy stref z teczką misji; medale przypinane na wynikach; ikony na przyciskach i na przyciskach dotykowych; wszystkie ekrany: tytuł, misje, bohaterowie, garderoba, ulepszenia, opcje, pauza, wyniki, porażka, karty Arcade, zwycięstwo | ✅ gotowe |
-| **1.27** | HUD i UI (5.10), kierunek „B — wojskowy” wybrany z makiet: HUD na osobnej warstwie w rozdzielczości ekranu; nieśmiertelnik zamiast panelu bohatera (klawisz specjala, jeńcy jako klatki, nowy bohater: podskok i pasek z bronią zamiast dużej karty na dole); trasa misji z twarzą bohatera zamiast paska postępu; Grimm jak napisy w filmie; karta INTEL zamiast zdań o wrogach na środku ekranu (jedna naraz); podpowiedzi sterowania jako klawisze nad bohaterem (misja 1, wyjście z pojazdu, lot); tabliczki samouczka jako piktogramy z klawiszami; paski w stosach, bez nachodzenia na siebie (także co-op, mały ekran, dotyk) | ✅ gotowe |
-| **1.26** | skok i ściany (5.1): skok przy ścianie to zwykły skok (było 240 px lotu po ścianie bez grawitacji); złapanie ściany i trzymanie się jej; na ścianie zwrot jak na ziemi: do ściany = wspinaczka 92 px/s (strzał kopie), od ściany = obrót i strzał od ściany, bez klawiszy = wiszenie; ↓ zjazd, skok = odbicie; krótki skok 25 px zamiast 18; podpowiedź i nowa tabliczka w samouczku; sprawdzone testem A/B na symulowanych graczach | ✅ gotowe |
-| **1.25.1** | poprawki z gry: spokojna kamera (wyprzedzenie za kierunkiem biegu, płynne przejście 0,9 s przy zmianie kierunku zamiast przeskoku, w pionie wysokość ostatniego gruntu, więc skok nie buja obrazem) i strzał podczas wspinaczki (skoki na uskoki nie blokują już broni) | ✅ gotowe |
-| **1.25** | kosmetyka (10, „Garderoba”): 9 czapek (w tym nowe PARTY HAT, TOP HAT, VIKING HELM, CROWN) i 7 malowań za $ (razem 6500 $), kupowane raz dla wszystkich bohaterów, strój osobno dla każdego; ekran WARDROBE z przymierzaniem przed zakupem (dwa kliknięcia), znacznik, gdy stać cię na coś nowego; strój widać w misji, w HUD i na karcie DEPLOYED | ✅ gotowe |
-| **1.24** | mini-bossowie (8.1): THE DOZER (buldożer mielący teren, pchający beczki, szarża po 0,8 s zapowiedzi z czerwonym torem na ziemi; słabe punkty: kabina i silnik) i JUGGERNAUT (minigun z laserem i świstem przed serią, wolny obrót, odepchnięcie barkiem; słaby punkt: zasobnik na plecach) w misjach 4, 7, 11 i 14 oraz w Arcade; +3000 pkt, +40 $ i złota skrzynia; iskry zamiast krwi przy trafieniach w maszyny | ✅ gotowe |
-| **1.23** | sekrety (5.8.1): w każdej misji i każdym etapie Arcade ukryty skarbiec pod popękaną ziemią (zakryty, dopóki się nie przebijesz, z błyskiem jako wskazówką), wejście skokiem, wybuchem albo kopaniem; +1000 pkt, +50 $ i złota skrzynia; znalezione sekrety w podsumowaniu, na przyciskach i karcie misji | ✅ gotowe |
-| **1.22** | pojazdy i sceny filmowe (5.9): czołg do prowadzenia (działo z automatycznym celowaniem po łuku, karabin sprzężony, taran, mielenie miękkich ścian, rozjeżdżanie; misje 8 i 12, Arcade), przelot z działkiem śmigłowca na starcie nowej strefy (misje 6 i 11, Arcade), pasy kinowe i zwolnienie przy wejściu bossa, przy jego zniszczeniu i przy wybuchu bazy | ✅ gotowe |
-| **1.21** | waga strzału i ślady walki (5.8): dziury po kulach, łuski z brzękiem leżące na ziemi (czerwona łuska strzelby przy przeładowaniu), dym z lufy, rykoszety, kawałki gruzu zostające na ziemi, wybuch rozrzucający łuski i gruz oraz odpychający żołnierzy za strefą rażenia, ciężar każdej broni przy zabójstwie, strzelba z bliska wyrzuca ciało, żonglerka ciałem (AIR JUGGLE), świst mijającej kuli; twarde lądowanie z falą uderzeniową (SHOCKWAVE), salta przy odbiciu od ściany i skoku z wślizgu, kurz spod butów | ✅ gotowe |
-| **1.20** | więcej zabawy na dłużej: Arcade jako rajd z kartami ulepszeń (1 z 3 po każdym etapie, 14 kart), reguła dnia w misji dnia (9 reguł w stałej kolejce: BARREL RAIN, LOW GRAVITY, HERO DAY…), charakter: kwestie bohaterów, okrzyki żołnierzy (także jako zapowiedź granatu i szarży), Generał Grimm przez radio | ✅ gotowe |
-| **1.19** | uczciwe śmierci i powroty (na podstawie symulacji graczy i modelu metryk, [METRICS.md](METRICS.md)): spadający gruz i zderzenie z bossem kosztują 1 HP z odrzutem zamiast natychmiastowej śmierci; znacznik miejsca upadku pocisku czołgu; podpowiedź „TIP:” po śmierci (2× na przyczynę, od bossa — jak pokonać tego bossa); +1 życie w kolejnej próbie po porażce (max +2, „RETRY +1 LIFE”); SKYREAPER: znaczniki rakiet i bomb, mniej rakiet w salwie; codzienna dostawa po pierwszej misji dnia; napis przyczyny śmierci zawsze w kadrze | ✅ gotowe |
-| **1.18** | pierwsze sekundy: w misji 1 zaraz przy lądowaniu trzy beczki (wybuchają od jednego trafienia) i dwóch strażników odwróconych plecami — pierwszy strzał to łańcuch wybuchów i DOUBLE KILL po ok. 3 s gry (wcześniej pierwszy wybuch po ok. 12 s); podpowiedzi przy bohaterze w chwili potrzeby (ruch, strzał gdy cel w zasięgu, skok przy stopniu), znikające po wykonaniu | ✅ gotowe |
-| równolegle | lista poprawek z sesji z 2–3 nowymi graczami (najpierw P1: utknięcia, niezrozumiałe zgony) | czeka na sesję |
-| plan | AI z osłonami i drabinami, pociąg pancerny (boss nowej strefy) | plan |
-| plan | tabela wyników misji dnia (leaderboard portalu), wyzwania z jednym życiem odblokowujące złote skrzynie; nowa strefa (miasto nocą) | plan |
-| plan | lokalizacje (PL, DE, ES, PT-BR, FR) — wymaga dodania znaków diakrytycznych do fontu bitmapowego (`src/gfx.js`) | plan |
+| **1.1** | local 2-player co-op, Arcade mode, difficulty levels, knife, blood traces | ✅ done |
+| **1.2** | genre research: shield soldiers, lookouts + sirens + paratroopers, mortarmen with target markers, mines, spikes, mission objectives (assassination / sabotage / escape), finale with the base blowing up, +4 heroes (12), gold crates, favorite hero, daily mission, screen shake setting | ✅ done |
+| **1.3** | game feel: variable gravity, slide, stomp, corner correction, squash & stretch, camera kick; hero HP by difficulty, telegraphed shots (aiming line), narrower hitbox, enemy accuracy that grows over time; kicking barrels/bodies, bowling effect, falls from heights, explosion jumps; named kills and multi-kills instead of combos | ✅ done |
+| **1.3.1–1.3.2** | longer weapon and explosion range; light aim assist for enemies one level higher or lower | ✅ done |
+| **1.4** | live tuning panel (F2): 33 movement, shooting and enemy parameters (38 today), copying changes as JSON | ✅ done |
+| **1.5** | sound layer: panning and muffling off screen, separate weapon and material sounds, layered explosions, music that reacts to combat | ✅ done |
+| **1.6** | grabbing and throwing soldiers (human shield, bowling effect), a takeover mech in 4 missions and in Arcade | ✅ done |
+| **1.7** | playtest tools: session recording, F3 report, "new tester" mode, guide [PLAYTEST.md](PLAYTEST.md) | ✅ done |
+| **1.8** | the world as a weapon, part 2: fuel drums and pipes, puddles, fire running along the trail, rope bridges you can shoot down (FLASH FIRE, BRIDGE OUT) | ✅ done |
+| **1.9** | enemies and bosses: sniper with a laser, flamethrower, officer calling in airstrikes, troop truck, boss weak spots, a hint on first meeting each enemy | ✅ done |
+| **1.10** | effects: light, new explosions (shockwave, rays, mushroom cloud, embers, smoke), zone atmosphere (light shafts, pollen, sand, snow), vignette, muzzle flashes, big moments, FX setting AUTO/FULL/LITE | ✅ done |
+| **1.11** | phones and accessibility: KNIFE button on touch (grabbing works on phones), OPTIONS screen (menu and pause), fewer flashes, aim assist OFF/NORMAL/HIGH, auto fire, vibration, key rebinding with hints in the tutorial | ✅ done |
+| **1.12** | release prep: screen layouts for very short screens (options in two columns and bigger buttons on touch, smaller logo, hero cards), fractional scaling for frames without a good integer scale (e.g. Poki 640×360) and bars in a narrow window, compliance with portal ad rules (RETRY above CONTINUE, video icon, no green), stacked score captions, regression test `REGRESS()`, new covers with the 1.10 effects, 16:9 and 2:3 preview videos, checklist [RELEASE.md](RELEASE.md) | ✅ done |
+| **1.13** | UI/UX: one main button per screen (orange, also visible on touch), PLAY/CONTINUE straight to the next mission, mission card with objective, medals and difficulty, objective and medals in pause, labeled stars in the summary, stars as medals collected across attempts, sound/music/options icons, co-op hidden on phones | ✅ done |
+| **1.14** | event readability: hero projectiles at ×0.8 speed with the same range, longer glowing tracers and an impact mark; moment of impact (white body flash, 45 ms hit-stop at most every 0.2 s) and longer body flight (body gravity ×0.75, slower spins); unsupported terrain creaks for 0.45 s before falling (cracks, shaking, dust, sound); barrel chain with a 0.22–0.45 s delay per link; explosions and smoke ×1.3 longer; hero death: 0.8 s slowdown, the camera stays in place, a caption with the cause ("SHOT BY A SNIPER"); everything in the F2 panel | ✅ done |
+| **1.15** | event readability, part 2 (analysis in 5.7): shared "cinematic" object gravity ×0.6 (bodies, debris, blocks, blood, sparks) with bodies hanging at the top of the arc; body flight shortened to 50–90 px; bigger projectiles (2 px) with a flash at the point of impact; stronger hit-stop on knife kills; a bridge sags and creaks for 0.3 s before snapping | ✅ done |
+| **1.16** | no-blood mode (default in portal packages, PEGI 12): hits produce dust, explosions throw bodies instead of tearing them apart, no blood stains; BLOOD toggle in options; preview video recorded without blood | ✅ done |
+| **1.17** | progression loop: money for missions, UPGRADES shop (4 permanent upgrades), daily supply drop with a day streak, next-hero bar, a reward for trying after a defeat; bloodless bodies disappear after a few hits (they do not soak up bullets) | ✅ done |
+| **1.33** | in-game text (5.15): no text to read during action; at most one call-out when you need to act, and a caption saying what killed the hero; character comments one at a time with gaps; removed points above enemies, style-kill names, start titles, announcements, intel cards and tips; new Russo One typeface at screen resolution for menus, HUD and speech bubbles | ✅ done |
+| **1.32** | character animation and reactions (5.14): 27 new poses for all characters (landing, skid, aiming, recoil, hit, reload, panic, celebration, death and more); running paced by distance traveled; telegraphs in the enemy's body (hop at "!", grenadier wind-up with the pin, shell into the mortar tube, dog crouch, officer's radio), knockdown by shockwave, falling helmets, enemies celebrating the hero's death; prisoners with moods, a freed prisoner runs to the hero; boss attack telegraphs; game start about 2 s faster | ✅ done |
+| **1.31** | title screen (5.13), "live scene" direction chosen from three mockups: a new player goes straight into mission 1 with the logo over the drop; a real mission plays behind the menu (demo pilot, 4 clips: jungle, tank, fuel depots, mech; no sound, saving or captions); new logo; the screen shows only the logo, CONTINUE, one row of buttons and a corner with the speaker. Fix: since 1.20 a comment in the middle of a line disabled the knife, slash and kickback cooldowns (the knife worked once per life) | ✅ done |
+| **1.30** | smooth camera (5.12), measured with a simulated player before and after: a spring instead of smoothing (no jerks when starting and stopping); after death a smooth glide or a fade instead of chasing the helicopter; smooth entry into the boss arena; vertical calm (bumps up to 20 px); no one-pixel hero jitter; looking down while falling (predicted landing spot); boss framing; smooth shakes and kick; picture drawn between physics steps (smoothness at 75–240 Hz); the old camera in F2 for comparison | ✅ done |
+| **1.29** | languages (5.11): Spanish, Portuguese (Brazil), German, French and Polish alongside English; selection by browser and in OPTIONS → LANGUAGE; translation at draw time (phrase tables and rules for sentences with numbers, Polish plurals); accented letters in the font; captions fit on the plates (long words break with a hyphen, smaller letters only as a last resort); hero names stay in English | ✅ done |
+| **1.28** | menu, pause and results in the HUD style (5.10), after mockups, with thicker text: the `src/uikit.js` element kit (riveted plates, striped yellow main button, brass, glass, medals, icons); mission select as zone routes with a mission folder; medals pinned on the results; icons on buttons and on touch buttons; all screens: title, missions, heroes, wardrobe, upgrades, options, pause, results, defeat, Arcade cards, victory | ✅ done |
+| **1.27** | HUD and UI (5.10), "B — military" direction chosen from mockups: HUD on a separate layer at screen resolution; dog tag instead of the hero panel (special key, prisoners as cages, new hero: a bounce and a weapon bar instead of a big card at the bottom); mission route with the hero's face instead of a progress bar; Grimm like movie subtitles; INTEL card instead of sentences about enemies in the middle of the screen (one at a time); control hints as keys above the hero (mission 1, leaving a vehicle, flying); tutorial signs as pictograms with keys; stacked bars that never overlap (also co-op, small screen, touch) | ✅ done |
+| **1.26** | jump and walls (5.1): a jump next to a wall is a normal jump (it used to be 240 px of flight up the wall without gravity); grabbing a wall and holding on; facing on a wall works like on the ground: toward the wall = 92 px/s climb (shooting digs), away from the wall = turn and shoot away from the wall, no keys = hang; ↓ slides down, jump = kick off; short jump 25 px instead of 18; a hint and a new tutorial sign; verified with an A/B test on simulated players | ✅ done |
+| **1.25.1** | fixes from play: calm camera (lead follows the running direction, a smooth 0.9 s transition on a change of direction instead of a jump, vertically the height of the last ground, so a jump does not bob the view) and shooting while climbing (jumps onto ledges no longer block the weapon) | ✅ done |
+| **1.25** | cosmetics (10, "Wardrobe"): 9 hats (including the new PARTY HAT, TOP HAT, VIKING HELM, CROWN) and 7 paints for $ ($6500 in total), bought once for all heroes, an outfit for each hero separately; WARDROBE screen with try-on before buying (two clicks), a marker when you can afford something new; the outfit is visible in the mission, in the HUD and on the DEPLOYED card | ✅ done |
+| **1.24** | mini-bosses (8.1): THE DOZER (a bulldozer that grinds terrain, pushes barrels, charges after a 0.8 s telegraph with a red path on the ground; weak spots: cab and engine) and JUGGERNAUT (minigun with a laser and a whine before a burst, slow turning, shoulder shove; weak spot: the pack on its back) in missions 4, 7, 11 and 14 and in Arcade; +3000 pts, +$40 and a gold crate; sparks instead of blood on hits to machines | ✅ done |
+| **1.23** | secrets (5.8.1): in every mission and every Arcade stage a vault hidden under cracked dirt (concealed until you break through, with a glint as a clue), entered by jumping, an explosion or digging; +1000 pts, +$50 and a gold crate; found secrets in the summary, on the buttons and on the mission card | ✅ done |
+| **1.22** | vehicles and cinematic scenes (5.9): a drivable tank (cannon with automatic arcing aim, coaxial machine gun, ram, grinding through soft walls, running over enemies; missions 8 and 12, Arcade), a helicopter door-gunner flyover at the start of a new zone (missions 6 and 11, Arcade), cinematic bars and slowdown when a boss enters, when it is destroyed and when the base blows up | ✅ done |
+| **1.21** | weight of shots and traces of battle (5.8): bullet holes, clinking casings that lie on the ground (red shotgun shell on reload), muzzle smoke, ricochets, debris bits that stay on the ground, explosions that scatter casings and debris and push soldiers beyond the damage zone, the weight of each weapon on a kill, the shotgun at close range sends the body flying, body juggling (AIR JUGGLE), the whiz of a passing bullet; hard landing with a shockwave (SHOCKWAVE), flips on wall jumps and slide jumps, dust from the boots | ✅ done |
+| **1.20** | more fun for longer: Arcade as a run with upgrade cards (1 of 3 after every stage, 14 cards), a daily rule in the daily mission (9 rules in a fixed queue: BARREL RAIN, LOW GRAVITY, HERO DAY…), personality: hero lines, soldier shouts (also as a grenade and charge telegraph), General Grimm on the radio | ✅ done |
+| **1.19** | fair deaths and comebacks (based on player simulation and the metrics model, [METRICS.md](METRICS.md)): falling debris and boss collisions cost 1 HP with knockback instead of instant death; impact marker for the tank's shells; a "TIP:" hint after death (2× per cause, from a boss — how to beat that boss); +1 life on the next attempt after a defeat (max +2, "RETRY +1 LIFE"); SKYREAPER: rocket and bomb markers, fewer rockets per volley; daily supply drop after the first mission of the day; the death-cause caption always in frame | ✅ done |
+| **1.18** | the first seconds: in mission 1, right at the landing, three barrels (they explode from a single hit) and two guards with their backs turned — the first shot is a chain of explosions and a DOUBLE KILL after about 3 s of play (previously the first explosion came after about 12 s); hints next to the hero at the moment of need (movement, shoot when a target is in range, jump at a step), disappearing once done | ✅ done |
+| in parallel | a list of fixes from a session with 2–3 new players (P1 first: getting stuck, deaths that make no sense) | waiting for the session |
+| plan | AI using cover and ladders, armored train (boss of a new zone) | plan |
+| plan | daily mission leaderboard (portal leaderboard), one-life challenges that unlock gold crates; a new zone (city at night) | plan |
+| plan | localizations (PL, DE, ES, PT-BR, FR) — requires adding diacritics to the bitmap font (`src/gfx.js`) | plan |
 
 ---
 
-## 17. KPI i plan testów
+## 17. KPIs and test plan
 
-- **Cele (CrazyGames/Poki)**: conversion to play > 90%, średni czas gry > 10 min, D1 retention > 12%.
-- Metryki do obserwacji: % ukończenia misji 1 (samouczek), miejsce śmierci na misję (poziom trudności), użycie „Continue”.
-- **Playtest przed wydaniem** (1.7): 2–3 osoby grające pierwszy raz, według [PLAYTEST.md](PLAYTEST.md). Raport F3 podaje zgony z przyczyną i sprawcą, utknięcia, bezczynność i czas odkrycia każdej mechaniki. Z raportów powstaje lista poprawek P1–P3.
-- **Prognoza metryk bez danych** (1.19): symulowani nowi gracze (`HUMANSIM()` w `tools/harness.js`) i model lejka (`tools/funnel.py`) — opis, założenia i wyniki w [METRICS.md](METRICS.md). Służy do porównywania wersji i szukania ścian trudności; prawdziwe liczby da dopiero Basic Launch na CrazyGames.
-- **Test regresji** (1.12): `REGRESS()` w `tools/harness.js` — bot z nieśmiertelnością przechodzi każdą misję i zgłasza wyjątki, NaN, rozrost liczby obiektów i czas klatki; przed każdym wydaniem musi dać PASS. Pełna lista kroków wydania: [RELEASE.md](RELEASE.md).
-- Przed wydaniem: test na słabym Androidzie (60 FPS przy wielu eksplozjach), Safari iOS (audio po pierwszym dotyku), iframe o zmiennym rozmiarze, blokada reklam (gra musi działać bez SDK).
+- **Targets (CrazyGames/Poki)**: conversion to play > 90%, average play time > 10 min, D1 retention > 12%.
+- Metrics to watch: % completing mission 1 (tutorial), place of death per mission (difficulty), use of "Continue".
+- **Pre-release playtest** (1.7): 2–3 first-time players, following [PLAYTEST.md](PLAYTEST.md). The F3 report lists deaths with cause and killer, getting stuck, idleness and the time to discover each mechanic. The reports produce a P1–P3 fix list.
+- **Metrics forecast without data** (1.19): simulated new players (`HUMANSIM()` in `tools/harness.js`) and a funnel model (`tools/funnel.py`) — description, assumptions and results in [METRICS.md](METRICS.md). Used to compare versions and look for difficulty walls; real numbers will only come from the Basic Launch on CrazyGames.
+- **Regression test** (1.12): `REGRESS()` in `tools/harness.js` — a bot with invulnerability plays through every mission and reports exceptions, NaN, object-count growth and frame time; it must PASS before every release. Full list of release steps: [RELEASE.md](RELEASE.md).
+- Before release: test on a weak Android phone (60 FPS with many explosions), iOS Safari (audio after the first touch), an iframe of variable size, an ad blocker (the game must work without the SDK).

@@ -5,28 +5,28 @@
 //  new player does - how each mission ended, every death and what caused it,
 //  where they got stuck, which controls they found and when - and turns it
 //  into a report. F3 (or five quick taps on the version number on the title
-//  screen) opens the panel. "Nowy tester" archives the log and starts a clean
+//  screen) opens the panel. "New tester" archives the log and starts a clean
 //  one on a clean save; the owner's own save is put aside until restored.
 // ============================================================================
 
 const PT_CAUSE = {
-  shot: 'strzał', explosion: 'wybuch', fire: 'ogień', bite: 'ugryzienie', bash: 'cios tarczą',
-  crush: 'zmiażdżenie', spikes: 'kolce', doom: 'fala detonacji',
+  shot: 'shot', explosion: 'explosion', fire: 'fire', bite: 'bite', bash: 'shield bash',
+  crush: 'crushed', spikes: 'spikes', doom: 'detonation wave',
 };
 // what a first-time player should find, in roughly the order the game teaches it
 const PT_FIRSTS = [
-  ['key:move', 'ruch'], ['key:jump', 'skok'], ['key:fire', 'strzał'], ['kill', 'pierwsze zabójstwo'],
-  ['wallclimb', 'wspinaczka po ścianie'], ['walljump', 'odbicie od ściany'], ['ladder', 'drabina'], ['rescue', 'uwolniony jeniec'],
-  ['key:special', 'klawisz specjala'], ['special', 'specjal'], ['special:empty', 'specjal bez amunicji'],
-  ['key:melee', 'klawisz noża'], ['knife', 'nóż'], ['knife:auto', 'nóż przy strzale z bliska'], ['barrel kick', 'kopnięcie beczki'],
-  ['bat grenade', 'odbicie granatu'], ['key:down', 'klawisz w dół'], ['slide', 'ślizg'], ['slidejump', 'skok ze ślizgu'], ['stomp', 'deptanie'],
-  ['grab', 'złapanie żołnierza'], ['throw', 'rzut żołnierzem'], ['gold crate', 'złota skrzynia'], ['pocket', 'przedmiot ze skrzyni'],
-  ['fuel leak', 'przebita beczka lub rura z paliwem'], ['fuel fire', 'podpalone paliwo'], ['drum kick', 'kopnięta beczka paliwa'], ['bridge', 'zawalony most'],
-  ['mech', 'wejście do mecha'], ['mech:exit', 'wyjście z mecha'], ['mech:lost', 'mech zniszczony'], ['style kill', 'zabójstwo stylowe'], ['death', 'pierwsza śmierć'],
+  ['key:move', 'move'], ['key:jump', 'jump'], ['key:fire', 'shoot'], ['kill', 'first kill'],
+  ['wallclimb', 'wall climb'], ['walljump', 'wall jump'], ['ladder', 'ladder'], ['rescue', 'prisoner freed'],
+  ['key:special', 'special key'], ['special', 'special'], ['special:empty', 'special with no ammo'],
+  ['key:melee', 'melee key'], ['knife', 'knife'], ['knife:auto', 'knife on a close-range shot'], ['barrel kick', 'barrel kick'],
+  ['bat grenade', 'grenade batted back'], ['key:down', 'down key'], ['slide', 'slide'], ['slidejump', 'slide jump'], ['stomp', 'stomp'],
+  ['grab', 'soldier grab'], ['throw', 'soldier throw'], ['gold crate', 'gold crate'], ['pocket', 'crate item'],
+  ['fuel leak', 'fuel barrel or pipe punctured'], ['fuel fire', 'fuel set alight'], ['drum kick', 'fuel drum kicked'], ['bridge', 'bridge collapsed'],
+  ['mech', 'mech entered'], ['mech:exit', 'mech exited'], ['mech:lost', 'mech destroyed'], ['style kill', 'style kill'], ['death', 'first death'],
 ];
 const PT_NOT_GOALS = ['special:empty', 'mech:lost', 'death']; // logged, but not something a player "should" find
-const PT_GOAL = { extract: 'ewakuacja', target: 'zamach', depots: 'składy paliwa', escape: 'ucieczka', boss: 'boss' };
-const PT_KIND = { bullet: 'kule', explosion: 'wybuchy', fire: 'ogień', crush: 'zmiażdżenia', melee: 'wręcz', shock: 'prąd', rail: 'railgun', fall: 'upadki' };
+const PT_GOAL = { extract: 'extraction', target: 'assassination', depots: 'fuel depots', escape: 'escape', boss: 'boss' };
+const PT_KIND = { bullet: 'bullets', explosion: 'explosions', fire: 'fire', crush: 'crushes', melee: 'melee', shock: 'shock', rail: 'railgun', fall: 'falls' };
 const PT_KEYS = [['key:move', ['left', 'right']], ['key:jump', ['jump', 'up']], ['key:fire', ['fire']], ['key:special', ['special']], ['key:melee', ['melee']], ['key:down', ['down']]];
 
 const Playtest = {
@@ -252,59 +252,59 @@ const Playtest = {
     const tally = (list) => { const o = {}; for (const k of list) o[k] = (o[k] || 0) + 1; return o; };
     const top = (o) => Object.entries(o).sort((a, b) => b[1] - a[1]).map(([k, n]) => k + ' ' + n).join(', ');
     const out = [];
-    out.push('BLAST BATTALION — RAPORT Z TESTU' + (L.label ? ' · ' + L.label : ''));
+    out.push('BLAST BATTALION — PLAYTEST REPORT' + (L.label ? ' · ' + L.label : ''));
     const wall = evs.length ? evs[evs.length - 1].t : 0;
-    out.push('Wersja ' + (boot.v || VERSION) + ' · log od ' + when(L.started) + ' · czas gry ' + T(L.playT) + ' (razem z menu i pauzami ' + T(wall) + ') · uruchomień strony: ' + boots.length);
-    const inputs = [...new Set(runs.map((r) => r.input).concat(boot.input ? [boot.input] : []))].map((m) => ({ keyboard: 'klawiatura', touch: 'dotyk', gamepad: 'pad' }[m] || m));
-    out.push('Sprzęt: ' + (inputs.join(' + ') || '?') + ' · obraz gry ' + (boot.view || '?') + ' · okno ' + (boot.win || '?') + (boot.phone ? ' · telefon/tablet' : '') + (boot.touch ? ' · ekran dotykowy' : ''));
+    out.push('Version ' + (boot.v || VERSION) + ' · log since ' + when(L.started) + ' · play time ' + T(L.playT) + ' (incl. menus and pauses ' + T(wall) + ') · page loads: ' + boots.length);
+    const inputs = [...new Set(runs.map((r) => r.input).concat(boot.input ? [boot.input] : []))].map((m) => ({ keyboard: 'keyboard', touch: 'touch', gamepad: 'gamepad' }[m] || m));
+    out.push('Hardware: ' + (inputs.join(' + ') || '?') + ' · game view ' + (boot.view || '?') + ' · window ' + (boot.win || '?') + (boot.phone ? ' · phone/tablet' : '') + (boot.touch ? ' · touchscreen' : ''));
     const tune = boot.tune || {};
-    out.push('Strojenie: ' + (Object.keys(tune).length ? 'ZMIENIONE ' + Object.entries(tune).map(([k, v]) => k + '=' + v).join(', ') : 'domyślne'));
+    out.push('Tuning: ' + (Object.keys(tune).length ? 'CHANGED ' + Object.entries(tune).map(([k, v]) => k + '=' + v).join(', ') : 'defaults'));
     const sv = boot.save || {};
-    out.push('Zapis na starcie: ' + (sv.unlocked <= 1 && !sv.rescues && !sv.stars ? 'czysty (pierwsza gra)' : 'misje ' + sv.unlocked + ', jeńcy ' + sv.rescues + ', gwiazdki ' + sv.stars));
+    out.push('Save at start: ' + (sv.unlocked <= 1 && !sv.rescues && !sv.stars ? 'clean (first game)' : 'missions ' + sv.unlocked + ', prisoners ' + sv.rescues + ', stars ' + sv.stars));
 
     const res = (r) => {
       const [head, how] = String(r.result || '').split(':');
-      const h = { complete: 'UKOŃCZONA ' + '★'.repeat(r.stars || 0) + '☆'.repeat(Math.max(0, 3 - (r.stars || 0))), failed: 'PORAŻKA', quit: 'PRZERWANA', closed: 'ZAMKNIĘTA STRONA', running: 'W TOKU' }[head] || head;
-      const w = { retry: 'ponów', menu: 'menu', restart: 'restart', quit: 'wyjście', next: 'dalej', replay: 'powtórka', again: 'jeszcze raz' }[how] || how;
+      const h = { complete: 'COMPLETED ' + '★'.repeat(r.stars || 0) + '☆'.repeat(Math.max(0, 3 - (r.stars || 0))), failed: 'FAILED', quit: 'QUIT', closed: 'PAGE CLOSED', running: 'IN PROGRESS' }[head] || head;
+      const w = { retry: 'retry', menu: 'menu', restart: 'restart', quit: 'exit', next: 'next', replay: 'replay', again: 'again' }[how] || how;
       return h + (w ? ' → ' + w : '');
     };
     const done = runs.filter((r) => /^complete/.test(r.result)).length, lost = runs.filter((r) => /^failed/.test(r.result)).length;
-    const goalPl = (g) => { const [a, b] = String(g || '').split(':'); return (PT_GOAL[a] || a) + (b ? ' (niewykonany)' : ''); };
+    const goalPl = (g) => { const [a, b] = String(g || '').split(':'); return (PT_GOAL[a] || a) + (b ? ' (not done)' : ''); };
     const useName = (k) => { const [base, who] = k.split('@'); const f = PT_FIRSTS.find((x) => x[0] === base); return (f ? f[1] : base) + (who ? ' ' + who : ''); };
-    out.push('', 'MISJE — podejścia: ' + runs.length + ' · ukończone ' + done + ' · porażki ' + lost + ' · przerwane/inne ' + (runs.length - done - lost));
+    out.push('', 'MISSIONS — attempts: ' + runs.length + ' · completed ' + done + ' · failed ' + lost + ' · quit/other ' + (runs.length - done - lost));
     runs.forEach((r, i) => {
       const st = sum(r.style);
       out.push(' ' + (i + 1) + '. ' + r.m + ' ' + r.name + ' · ' + r.diff + (r.players > 1 ? ' · co-op' : '') + ' · ' + res(r) + ' · ' + T(r.time) +
-        ' · zgony ' + r.deaths.length + ' · trafienia ' + sum(r.hurts) + ' · zabici ' + r.kills + (st ? ' (stylowe ' + st + ')' : '') +
-        ' · jeńcy ' + r.rescued + '/' + r.prisoners + ' · najdalej ' + r.far + '%' + (r.stalls.length ? ' · utknięcia ' + r.stalls.length : '') +
-        (r.gameovers ? ' · game over ' + r.gameovers : '') + (r.continues ? ' · kontynuacje ' + r.continues : '') + (r.mechT >= 1 ? ' · w mechu ' + T(r.mechT) : '') +
-        ' · bohaterowie: ' + (r.heroes.join(', ') || '-'));
+        ' · deaths ' + r.deaths.length + ' · hits ' + sum(r.hurts) + ' · kills ' + r.kills + (st ? ' (style ' + st + ')' : '') +
+        ' · prisoners ' + r.rescued + '/' + r.prisoners + ' · furthest ' + r.far + '%' + (r.stalls.length ? ' · stalls ' + r.stalls.length : '') +
+        (r.gameovers ? ' · game over ' + r.gameovers : '') + (r.continues ? ' · continues ' + r.continues : '') + (r.mechT >= 1 ? ' · in mech ' + T(r.mechT) : '') +
+        ' · heroes: ' + (r.heroes.join(', ') || '-'));
     });
 
     const deaths = [];
     runs.forEach((r) => r.deaths.forEach((d) => deaths.push(Object.assign({ m: r.m }, d))));
-    out.push('', 'ZGONY (' + deaths.length + ')' + (deaths.length ? ': ' + top(tally(deaths.map((d) => PT_CAUSE[d.c] || d.c))) : ''));
+    out.push('', 'DEATHS (' + deaths.length + ')' + (deaths.length ? ': ' + top(tally(deaths.map((d) => PT_CAUSE[d.c] || d.c))) : ''));
     const bySrc = tally(deaths.filter((d) => d.by).map((d) => d.by));
-    if (Object.keys(bySrc).length) out.push('  sprawcy: ' + top(bySrc));
-    deaths.slice(0, 60).forEach((d) => out.push('  - ' + d.m + ' ' + d.pct + '% po ' + T(d.t) + ' — ' + (PT_CAUSE[d.c] || d.c) + (d.by ? ' ← ' + d.by : '') + ' (' + d.hero + (d.p ? ', P2' : '') + ')'));
+    if (Object.keys(bySrc).length) out.push('  killers: ' + top(bySrc));
+    deaths.slice(0, 60).forEach((d) => out.push('  - ' + d.m + ' ' + d.pct + '% after ' + T(d.t) + ' — ' + (PT_CAUSE[d.c] || d.c) + (d.by ? ' ← ' + d.by : '') + ' (' + d.hero + (d.p ? ', P2' : '') + ')'));
     const hurts = {};
     runs.forEach((r) => { for (const k in r.hurts) hurts[k] = (hurts[k] || 0) + r.hurts[k]; });
     const hurtNames = {};
     for (const k in hurts) { const [c, s] = k.split('<'); const n = (PT_CAUSE[c] || c) + (s ? ' ← ' + s : ''); hurtNames[n] = (hurtNames[n] || 0) + hurts[k]; }
-    out.push('TRAFIENIA BEZ ŚMIERCI (' + sum(hurts) + ')' + (sum(hurts) ? ': ' + top(hurtNames) : ''));
+    out.push('HITS WITHOUT DEATH (' + sum(hurts) + ')' + (sum(hurts) ? ': ' + top(hurtNames) : ''));
 
     const stalls = [];
     runs.forEach((r) => r.stalls.forEach((s) => stalls.push(Object.assign({ m: r.m }, s))));
-    out.push('', 'UTKNIĘCIA (≥' + this.STALL + ' s bez postępu w prawo): ' + stalls.length);
-    const endWhy = { moved: 'ruszył dalej', respawn: 'zginął', end: 'koniec misji' };
+    out.push('', 'STALLS (≥' + this.STALL + ' s without progress to the right): ' + stalls.length);
+    const endWhy = { moved: 'moved on', respawn: 'died', end: 'mission ended' };
     stalls.forEach((s) => out.push('  - ' + s.m + ' ' + s.pct + '% (x ' + s.x + ', y ' + s.y + ') · ' + (s.dur || '≥' + this.STALL) + ' s' + (s.end ? ' → ' + (endWhy[s.end] || s.end) : '') +
-      ' · ściana przed nim: ' + s.wall + ' kaf. · wrogów obok: ' + s.foes + ' · cel: ' + goalPl(s.goal)));
+      ' · wall ahead: ' + s.wall + ' tiles · enemies nearby: ' + s.foes + ' · goal: ' + goalPl(s.goal)));
     const idles = evs.filter((e) => e.k === 'idle').length, idleT = runs.reduce((a, r) => a + (r.idle || 0), 0);
-    out.push('BEZCZYNNOŚĆ (≥' + this.IDLE + ' s bez żadnego klawisza): ' + idles + '×' + (idleT ? ', razem ' + Math.round(idleT) + ' s' : ''));
+    out.push('IDLE (≥' + this.IDLE + ' s without any input): ' + idles + '×' + (idleT ? ', total ' + Math.round(idleT) + ' s' : ''));
     const locked = runs.filter((r) => r.flagLocked).map((r) => r.m + ' ×' + r.flagLocked);
-    out.push('PRÓBY EWAKUACJI PRZED WYKONANIEM CELU: ' + (locked.length ? locked.join(', ') : '0'));
+    out.push('EXTRACTION ATTEMPTS BEFORE THE GOAL WAS DONE: ' + (locked.length ? locked.join(', ') : '0'));
     const pauses = evs.filter((e) => e.k === 'pause'), pp = pauses.filter((e) => e.why === 'player').length;
-    out.push('PAUZY: ' + pp + ' przez gracza' + (pauses.length > pp ? ', ' + (pauses.length - pp) + ' automatyczne (okno/panel)' : ''));
+    out.push('PAUSES: ' + pp + ' by the player' + (pauses.length > pp ? ', ' + (pauses.length - pp) + ' automatic (window/panel)' : ''));
 
     const F = L.firsts, used = [], unused = [];
     for (const [k, name] of PT_FIRSTS) {
@@ -312,12 +312,12 @@ const Playtest = {
       else if (!PT_NOT_GOALS.includes(k)) unused.push(name);
     }
     used.sort((a, b) => a[0] - b[0]);
-    out.push('', 'PIERWSZE UŻYCIE (czas gry · misja): ' + (used.map((u) => u[1]).join(' · ') || '-'));
-    out.push('NIE UŻYŁ: ' + (unused.join(', ') || '-'));
+    out.push('', 'FIRST USE (play time · mission): ' + (used.map((u) => u[1]).join(' · ') || '-'));
+    out.push('NEVER USED: ' + (unused.join(', ') || '-'));
     const uses = {}, useNames = {};
     runs.forEach((r) => { for (const k in r.uses) uses[k] = (uses[k] || 0) + r.uses[k]; });
     for (const k in uses) useNames[useName(k)] = uses[k];
-    out.push('UŻYCIA RAZEM: ' + (top(useNames) || '-'));
+    out.push('TOTAL USES: ' + (top(useNames) || '-'));
     const kinds = {}, style = {};
     let kills = 0;
     runs.forEach((r) => {
@@ -325,27 +325,27 @@ const Playtest = {
       for (const k in r.kinds) { const n = PT_KIND[k] || k; kinds[n] = (kinds[n] || 0) + r.kinds[k]; }
       for (const k in r.style) style[k] = (style[k] || 0) + r.style[k];
     });
-    out.push('ZABÓJSTWA: ' + kills + (kills ? ' · ' + top(kinds) : '') + (sum(style) ? ' · stylowe: ' + top(style) : ''));
+    out.push('KILLS: ' + kills + (kills ? ' · ' + top(kinds) : '') + (sum(style) ? ' · style: ' + top(style) : ''));
     const path = evs.filter((e) => e.k === 'ui').map((e) => e.at + ':' + e.id);
-    out.push('MENU (kliknięcia po kolei): ' + (path.slice(0, 80).join(' → ') || '-') + (path.length > 80 ? ' …' : ''));
+    out.push('MENU (clicks in order): ' + (path.slice(0, 80).join(' → ') || '-') + (path.length > 80 ? ' …' : ''));
 
     // quick flags worth a look before reading everything
     const flags = [];
     const firstRun = runs[0];
-    if (firstRun && firstRun.deaths.length >= 3) flags.push('Już w pierwszej misji (' + firstRun.m + ') ' + firstRun.deaths.length + ' zgony — start może być za trudny.');
-    if (stalls.length) flags.push('Utknięcia: ' + stalls.length + ' — sprawdź te miejsca na mapie (misja, % długości).');
-    if (locked.length) flags.push('Szedł do flagi ewakuacji przed wykonaniem celu — cel misji mógł być niejasny.');
+    if (firstRun && firstRun.deaths.length >= 3) flags.push('Already in the first mission (' + firstRun.m + ') ' + firstRun.deaths.length + ' deaths — the start may be too hard.');
+    if (stalls.length) flags.push('Stalls: ' + stalls.length + ' — check these spots on the map (mission, % of length).');
+    if (locked.length) flags.push('Went to the extraction flag before the goal was done — the mission goal may have been unclear.');
     const lateFire = F['key:fire'] && F['key:fire'].pt > 30;
-    if (!F['key:fire'] && L.playT > 20) flags.push('Ani razu nie strzelił.'); else if (lateFire) flags.push('Strzał znalazł dopiero po ' + T(F['key:fire'].pt) + ' gry.');
-    if (!F.special && L.playT > 120) flags.push('Nie użył specjala mimo ' + T(L.playT) + ' gry.');
-    if (!F['key:melee'] && L.playT > 180) flags.push('Nie nacisnął klawisza noża.');
-    if (F['special:empty']) flags.push('Próbował specjala bez amunicji (' + (uses['special:empty'] || 0) + '×) — licznik specjali może być słabo widoczny.');
-    if (idles) flags.push('Okresy bezczynności: ' + idles + ' — zapytaj, co się wtedy działo.');
+    if (!F['key:fire'] && L.playT > 20) flags.push('Never fired once.'); else if (lateFire) flags.push('Found the fire key only after ' + T(F['key:fire'].pt) + ' of play.');
+    if (!F.special && L.playT > 120) flags.push('Never used a special in ' + T(L.playT) + ' of play.');
+    if (!F['key:melee'] && L.playT > 180) flags.push('Never pressed the melee key.');
+    if (F['special:empty']) flags.push('Tried a special with no ammo (' + (uses['special:empty'] || 0) + '×) — the special counter may be hard to see.');
+    if (idles) flags.push('Idle periods: ' + idles + ' — ask what was going on.');
     const quits = runs.filter((r) => /^quit/.test(r.result)).length;
-    if (quits) flags.push('Przerwane misje: ' + quits + ' — zapytaj o powód.');
-    if (flags.length) out.push('', 'SYGNAŁY DO SPRAWDZENIA:', ...flags.map((f) => '  • ' + f));
+    if (quits) flags.push('Missions quit: ' + quits + ' — ask why.');
+    if (flags.length) out.push('', 'THINGS TO CHECK:', ...flags.map((f) => '  • ' + f));
 
-    out.push('', '--- DANE (JSON, dla Claude) ---', JSON.stringify(Object.assign({}, L, { runs })));
+    out.push('', '--- DATA (JSON, for Claude) ---', JSON.stringify(Object.assign({}, L, { runs })));
     return out.join('\n');
   },
 
@@ -404,23 +404,23 @@ const Playtest = {
     const a = this.archive(), cur = this.sel.value;
     this.sel.innerHTML = '';
     const opt = (value, text) => { const o = document.createElement('option'); o.value = value; o.textContent = text; this.sel.appendChild(o); };
-    const name = (L, i) => (L.label || (i == null ? 'bieżący log' : 'log ' + (i + 1))) + ' · ' + new Date(L.started).toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-    opt('cur', 'Teraz: ' + name(this.log));
-    for (let i = a.length - 1; i >= 0; i--) opt(String(i), 'Archiwum: ' + name(a[i], i));
+    const name = (L, i) => (L.label || (i == null ? 'current log' : 'log ' + (i + 1))) + ' · ' + new Date(L.started).toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    opt('cur', 'Now: ' + name(this.log));
+    for (let i = a.length - 1; i >= 0; i--) opt(String(i), 'Archive: ' + name(a[i], i));
     this.sel.value = [...this.sel.options].some((o) => o.value === cur) ? cur : 'cur';
     const L = this.selected();
     this.text.value = this.report(L);
-    this.stat.textContent = (L.label ? L.label + ' · ' : '') + L.runs.length + ' misji · ' + L.events.length + ' zdarzeń · czas gry ' + fmtTime(L.playT);
+    this.stat.textContent = (L.label ? L.label + ' · ' : '') + L.runs.length + ' missions · ' + L.events.length + ' events · play time ' + fmtTime(L.playT);
     let backup = false;
     try { backup = !!localStorage.getItem(this.BACKUP); } catch (e) { /* */ }
     this.bRestore.style.display = backup ? '' : 'none';
     const tuned = Object.keys(TunePanel.changed()).length;
-    this.warn.textContent = tuned ? 'Uwaga: aktywne zmiany strojenia (' + tuned + ') — testerzy zagrają na nich. Reset w panelu F2 przywraca domyślne.' : '';
+    this.warn.textContent = tuned ? 'Warning: tuning changes are active (' + tuned + ') — testers will play with them. Reset in the F2 panel restores the defaults.' : '';
   },
   note(msg) { this.msg.textContent = msg; },
   copy(text) {
-    const fallback = () => { this.text.value = text; this.text.focus(); this.text.select(); this.note('Zaznaczone — skopiuj Ctrl+C (na telefonie: Kopiuj z menu).'); };
-    try { navigator.clipboard.writeText(text).then(() => this.note('Skopiowano — wklej raport w czacie z Claude.'), fallback); } catch (e) { fallback(); }
+    const fallback = () => { this.text.value = text; this.text.focus(); this.text.select(); this.note('Selected — copy with Ctrl+C (on a phone: Copy from the menu).'); };
+    try { navigator.clipboard.writeText(text).then(() => this.note('Copied — paste the report into the chat with Claude.'), fallback); } catch (e) { fallback(); }
   },
   allReports() {
     const logs = this.archive().concat([this.log]).filter((L) => L.runs.length || L.events.length > 1);
@@ -434,8 +434,8 @@ const Playtest = {
       a.download = 'blast-battalion-playtest-' + d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') + '.txt';
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 3000);
-      this.note('Zapisano plik .txt (jeśli przeglądarka pozwoliła).');
-    } catch (e) { this.note('Pobieranie zablokowane — użyj Kopiuj.'); }
+      this.note('Saved a .txt file (if the browser allowed it).');
+    } catch (e) { this.note('Download blocked — use Copy.'); }
   },
   build() {
     const css = document.createElement('style');
@@ -462,19 +462,19 @@ const Playtest = {
     el.style.display = 'none';
     const mk = (tag, text, cls) => { const e = document.createElement(tag); if (text) e.textContent = text; if (cls) e.className = cls; return e; };
     const hd = mk('div', '', 'hd');
-    const bClose = mk('button', '×'); bClose.title = 'Zamknij (F3)';
+    const bClose = mk('button', '×'); bClose.title = 'Close (F3)';
     bClose.addEventListener('click', () => this.toggle());
-    hd.append(mk('b', 'Raport z testu'), bClose);
+    hd.append(mk('b', 'Playtest report'), bClose);
     this.stat = mk('div', '', 'stat');
     const row1 = mk('div', '', 'row');
     this.sel = document.createElement('select');
     this.sel.addEventListener('change', () => this.refresh());
-    const bCopy = mk('button', 'Kopiuj'), bAll = mk('button', 'Kopiuj wszystkie'), bDl = mk('button', 'Pobierz .txt'), bRef = mk('button', 'Odśwież');
-    bCopy.title = 'Kopiuj wybrany raport'; bAll.title = 'Kopiuj raporty wszystkich testerów (bieżący + archiwum)';
+    const bCopy = mk('button', 'Copy'), bAll = mk('button', 'Copy all'), bDl = mk('button', 'Download .txt'), bRef = mk('button', 'Refresh');
+    bCopy.title = 'Copy the selected report'; bAll.title = 'Copy the reports of all testers (current + archive)';
     bCopy.addEventListener('click', () => this.copy(this.text.value));
     bAll.addEventListener('click', () => this.copy(this.allReports()));
     bDl.addEventListener('click', () => this.download(this.allReports()));
-    bRef.addEventListener('click', () => { this.refresh(); this.note('Odświeżono.'); });
+    bRef.addEventListener('click', () => { this.refresh(); this.note('Refreshed.'); });
     // embedded pages (the artifact viewer, portal iframes) usually may not download files
     let top = true;
     try { top = window.self === window.top; } catch (e) { top = false; }
@@ -484,25 +484,25 @@ const Playtest = {
     this.text.readOnly = true;
     const row2 = mk('div', '', 'row');
     const name = document.createElement('input');
-    name.placeholder = 'np. Tester B'; name.maxLength = 24; name.size = 14;
-    const bNew = mk('button', 'Nowy tester');
-    bNew.title = 'Archiwizuje ten log, czyści postęp gry i przeładowuje stronę';
+    name.placeholder = 'e.g. Tester B'; name.maxLength = 24; name.size = 14;
+    const bNew = mk('button', 'New tester');
+    bNew.title = 'Archives this log, clears game progress and reloads the page';
     bNew.addEventListener('click', () => {
       if (Date.now() > this.armT) {
-        this.armT = Date.now() + 4000; bNew.textContent = 'Na pewno? Kliknij jeszcze raz';
-        setTimeout(() => { if (Date.now() > this.armT) bNew.textContent = 'Nowy tester'; }, 4100);
+        this.armT = Date.now() + 4000; bNew.textContent = 'Sure? Click again';
+        setTimeout(() => { if (Date.now() > this.armT) bNew.textContent = 'New tester'; }, 4100);
         return;
       }
       this.newTester(name.value.trim());
     });
-    this.bRestore = mk('button', 'Przywróć mój zapis');
-    this.bRestore.title = 'Koniec testów: wraca Twój postęp sprzed pierwszego testera';
+    this.bRestore = mk('button', 'Restore my save');
+    this.bRestore.title = 'End of testing: brings back your progress from before the first tester';
     this.bRestore.addEventListener('click', () => this.restoreSave());
-    row2.append(mk('span', 'Nazwa:'), name, bNew, this.bRestore);
+    row2.append(mk('span', 'Name:'), name, bNew, this.bRestore);
     this.warn = mk('div', '', 'warn');
     this.msg = mk('div', '', 'note');
-    el.append(hd, this.stat, row1, this.text, mk('h4', 'KOLEJNY TESTER'), row2,
-      mk('div', 'Nowy tester = nowy log i czysty postęp gry (jak u kogoś, kto gra pierwszy raz). Twój zapis zostaje odłożony i wraca po „Przywróć mój zapis”. Archiwum trzyma 5 ostatnich logów.', 'stat'),
+    el.append(hd, this.stat, row1, this.text, mk('h4', 'NEXT TESTER'), row2,
+      mk('div', 'New tester = a new log and clean game progress (like someone playing for the first time). Your save is set aside and comes back with "Restore my save". The archive keeps the last 5 logs.', 'stat'),
       this.warn, this.msg);
     // keys typed in the panel stay in the panel (F3 / Esc close it)
     el.addEventListener('keydown', (e) => {

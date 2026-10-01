@@ -1,166 +1,166 @@
-# Playtest — sesja z graczami, którzy grają pierwszy raz
+# Playtest — a session with first-time players
 
-**Cel:** zobaczyć grę oczami kogoś, kto jej nie zna, i zamienić to na listę poprawek.
+**Goal:** see the game through the eyes of someone who doesn't know it, and turn that into a list of fixes.
 
-**Kto:** 2–3 osoby, które nigdy nie grały w Blast Battalion. Najlepiej różne: ktoś, kto często gra w gry przeglądarkowe lub mobilne, i ktoś, kto gra rzadko.
+**Who:** 2–3 people who have never played Blast Battalion. Ideally different: someone who often plays browser or mobile games, and someone who rarely plays.
 
-**Ile:** 15–20 minut gry na osobę plus 5 minut rozmowy. Każda osoba gra osobno, pozostałe nie patrzą.
+**How long:** 15–20 minutes of play per person plus 5 minutes of conversation. Each person plays alone, the others don't watch.
 
 ---
 
-## 1. Przygotowanie (5 minut przed pierwszą osobą)
+## 1. Preparation (5 minutes before the first person)
 
-1. **Wersja gry.** Są trzy możliwości:
-   - artefakt (link z czatu) — jest prywatny, więc na cudzym urządzeniu zadziała dopiero po udostępnieniu w menu *Share*;
-   - lokalnie: `python tools/devserver.py 8321`, potem http://localhost:8321;
-   - plik `dist/web/index.html`, na przykład na własnym urządzeniu testera.
+1. **Game version.** There are three options:
+   - the artifact (link from the chat) — it's private, so on someone else's device it only works after sharing it in the *Share* menu;
+   - locally: `python tools/devserver.py 8321`, then http://localhost:8321;
+   - the file `dist/web/index.html`, for example on the tester's own device.
 
-   Wersje dla Poki i CrazyGames nie mają zapisu testu.
-2. **Czysty start.** Naciśnij **F3** (panel „Raport z testu”). Wpisz etykietę bez imienia i nazwiska, np. „Tester A”, i kliknij **Nowy tester** dwa razy. Strona przeładuje się z pustym postępem, jak u kogoś, kto gra pierwszy raz. Twój własny zapis zostaje odłożony na bok.
-   - Na telefonie lub tablecie bez klawiatury panel otwiera się pięcioma szybkimi stuknięciami w numer wersji (lewy górny róg ekranu tytułowego). Po „Nowy tester” gra zaczyna od razu od misji 1, bez ekranu tytułowego (1.31). Na telefonie po raport wejdź na ekran tytułowy przez pauzę (wyjście z misji, potem wstecz).
-3. **Strojenie.** Jeśli panel F3 pokazuje żółte ostrzeżenie o zmienionym strojeniu, a chcesz testować wartości domyślne, otwórz **F2** i kliknij **Reset**.
-4. **Warunki.** Dźwięk włączony (słuchawki albo głośnik), duże okno lub pełny ekran. Urządzenie takie, na jakim tester zwykle gra: komputer albo telefon poziomo.
-5. **Notatki.** Przygotuj kartkę albo notatnik z tabelą z punktu 6 i zegarek (liczysz czas od startu).
+   The Poki and CrazyGames versions have no test log.
+2. **Clean start.** Press **F3** (the "Playtest report" panel). Enter a label without a full name, e.g. "Tester A", and click **New tester** twice. The page reloads with empty progress, like for someone playing for the first time. Your own save is set aside.
+   - On a phone or tablet without a keyboard, the panel opens with five quick taps on the version number (top-left corner of the title screen). After "New tester" the game starts straight in mission 1, without the title screen (1.31). On a phone, to get the report, go to the title screen via pause (exit the mission, then back).
+3. **Tuning.** If the F3 panel shows a yellow warning about changed tuning and you want to test the defaults, open **F2** and click **Reset**.
+4. **Conditions.** Sound on (headphones or speaker), a large window or full screen. The kind of device the tester usually plays on: a computer or a phone in landscape.
+5. **Notes.** Prepare a sheet of paper or a notebook with the table from section 6, and a clock (you count time from the start).
 
-## 2. Co powiedzieć na początku
+## 2. What to say at the start
 
-> „To gra akcji w przeglądarce. Graj tak, jak grałbyś sam w domu. Mów na głos, co myślisz: co próbujesz zrobić, co cię dziwi, co cię denerwuje. Sprawdzamy grę, a nie ciebie. Nie będę podpowiadać, bo chcę zobaczyć, gdzie gra sama nie tłumaczy.”
+> "This is an action game in the browser. Play the way you would on your own at home. Think out loud: what you're trying to do, what surprises you, what annoys you. We're testing the game, not you. I won't give hints, because I want to see where the game doesn't explain itself."
 
-Nic więcej nie wyjaśniaj: ani sterowania, ani celu gry.
+Explain nothing more: neither the controls nor the goal of the game.
 
-## 3. Zasady dla osoby, która obserwuje
+## 3. Rules for the observer
 
-- **Nie podpowiadaj.** Na pytanie „co mam zrobić?” odpowiedz „a jak myślisz?”.
-- **Pomóż dopiero wtedy**, gdy ktoś utknął na ponad 2 minuty albo chce przestać. Zanotuj wtedy dokładnie, w czym pomogłeś. To najcenniejsze znalezisko z całej sesji.
-- **Zapisuj czas i dokładne słowa gracza.** Cytat („nie wiem, czemu zginąłem”) mówi więcej niż ocena.
-- **Nie broń gry i nie tłumacz błędów.** Jeśli coś nie działa, zanotuj i graj dalej.
-- **Patrz na twarz i ręce**, nie tylko na ekran: śmiech, westchnienie, szukanie klawiszy, zerkanie na telefon.
+- **Don't give hints.** To "what should I do?" answer "what do you think?".
+- **Help only** when someone has been stuck for more than 2 minutes or wants to stop. Then write down exactly what you helped with. That's the most valuable finding of the whole session.
+- **Write down the time and the player's exact words.** A quote ("I don't know why I died") says more than a rating.
+- **Don't defend the game or explain bugs.** If something doesn't work, note it and keep playing.
+- **Watch the face and hands**, not just the screen: laughter, sighs, searching for keys, glancing at the phone.
 
-## 4. Przebieg (około 20 minut)
+## 4. Flow (about 20 minutes)
 
-| Czas | Co się dzieje | Na co patrzysz |
+| Time | What happens | What you watch for |
 |---|---|---|
-| 0–1 min | start: od razu misja 1, logo nad zrzutem ze śmigłowca | Czy rozumie, że już gra? Czy rusza sam, zanim zobaczy klawisze nad bohaterem? Czy czeka na coś? |
-| pierwsze sekundy misji 1 | powitalne beczki | Czy strzela w beczki po podpowiedzi „J: SHOOT”? Czy łańcuch wybuchów robi wrażenie? Czy wie, jak wyjść z krateru? |
-| 1–10 min | kampania od misji 1 (samouczek), potem dalej | pierwsza minuta ruchu i strzału, pierwsze starcie, pierwsza śmierć |
-| 10–15 min | gra swobodna: kolejne misje, Arcade albo Heroes, co tester woli | Czy sam z siebie chce grać dalej? Co wybiera? |
-| koniec | tester sam mówi „wystarczy” (zanotuj kiedy i dlaczego) albo mija 20 minut | nie przedłużaj na siłę |
-| +5 min | rozmowa (punkt 5) | |
-| na koniec | **F3 → Kopiuj** (po ostatniej osobie: **Kopiuj wszystkie**) | raport wklejasz do czatu razem z notatkami |
+| 0–1 min | start: straight into mission 1, logo over the helicopter drop | Do they understand they're already playing? Do they move on their own before seeing the keys above the hero? Are they waiting for something? |
+| first seconds of mission 1 | welcome barrels | Do they shoot the barrels after the "J: SHOOT" hint? Does the chain of explosions impress? Do they know how to get out of the crater? |
+| 1–10 min | campaign from mission 1 (tutorial), then onward | first minute of moving and shooting, first fight, first death |
+| 10–15 min | free play: more missions, Arcade or Heroes, whatever the tester prefers | Do they want to keep playing on their own? What do they choose? |
+| end | the tester says "that's enough" (note when and why) or 20 minutes pass | don't drag it out |
+| +5 min | conversation (section 5) | |
+| at the very end | **F3 → Copy** (after the last person: **Copy all**) | paste the report into the chat together with your notes |
 
-### Lista kontrolna do obserwacji
+### Observation checklist
 
-**Pierwsza minuta**
-- Czy znalazł ruch, skok i strzał bez szukania? Ile to trwało?
-- Czy czyta tablice samouczka? Czy zatrzymuje się przy nich, czy je mija?
-- Czy rozumie, że pociski kopią w ziemi i niszczą teren?
+**First minute**
+- Did they find move, jump and shoot without searching? How long did it take?
+- Do they read the tutorial signs? Do they stop at them or walk past?
+- Do they understand that bullets dig into the ground and destroy terrain?
 
-**Walka i śmierć**
-- Czy zauważa czerwoną linię celownika wroga? Czy reaguje (skok, ślizg, schowanie się)?
-- Czy po trafieniu wie, że stracił punkt życia? Serca w panelu bohatera (lewy górny róg) to punkty życia; utracone serce robi się szare, ostatnie pulsuje. Hełm „×3” pod spodem to zapas bohaterów (życia).
-- Czy po śmierci wie, **dlaczego** zginął? Zapytaj krótko: „co się stało?”.
-- Czy któryś wróg jest wyraźnie frustrujący (psy, tarczownicy, moździerze, zamachowcy)?
+**Combat and death**
+- Do they notice the enemy's red aiming line? Do they react (jump, slide, take cover)?
+- After a hit, do they know they lost a health point? The hearts in the hero panel (top-left corner) are health points; a lost heart turns grey, the last one pulses. The "×3" helmet below is the hero reserve (lives).
+- After dying, do they know **why** they died? Ask briefly: "what happened?".
+- Is any enemy clearly frustrating (dogs, shield soldiers, mortars, suicide bombers)?
 
-**Rozumienie gry**
-- Czy rozumie, że uwolnienie jeńca daje nowego bohatera i dodatkowe życie?
-- Czy zauważa zmianę bohatera i nową broń?
-- Czy rozumie cel misji (flaga, śmigłowiec; w późniejszych misjach zamach, składy paliwa, ucieczka)?
-- Czy wie, dokąd iść? Czy wraca bez potrzeby?
+**Understanding the game**
+- Do they understand that freeing a prisoner gives a new hero and an extra life?
+- Do they notice the hero change and the new weapon?
+- Do they understand the mission goal (flag, helicopter; in later missions assassination, fuel depots, escape)?
+- Do they know where to go? Do they backtrack needlessly?
 
-**Mechaniki: czy odkrył je sam?**
-- specjal (K / C) i jego licznik;
-- nóż (L / V), kopnięcie beczki, odbicie granatu;
-- ślizg (bieg + ↓), deptanie po głowach;
-- złapanie żołnierza (przytrzymanie noża) i rzut;
-- mech (↑ przy mechu, wyjście przez przytrzymanie ↓);
-- złote skrzynie i przedmioty z nich;
-- zielone beczki i rury z paliwem (w misji 2): czy rozumie, że kula robi wyciek, a ogień podpala kałużę? Czy wpada na pomysł, żeby podpalić ślad albo kopnąć beczkę?
-- most linowy (w misji 2): czy zestrzeli słupek, gdy stoją na nim żołnierze? Czy po zawaleniu mostu wie, jak wyjść z przepaści (drabina po drugiej stronie)?
+**Mechanics: did they discover them on their own?**
+- special (K / C) and its counter;
+- knife (L / V), kicking a barrel, deflecting a grenade;
+- slide (run + ↓), stomping on heads;
+- grabbing a soldier (holding knife) and throwing;
+- mech (↑ at the mech, exit by holding ↓);
+- golden crates and the items from them;
+- green barrels and fuel pipes (in mission 2): do they understand that a bullet makes a leak and fire ignites the puddle? Do they come up with the idea of igniting the trail or kicking the barrel?
+- rope bridge (in mission 2): do they shoot the post when soldiers are standing on it? After the bridge collapses, do they know how to get out of the chasm (ladder on the other side)?
 
-**Miejsca wskazane przez symulację graczy (1.19, [METRICS.md](METRICS.md))** — bot tego nie rozstrzygnie, człowiek tak:
-- misja 3 (ucieczka przed detonacją): czy gracz rozumie, że ma biec, czy zatrzymuje się do strzelania?
-- misja 4 (zamach): czy sam znajduje drogę na piętro kwatery do pułkownika? Bot jej nie znajduje;
-- bossowie (misje 5 i 10): czy widzi czerwone znaczniki pocisków i z nich schodzi?
-- po śmierci: czy czyta pasek z żółtą etykietą TIP (na dole ekranu) i czy następnym razem robi to, co radzi?
-- ekran porażki: czy wybiera „RETRY +1 LIFE” (i czy w ogóle zauważa dodatkowe życie)?
-- po pierwszej misji: czy rozumie panel SUPPLY DROP („jutro więcej”)? Zapytaj po grze: „wrócisz jutro? po co?”.
+**Spots flagged by the player simulation (1.19, [METRICS.md](METRICS.md))** — the bot can't settle these, a human can:
+- mission 3 (escape before detonation): does the player understand they have to run, or do they stop to shoot?
+- mission 4 (assassination): do they find the way up to the colonel on the upper floor of the HQ on their own? The bot doesn't find it;
+- bosses (missions 5 and 10): do they see the red projectile markers and step out of them?
+- after death: do they read the bar with the yellow TIP label (at the bottom of the screen), and next time do they do what it advises?
+- defeat screen: do they choose "RETRY +1 LIFE" (and do they even notice the extra life)?
+- after the first mission: do they understand the SUPPLY DROP panel ("more tomorrow")? Ask after the game: "will you come back tomorrow? why?".
 
-**Pojazdy, sekrety, mini-bossowie (1.22–1.24)**
-- przelot z działkiem (misja 6): czy strzela z działka, czy od razu pomija przelot?
-- czołg (misja 8): czy wsiada? Czy rozumie, że działo samo celuje po łuku?
-- sekret: czy zauważa błysk z popękanej ziemi i próbuje na nią skoczyć?
-- ściany (1.26): czy łapie ścianę celowo i strzela z niej? Czy odkrywa obrót na ścianie (kierunek od ściany) i skok od ściany? Czy coś go w skakaniu zaskakuje (zapytaj: „co zrobił bohater, czego się nie spodziewałeś?”)?
-- garderoba: czy zauważa znacznik na HEROES i zagląda do WARDROBE? Czy coś kupuje i co wybiera? Czy przymierzanie (pierwsze kliknięcie) jest jasne?
-- mini-boss (misja 4 JUGGERNAUT, misja 7 THE DOZER): czy sam odkrywa słaby punkt (plecy, kabina), czy strzela w pancerz? Czy uskakuje przed szarżą po czerwonym świetle? Czy chowa się albo przeskakuje, gdy widzi laser?
+**Vehicles, secrets, mini-bosses (1.22–1.24)**
+- gunship flight (mission 6): do they fire the gun, or skip the flight right away?
+- tank (mission 8): do they get in? Do they understand that the cannon aims along an arc by itself?
+- secret: do they notice the glint from the cracked ground and try to jump on it?
+- walls (1.26): do they grab a wall on purpose and shoot from it? Do they discover the wall turn (direction away from the wall) and the wall jump? Does anything about jumping surprise them (ask: "what did the hero do that you didn't expect?")?
+- wardrobe: do they notice the marker on HEROES and look into WARDROBE? Do they buy anything, and what do they pick? Is trying on (the first click) clear?
+- mini-boss (mission 4 JUGGERNAUT, mission 7 THE DOZER): do they discover the weak spot on their own (back, cab), or shoot the armor? Do they dodge the charge after the red light? Do they take cover or jump over when they see the laser?
 
-**HUD i samouczek (1.27)**
-- tabliczki-piktogramy w misji 1: czy tester robi to, co pokazuje tabliczka, bez pytania? Która jest niejasna? Po misji zapytaj: „co mówiła tabliczka z klatką? a ta ze ścianą?”;
-- nieśmiertelnik: czy wie, ile ma serc i specjali i jakim klawiszem rzuca specjal? Czy zauważa klatki jeńców i hełm z życiami?
-- trasa misji u góry: czy zerka na nią, żeby sprawdzić, ile zostało? Czy rozumie czerwoną flagę (cel jeszcze niewykonany)?
-- karta INTEL: czy ją czyta i robi, co radzi (np. rusza się, gdy laser snajpera zbieleje)?
-- czy coś na ekranie zasłania akcję albo przeszkadza? Zapytaj po grze: „czy coś na ekranie ci przeszkadzało albo było niejasne?”.
-- menu (1.28): czy od razu klika żółty przycisk, żeby grać dalej? Czy w wyborze misji rozumie trasy i złotą linię? Czy na ekranie wyników wie, za co dostał medale?
+**HUD and tutorial (1.27)**
+- pictogram signs in mission 1: does the tester do what the sign shows without asking? Which one is unclear? After the mission ask: "what did the sign with the cage say? and the one with the wall?";
+- dog tag: do they know how many hearts and specials they have, and which key throws a special? Do they notice the prisoner cages and the helmet with lives?
+- mission route at the top: do they glance at it to check how much is left? Do they understand the red flag (goal not yet completed)?
+- INTEL card: do they read it and do what it advises (e.g. move when the sniper's laser turns white)?
+- does anything on screen cover the action or get in the way? Ask after the game: "did anything on screen bother you or was it unclear?".
+- menu (1.28): do they click the yellow button right away to keep playing? In mission select, do they understand the routes and the golden line? On the results screen, do they know what they got the medals for?
 
-**Języki (1.29)** — gdy tester woli inny język niż angielski:
-- gra sama wybiera język przeglądarki; sprawdź, czy wybrała dobrze (OPTIONS → LANGUAGE);
-- czy jakiś napis jest niezrozumiały, dziwnie przetłumaczony albo ucięty? Zapisz dokładne brzmienie i ekran;
-- czy tester rozumie zdania z liczbami (np. ile zabójstw, ile żyć) i napis z przyczyną śmierci?
+**Languages (1.29)** — when the tester prefers a language other than English:
+- the game picks the browser language by itself; check whether it picked correctly (OPTIONS → LANGUAGE);
+- is any text incomprehensible, oddly translated or cut off? Write down the exact wording and the screen;
+- does the tester understand sentences with numbers (e.g. how many kills, how many lives) and the cause-of-death text?
 
-**Arcade i misja dnia (1.20)** — jeśli tester sam tam zajrzy:
-- czy czyta karty ulepszeń, czy klika pierwszą z brzegu? Którą wybiera i czy czuje jej działanie?
-- czy po końcu biegu od razu zaczyna nowy („jeszcze raz”)?
-- czy reguła dnia go bawi i czy rozumie ją z samego napisu na starcie?
-- czy zauważa kwestie bohaterów i radio Grimma? Czy śmieszą, czy przeszkadzają?
+**Arcade and daily mission (1.20)** — if the tester goes there on their own:
+- do they read the upgrade cards, or click the first one at hand? Which one do they choose, and do they feel its effect?
+- after a run ends, do they start a new one right away ("one more")?
+- does the daily rule amuse them, and do they understand it from the text at the start alone?
+- do they notice the heroes' lines and Grimm's radio? Are they funny or annoying?
 
-**Emocje**
-- Co wywołało śmiech, „wow” albo „ale jazda”?
-- Gdzie pojawia się frustracja albo nuda (zerkanie w telefon, szybkie klikanie bez celu)?
+**Emotions**
+- What caused laughter, a "wow" or "what a ride"?
+- Where does frustration or boredom appear (glancing at the phone, aimless fast clicking)?
 
-## 5. Pytania po grze
+## 5. Questions after the game
 
-1. Opowiedz własnymi słowami, o co chodzi w tej grze.
-2. Co było najfajniejsze? Jaki moment zapamiętasz?
-3. Co było najbardziej frustrujące albo niesprawiedliwe?
-4. Czy coś było niejasne: sterowanie, cel misji, dlaczego zginąłeś?
-5. Co oznaczała czerwona linia przed strzałem wroga?
-6. Co się dzieje, kiedy uwalniasz jeńca?
-7. Oceń od 1 do 5: trudność (1 = za łatwo, 3 = w sam raz, 5 = za trudno) i wygodę sterowania (1 = niewygodne, 5 = bardzo wygodne).
-8. Zagrałbyś jeszcze? Na czym: komputer czy telefon? Poleciłbyś komuś?
-9. Czego ci brakowało?
+1. Tell me in your own words what this game is about.
+2. What was the most fun? What moment will you remember?
+3. What was the most frustrating or unfair?
+4. Was anything unclear: controls, mission goal, why you died?
+5. What did the red line before an enemy's shot mean?
+6. What happens when you free a prisoner?
+7. Rate from 1 to 5: difficulty (1 = too easy, 3 = just right, 5 = too hard) and control comfort (1 = uncomfortable, 5 = very comfortable).
+8. Would you play again? On what: computer or phone? Would you recommend it to someone?
+9. What did you miss?
 
-## 6. Arkusz notatek (jeden na osobę)
+## 6. Note sheet (one per person)
 
-Tester: ________ Urządzenie: ________ Data: ________
+Tester: ________ Device: ________ Date: ________
 
-| Czas | Co się stało | Reakcja lub cytat | Moja hipoteza |
+| Time | What happened | Reaction or quote | My hypothesis |
 |---|---|---|---|
-| 0:40 | minął tablicę SLIDE i nie użył ślizgu | „jak się kucało?” | tablica za mała / za wcześnie |
+| 0:40 | walked past the SLIDE sign and didn't use the slide | "how do I crouch again?" | sign too small / too early |
 | | | | |
 
-## 7. Co gra zapisuje sama (panel F3)
+## 7. What the game records by itself (F3 panel)
 
-- przebieg każdej misji: wynik, czas, najdalszy punkt, jeńcy, bohaterowie, co gracz zrobił na końcu (ponów, menu, dalej);
-- każdy zgon: przyczyna, sprawca (typ wroga, beczka, mina, boss…), miejsce jako procent długości misji;
-- trafienia, które nie zabiły, z podziałem na przyczyny;
-- utknięcia: co najmniej 25 s bez postępu w prawo, z wysokością ściany przed bohaterem i liczbą wrogów obok;
-- bezczynność: co najmniej 15 s bez naciśnięcia żadnego klawisza;
-- próby ewakuacji przed wykonaniem celu misji;
-- pierwsze użycie każdego klawisza i każdej mechaniki (czas gry i misja) oraz lista tych, których gracz nie użył;
-- pauzy, kliknięcia w menu, sprzęt i rozmiar ekranu, zmienione strojenie;
-- sekcja **SYGNAŁY DO SPRAWDZENIA** z automatycznymi podpowiedziami, o co dopytać.
+- the course of each mission: result, time, farthest point, prisoners, heroes, what the player did at the end (retry, menu, next);
+- every death: cause, killer (enemy type, barrel, mine, boss…), location as a percentage of mission length;
+- hits that didn't kill, broken down by cause;
+- stalls: at least 25 s without progress to the right, with the height of the wall in front of the hero and the number of enemies nearby;
+- idleness: at least 15 s without pressing any key;
+- attempts to evacuate before completing the mission goal;
+- first use of each key and each mechanic (playtime and mission), and a list of those the player didn't use;
+- pauses, menu clicks, hardware and screen size, changed tuning;
+- a **THINGS TO CHECK** section with automatic hints on what to ask about.
 
-Dane zostają w tej przeglądarce (localStorage), nic nie jest nigdzie wysyłane. Archiwum trzyma 5 ostatnich logów. Po ostatnim testerze kliknij **Przywróć mój zapis**: wróci Twój postęp sprzed testów.
+The data stays in this browser (localStorage), nothing is sent anywhere. The archive keeps the last 5 logs. After the last tester, click **Restore my save**: your progress from before the tests comes back.
 
-## 8. Po sesji
+## 8. After the session
 
-Wklej do czatu:
-- raporty (**Kopiuj wszystkie**);
-- arkusze notatek;
-- odpowiedzi na pytania.
+Paste into the chat:
+- the reports (**Copy all**);
+- the note sheets;
+- the answers to the questions.
 
-Claude złoży z tego listę poprawek z priorytetami:
-- **P1** — ktoś utknął, przestał grać albo ginął, nie wiedząc dlaczego;
-- **P2** — coś było niejasne, ale gracz sobie poradził;
-- **P3** — szlif i kosmetyka.
+Claude will turn this into a prioritized list of fixes:
+- **P1** — someone got stuck, stopped playing, or kept dying without knowing why;
+- **P2** — something was unclear, but the player managed;
+- **P3** — polish and cosmetics.
 
-Najpierw idą poprawki P1, potem nowe funkcje.
+P1 fixes come first, new features after.
