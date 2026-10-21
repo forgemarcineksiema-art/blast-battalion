@@ -1,0 +1,65 @@
+<!doctype html><html lang="pl"><meta charset="utf-8"><title>Blast Battalion — kontrola techniczna</title><style>body{margin:20px;background:#11151e;color:#eef3fb;font:16px/1.5 Arial}button{font:inherit;margin:0 12px 12px 0;padding:12px}iframe{display:block;border:1px solid #777;width:844px;height:390px}pre{white-space:pre-wrap}label{display:block;margin:12px 0}</style><h1>Kontrola techniczna Blast Battalion</h1><p>Osobne narzędzie testowe. Wymuszone sterowanie dotykowe sprawdza układ, nie zastępuje fizycznego telefonu.</p><button id="mp4" disabled>Nagraj 3 ujęcia (WebM)</button><button id="film" disabled>Nagraj klip 9 sekund</button><button id="regress" disabled>Sprawdź 15 misji</button><button id="start" disabled>Uruchom misję 1</button><button id="touch" disabled>Podgląd sterowania dotykowego</button><button id="portrait" disabled>Widok pionowy 390 × 844</button><button id="landscape" disabled>Widok poziomy 844 × 390</button><p role="status" id="status">Uruchamianie gry…</p><iframe id="gameframe" title="Testowa kopia gry" src="game.html?debug=1"></iframe><p id="clock"></p><a href="/__shots.zip?prefix=plazaworks_blast_20261021" download>Pobierz klatki nagrania</a><p id="export-status" role="status"></p><video id="clip" controls playsinline style="display:none;max-width:100%" aria-label="Klip z gry"></video><a id="save-mp4" style="display:none">Pobierz gotowy klip</a><pre id="result"></pre><script>
+const frame=document.getElementById('gameframe'),status=document.getElementById('status'),out=document.getElementById('result');let running=false;
+const poll=setInterval(()=>{const w=frame.contentWindow;if(!w.__bb)return;document.getElementById('clock').textContent='Czas misji: '+(w.world ? w.world.time.toFixed(1) : '-')+' s; pauza: '+Boolean(w.__bb.PlayScene.overlay);for(const b of document.querySelectorAll('button')) b.disabled=false;if(!running && status.textContent==='Uruchamianie gry…')status.textContent='Gra gotowa';if(w.__regress){status.textContent='Misje: '+w.__regress.done+'/'+w.__regress.of;out.textContent=JSON.stringify(w.__regress,null,2)}},500);
+document.getElementById('film').onclick=()=>setTimeout(async()=>{running=true;status.textContent='Nagrywanie rzeczywistych klatek gry';try{const w=frame.contentWindow;w.reviewTouch(false);out.textContent=await w.TRAILER.make('plazaworks_blast_20261021',[480,270],[{level:2,sec:3,steps:1800},{level:6,sec:3,steps:1800},{level:13,sec:3,steps:1800}],false);status.textContent='Klatki zapisane'}catch(e){out.textContent=e.stack;status.textContent='Błąd nagrania'}finally{running=false}},100);document.getElementById('regress').onclick=async()=>{running=true;status.textContent='Regresja w toku';try{await frame.contentWindow.REGRESS();status.textContent=frame.contentWindow.__regress.summary;out.textContent=JSON.stringify(frame.contentWindow.__regress,null,2)}catch(e){status.textContent='Błąd: '+e.stack}finally{running=false}};
+document.getElementById('start').onclick=()=>frame.contentWindow.TT.start(0);document.getElementById('touch').onclick=()=>{frame.contentWindow.reviewTouch(true);status.textContent='Wymuszony podgląd dotyku'};
+document.getElementById('portrait').onclick=()=>{frame.style.width='390px';frame.style.height='844px'};
+document.getElementById('landscape').onclick=()=>{frame.style.width='844px';frame.style.height='390px'};
+
+document.querySelector('a[href^="/__shots.zip"]').addEventListener('click', async event => {
+  event.preventDefault();
+  const href = event.currentTarget.href, state = document.getElementById('export-status');
+  state.textContent = 'Przygotowywanie pliku ZIP…';
+  try {
+    const response = await fetch(href);
+    if (!response.ok) throw new Error('Eksport HTTP ' + response.status);
+    const blob = await response.blob(), link = document.createElement('a');
+    link.href = URL.createObjectURL(blob); link.download = 'blast-battalion-frames.zip';
+    document.body.append(link); link.click(); link.remove();
+    state.textContent = 'Archiwum gotowe: ' + blob.size + ' bajtów';
+    setTimeout(() => URL.revokeObjectURL(link.href), 60000);
+  } catch(error) { state.textContent = error.message; }
+});
+
+document.getElementById('mp4').onclick = () => setTimeout(async () => {
+  running = true; status.textContent = 'Nagrywanie klipu z prawdziwej rozgrywki';
+  const w = frame.contentWindow, trailer = w.TRAILER;
+  let stream;
+  try {
+    w.reviewTouch(false);
+    const canvas = document.createElement('canvas'); canvas.width = 960; canvas.height = 540;
+    const context = canvas.getContext('2d'); context.imageSmoothingEnabled = false;
+    stream = canvas.captureStream(30);
+    const mimeType = ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(type => MediaRecorder.isTypeSupported(type));
+    const recorder = new MediaRecorder(stream, {mimeType,videoBitsPerSecond:4000000}), chunks = [];
+    recorder.ondataavailable = event => { if(event.data.size) chunks.push(event.data); };
+    const stopped = new Promise(resolve => { recorder.onstop = resolve; });
+    recorder.start(1000);
+    const clips = [{level:2,at:2.8},{level:6,at:13.4},{level:13,at:19.4}], log = [];
+    for (const clip of clips) {
+      const seed = 1000 + clip.level * 17, from = Math.round(clip.at * 60) & ~1;
+      trailer.begin(clip.level,seed,[480,270],false);
+      trailer.sim(() => { for(let i=0;i<from;i++)trailer.tick(i); });
+      for(let n=0;n<90;n++) {
+        trailer.sim(() => { trailer.tick(from+n*2); trailer.tick(from+n*2+1); });
+        context.drawImage(w.__bb.Gfx.canvas,0,0,960,540);
+        const hud = w.document.getElementById('hud'); if(hud) context.drawImage(hud,0,0,960,540);
+        await new Promise(resolve => setTimeout(resolve,1000/30));
+      }
+      log.push('M'+(clip.level+1)+' od '+clip.at+' s: 90 klatek symulacji');
+    }
+    recorder.stop(); await stopped;
+    const blob = new Blob(chunks,{type:mimeType}), url = URL.createObjectURL(blob);
+    const video = document.getElementById('clip'), link = document.getElementById('save-mp4');
+    video.src = url; video.style.display = 'block';
+    link.href = url; link.download = 'Blast-Battalion-portfolio.webm'; link.style.display = 'block';
+    out.textContent = log.join('\n')+'\n'+blob.size+' bajtów, bez dźwięku';
+    status.textContent = 'Klip gotowy';
+  } catch(error) { out.textContent = error.stack; status.textContent = 'Błąd nagrania'; }
+  finally {
+    trailer.unlock(); w.TT.unforce();
+    if(stream)for(const track of stream.getTracks())track.stop();
+    running = false;
+  }
+},100);
+</script></html>

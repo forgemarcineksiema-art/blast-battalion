@@ -6,6 +6,7 @@
 const Gfx = {
   canvas: null, ctx: null, W: 480, H: 270, scale: 1,
   TARGET_H: 270,
+  portraitBlocked: false,
 
   init() {
     this.canvas = document.getElementById('game');
@@ -68,7 +69,19 @@ const Gfx = {
     this.canvas.style.top = Math.round((ch - cssH) / 2) + 'px';
     this.ctx.imageSmoothingEnabled = false;
     const rot = document.getElementById('rotate');
-    if (rot) rot.style.display = (Input.isTouchDevice && ch > cw * 1.05) ? 'flex' : 'none';
+    const portrait = Input.isTouchDevice && ch > cw * 1.05;
+    const enteredPortrait = portrait && !this.portraitBlocked;
+    this.portraitBlocked = portrait;
+    if (rot) rot.style.display = portrait ? 'flex' : 'none';
+    // The rotate prompt covers the game. Do not let enemies keep attacking
+    // while the player cannot see or control their hero.
+    if (enteredPortrait) {
+      Input.clear();
+      if (typeof Touch !== 'undefined') Touch.reset();
+      if (typeof App !== 'undefined' && typeof PlayScene !== 'undefined' && App.scene === PlayScene && PlayScene.world) {
+        PlayScene.pause('orientation');
+      }
+    }
     if (typeof Hud !== 'undefined') Hud.resize(); // the HUD layer follows the game canvas
   },
 };

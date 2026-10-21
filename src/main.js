@@ -68,11 +68,15 @@
       const q = STEP / 2, m = Math.round(dt / q);
       if (m >= 1 && m <= 4 && Math.abs(dt - m * q) < 0.0005) dt = m * q;
       try {
-        if (!Platform.adActive) {
+        if (!Platform.adActive && !Gfx.portraitBlocked && !document.hidden) {
           acc += dt;
           let n = 0;
           while (acc >= STEP && n < 4) { Input.poll(); App.tick++; App.update(STEP); acc -= STEP; n++; }
           if (n === 4) acc = 0;
+        } else {
+          // Resuming after an ad, a hidden tab or a rotation prompt starts
+          // from the current frame, without a burst of catch-up updates.
+          acc = 0;
         }
         // the world is drawn between its last two steps (World.draw): smooth on 75-240 Hz screens
         App.alpha = Math.min(1, acc / STEP);
