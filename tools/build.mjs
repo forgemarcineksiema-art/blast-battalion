@@ -19,6 +19,7 @@ import { execSync } from 'node:child_process';
 import { deflateRawSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
+import { Script } from 'node:vm';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
@@ -54,7 +55,7 @@ const setPlatform = (src, p) => src.replace(/<script>window\.GAME_PLATFORM[^<]*<
 // (src/platform.js still loads it itself when it isn't there)
 const HEAD_SDK = { poki: '<script src="https://game-cdn.poki.com/scripts/v2/poki-sdk.js"></script>' };
 const withSdk = (src, p) => (HEAD_SDK[p] ? src.replace('</head>', HEAD_SDK[p] + '\n</head>') : src);
-const pageWith = (platform, scriptTag) => withSdk(setPlatform(html, platform), platform).replace(blockRe, scriptTag);
+const pageWith = (platform, scriptTag) => withSdk(setPlatform(html, platform), platform).replace(blockRe, () => scriptTag);
 // guard against "</script>" sequences inside the inlined bundle
 const inline = (js) => `<script>\n${js.replace(/<\/script/gi, '<\\/script')}\n</script>`;
 
@@ -90,7 +91,16 @@ function zip(entries) {
 
 // ---------------------------------------------------------------- write
 if (existsSync(dist)) rmSync(dist, { recursive: true, force: true });
-const out = (rel, data) => { const p = join(dist, rel); mkdirSync(dirname(p), { recursive: true }); writeFileSync(p, data); return p; };
+function checkScripts(rel, data) {
+  if (rel.endsWith('.js')) new Script(data, { filename: rel });
+  if (!rel.endsWith('.html')) return;
+  let index = 0;
+  for (const match of data.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    if (/\bsrc\s*=/.test(match[1])) continue;
+    new Script(match[2], { filename: `${rel}:inline-${++index}` });
+  }
+}
+const out = (rel, data) => { checkScripts(rel, data); const p = join(dist, rel); mkdirSync(dirname(p), { recursive: true }); writeFileSync(p, data); return p; };
 const kb = (s) => (Buffer.byteLength(s) / 1024).toFixed(1) + ' KB';
 
 // single-file web build
@@ -109,7 +119,7 @@ for (const p of ['poki', 'crazygames']) {
 // claude.ai Artifact fragment: title + style + body content, no document skeleton
 const title = html.match(/<title>[\s\S]*?<\/title>/)[0];
 const style = html.match(/<style>[\s\S]*?<\/style>/)[0];
-const body = setPlatform(html, 'none').match(/<body>([\s\S]*?)<\/body>/)[1].replace(blockRe, inline(code)).trim();
+const body = setPlatform(html, 'none').match(/<body>([\s\S]*?)<\/body>/)[1].replace(blockRe, () => inline(code)).trim();
 out('artifact/blast-battalion.html', `${title}\n${style}\n${body}\n`);
 
 console.log(`Bundled ${files.length} source files -> ${kb(code)} of JavaScript`);

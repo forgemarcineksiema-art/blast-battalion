@@ -5,7 +5,7 @@
 
 const GAME_TITLE = 'BLAST BATTALION';
 const GAME_ID = 'blastbattalion';
-const VERSION = '1.33.1';
+const VERSION = '1.33.2';
 const TILE = 16;
 const STEP = 1 / 60;
 const BASE_GRAVITY = 900;

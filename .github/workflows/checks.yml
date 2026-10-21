@@ -1,0 +1,21 @@
+name: Game checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm test
+      - run: python3 -m unittest discover -s test -p '*_test.py' -v
+      - run: python3 tools/check_lang.py
+      - run: npm run build

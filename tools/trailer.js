@@ -132,10 +132,20 @@ window.TRAILER = {
   capture(level, seed, size, from, len, noHud) {
     this.begin(level, seed, size, noHud);
     const frames = [];
+    const frame = document.createElement('canvas');
+    frame.width = Gfx.W; frame.height = Gfx.H;
+    const context = frame.getContext('2d');
+    context.imageSmoothingEnabled = false;
     this.sim(() => {
       for (let i = 0; i < from + len; i++) {
         this.tick(i);
-        if (i >= from && i % 2) frames.push(Gfx.canvas.toDataURL('image/png'));
+        if (i >= from && i % 2) {
+          context.drawImage(Gfx.canvas, 0, 0, frame.width, frame.height);
+          if (!noHud && typeof Hud !== 'undefined' && Hud.canvas) {
+            context.drawImage(Hud.canvas, 0, 0, frame.width, frame.height);
+          }
+          frames.push(frame.toDataURL('image/png'));
+        }
       }
     });
     return frames;
